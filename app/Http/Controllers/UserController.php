@@ -34,7 +34,7 @@ public function index(Request $request)
             ->editColumn('created_at', fn ($row)   // nice date format
                 => $row->created_at->format('Y-m-d H:i'))
             ->addColumn('action', function ($row) { // buttons / dropdown
-                return view('partials.actions', compact('row'))->render();
+                return view('pages.users.actions', compact('row'))->render();
             })
             ->rawColumns(['action'])               // allow HTML in “action”
             ->make(true);
