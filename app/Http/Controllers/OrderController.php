@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
@@ -12,29 +13,50 @@ class OrderController extends Controller
     /* ───────────── Index ───────────── */
     public function index(Request $request)
     {
+        /* ---------- AJAX: DataTables request ---------- */
         if ($request->ajax()) {
-            $orders = Order::with('buyer')->select('orders.*');
+            // ⬇ join buyers so we can order / search on buyer name
+            $orders = Order::query()
+                ->leftJoin('users as buyers', 'buyers.id', '=', 'orders.buyer_id')
+                ->select([
+                    'orders.id',
+                    'buyers.fullname as buyer',   // alias for JSON key
+                    'orders.status',
+                    'orders.total_amount',
+                    'orders.created_at',
+                ]);
 
             return DataTables::of($orders)
-                ->addIndexColumn()
-                ->addColumn('buyer', fn($row) => $row->buyer->fullname ?? '-')
-                ->addColumn('status', fn($row) => ucfirst($row->status))
-                ->addColumn('total_amount', fn($row) => number_format($row->total_amount, 2) . ' $')
-                ->addColumn('action', function ($row) {
-                    return view('orders.partials.actions', compact('row'))->render();
+                ->addIndexColumn()                           // DT_RowIndex
+                ->editColumn('status', fn($row)               // nicer status text
+                    => ucfirst($row->status))
+                ->editColumn('total_amount', fn($row)         // formatted money
+                    => number_format($row->total_amount, 2) . ' $')
+                ->editColumn('created_at', fn($row)           // date format
+                    => $row->created_at->format('Y-m-d H:i'))
+                ->addColumn('action', function ($row) {       // buttons / dropdown
+                    return view('pages.orders.partials.actions', compact('row'))->render();
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action'])                      // allow HTML in “action”
                 ->make(true);
         }
 
-        return view('orders.index');
+        /* ---------- First page load: Blade view ---------- */
+        $buyers   = User::where('user_type', 'buyer')
+                        ->orderBy('fullname')
+                        ->get(['id', 'fullname']);
+        $statuses = ['pending', 'confirmed', 'cancelled', 'completed'];
+
+        return view('pages.orders.index', compact('buyers', 'statuses'));
     }
 
     /* ───────────── Create ───────────── */
     public function create()
     {
-        $buyers = User::where('user_type', 'buyer')->orderBy('fullname')->get();
-        return view('orders.create', compact('buyers'));
+        $buyers   = User::where('user_type', 'buyer')->orderBy('fullname')->get();
+        $statuses = ['pending', 'confirmed', 'cancelled', 'completed'];
+
+        return view('pages.orders.create', compact('buyers', 'statuses'));
     }
 
     /* ───────────── Store ───────────── */
@@ -42,7 +64,7 @@ class OrderController extends Controller
     {
         $request->validate([
             'buyer_id'     => 'required|exists:users,id',
-            'status'       => 'required|in:pending,confirmed,cancelled,completed',
+            'status'       => ['required', Rule::in(['pending', 'confirmed', 'cancelled', 'completed'])],
             'total_amount' => 'required|numeric|min:0',
         ]);
 
@@ -54,9 +76,11 @@ class OrderController extends Controller
     /* ───────────── Edit ───────────── */
     public function edit($id)
     {
-        $order  = Order::findOrFail($id);
-        $buyers = User::where('user_type', 'buyer')->orderBy('fullname')->get();
-        return view('orders.edit', compact('order', 'buyers'));
+        $order    = Order::findOrFail($id);
+        $buyers   = User::where('user_type', 'buyer')->orderBy('fullname')->get();
+        $statuses = ['pending', 'confirmed', 'cancelled', 'completed'];
+
+        return view('pages.orders.edit', compact('order', 'buyers', 'statuses'));
     }
 
     /* ───────────── Update ───────────── */
@@ -66,7 +90,7 @@ class OrderController extends Controller
 
         $request->validate([
             'buyer_id'     => 'required|exists:users,id',
-            'status'       => 'required|in:pending,confirmed,cancelled,completed',
+            'status'       => ['required', Rule::in(['pending', 'confirmed', 'cancelled', 'completed'])],
             'total_amount' => 'required|numeric|min:0',
         ]);
 
@@ -79,6 +103,7 @@ class OrderController extends Controller
     public function destroy($id)
     {
         Order::findOrFail($id)->delete();
+
         return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
     }
 }

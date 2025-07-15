@@ -64,26 +64,32 @@ class CropTypeController extends Controller
     /**
      * Show the form for editing the specified crop type.
      */
-    public function edit(CropType $cropType)
-    {
-        return view('pages.crop_types.edit', compact('cropType'));
-    }
+   public function edit($id)
+{
+    $cropType = CropType::findOrFail($id);
+    return view('pages.crop_types.edit', compact('cropType'));
+}
 
-    /**
-     * Update the specified crop type in storage.
-     */
-    public function update(Request $request, CropType $cropType)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:crop_types,name,' . $cropType->id,
-            'description' => 'nullable|string',
-        ]);
+/**
+ * Update the specified crop type in storage.
+ */
+public function update(Request $request, $id)
+{
+    $cropType = CropType::findOrFail($id);
 
-        $cropType->update($validated);
+    $request->validate([
+        'name' => 'required|string|max:255|unique:crop_types,name,' . $cropType->id,
+        'description' => 'nullable|string',
+    ]);
 
-        return redirect()->route('crop_types.index')
-                         ->with('success', 'Crop type updated successfully.');
-    }
+    $cropType->update([
+        'name' => $request->name,
+        'description' => $request->description,
+    ]);
+
+    return redirect()->route('crop_types.index')->with('success', 'Crop type updated successfully.');
+}
+
 
     /**
      * Remove the specified crop type from storage.

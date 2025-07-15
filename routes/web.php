@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CropController;
 use App\Http\Controllers\CropTypeController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +50,19 @@ Route::middleware('auth')->group(function () {
         Route::get('{id}/show', [CropController::class, 'show'])->name('crops.show');
         Route::put('{id}/update', [CropController::class, 'update'])->name('crops.update');
         Route::delete('{id}/delete', [CropController::class, 'destroy'])->name('crops.delete');
+
+    });
+
+
+
+     Route::group(['prefix' => 'oders'], function () {
+        Route::get('/', [OrderController::class, 'index'])->name('oders.index');
+        Route::get('/create', [OrderController::class, 'create'])->name('oders.create');
+        Route::post('/store', [OrderController::class, 'store'])->name('oders.store');
+        Route::get('crops/{id}/edit', [OrderController::class, 'edit'])->name('oders.edit');
+        // Route::get('{id}/show', [OrderController::class, 'show'])->name('oders.show');
+        Route::put('{id}/update', [OrderController::class, 'update'])->name('oders.update');
+        Route::delete('{id}/delete', [OrderController::class, 'destroy'])->name('oders.delete');
 
     });
 });
