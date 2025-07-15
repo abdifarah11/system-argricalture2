@@ -54,7 +54,13 @@
                           <a href="{{ route('crop_types.index') }}" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>cropbs type  Management</p>
-                    </a>
+                    </a> #
+                    
+                      <a href="{{ route('orders.index') }}" class="nav-link active">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Orders Management</p>
+
+
                     
 
                     </a>

@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
 
 
     });
-        Route::group(['prefix' => 'crop_types'], function () {
+    Route::group(['prefix' => 'crop_types'], function () {
         Route::get('/', [CropTypeController::class, 'index'])->name('crop_types.index');
         Route::get('/create', [CropTypeController::class, 'create'])->name('crop_types.create');
         Route::post('/store', [CropTypeController::class, 'store'])->name('crop_types.store');
@@ -53,18 +53,18 @@ Route::middleware('auth')->group(function () {
 
     });
 
-
-
-     Route::group(['prefix' => 'oders'], function () {
-        Route::get('/', [OrderController::class, 'index'])->name('oders.index');
-        Route::get('/create', [OrderController::class, 'create'])->name('oders.create');
-        Route::post('/store', [OrderController::class, 'store'])->name('oders.store');
-        Route::get('crops/{id}/edit', [OrderController::class, 'edit'])->name('oders.edit');
-        // Route::get('{id}/show', [OrderController::class, 'show'])->name('oders.show');
-        Route::put('{id}/update', [OrderController::class, 'update'])->name('oders.update');
-        Route::delete('{id}/delete', [OrderController::class, 'destroy'])->name('oders.delete');
-
+    Route::group(['prefix' => 'Orders', 'as' => 'orders.'], function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/create', [OrderController::class, 'create'])->name('create');
+        Route::post('/', [OrderController::class, 'store'])->name('store');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        Route::get('/{order}/edit', [OrderController::class, 'edit'])->name('edit');
+        Route::put('/{order}', [OrderController::class, 'update'])->name('update');
+        Route::delete('/{order}', [OrderController::class, 'destroy'])->name('destroy');
     });
+
+
+  
 });
 
 require __DIR__ . '/auth.php';

@@ -1,19 +1,18 @@
-
-/* ───────────── resources/views/pages/orders/edit.blade.php ───────────── */
 @extends('layouts.app')
 
 @section('content')
 <div class="container mt-4">
     <h2>Edit Order</h2>
-    <form method="POST" action="{{ route('orders.update', $order->id) }}">
+
+    <form action="{{ route('orders.update', $order->id) }}" method="POST">
         @csrf
         @method('PUT')
 
         <div class="mb-3">
             <label for="buyer_id" class="form-label">Buyer</label>
-            <select name="buyer_id" id="buyer_id" class="form-control" required>
+            <select name="buyer_id" id="buyer_id" class="form-select" required>
                 @foreach ($buyers as $buyer)
-                    <option value="{{ $buyer->id }}" {{ $buyer->id == $order->buyer_id ? 'selected' : '' }}>
+                    <option value="{{ $buyer->id }}" {{ $order->buyer_id == $buyer->id ? 'selected' : '' }}>
                         {{ $buyer->fullname }}
                     </option>
                 @endforeach
@@ -22,9 +21,9 @@
 
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
-            <select name="status" id="status" class="form-control" required>
+            <select name="status" id="status" class="form-select" required>
                 @foreach ($statuses as $status)
-                    <option value="{{ $status }}" {{ $status == $order->status ? 'selected' : '' }}>
+                    <option value="{{ $status }}" {{ $order->status == $status ? 'selected' : '' }}>
                         {{ ucfirst($status) }}
                     </option>
                 @endforeach
@@ -33,10 +32,11 @@
 
         <div class="mb-3">
             <label for="total_amount" class="form-label">Total Amount</label>
-            <input type="number" name="total_amount" id="total_amount" class="form-control" step="0.01" value="{{ $order->total_amount }}" required>
+            <input type="number" name="total_amount" id="total_amount" step="0.01"
+                   value="{{ $order->total_amount }}" class="form-control" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary">Update Order</button>
         <a href="{{ route('orders.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
