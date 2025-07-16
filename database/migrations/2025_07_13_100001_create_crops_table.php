@@ -17,7 +17,7 @@ return new class extends Migration {
 
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('region_id')->nullable()->constrained();
-            $table->string('image')->nullable();
+            // $table->string('image')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
         });

@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         UsersTableSeeder::class,
         CropTypesTableSeeder::class,
         CropsTableSeeder::class,
-        PricesTableSeeder::class,
+        PriceTableSeeder::class,
         PriceHistoryTableSeeder::class,
         OrdersTableSeeder::class,
        // PurchasesTableSeeder::class,

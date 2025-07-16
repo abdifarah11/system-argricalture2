@@ -2,77 +2,111 @@
 
 @section('content')
 <div class="container">
-    <h3 class="mb-4">🌿 Add New Crop</h3>
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
+            <h4 class="mb-4 fw-bold">🌾 Add New Crop</h4>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <strong>Please fix the following errors:</strong>
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+            <form action="{{ route('crops.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                {{-- Name --}}
+                <div class="mb-3">
+                    <label for="name" class="form-label">Crop Name <span class="text-danger">*</span></label>
+                    <input type="text" name="name" id="name" class="form-control" required placeholder="e.g. Tomato">
+                </div>
+
+                {{-- Crop Type --}}
+                <div class="mb-3">
+                    <label for="crop_type_id" class="form-label">Crop Type <span class="text-danger">*</span></label>
+                    <select name="crop_type_id" id="crop_type_id" class="form-select" required>
+                        <option value="">Select type</option>
+                        @foreach($cropTypes as $type)
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Region --}}
+                <div class="mb-3">
+                    <label for="region_id" class="form-label">Region</label>
+                    <select name="region_id" id="region_id" class="form-select">
+                        <option value="">Select region</option>
+                        @foreach($regions as $region)
+                            <option value="{{ $region->id }}">{{ $region->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Description --}}
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description (Optional)</label>
+                    <textarea name="description" id="description" class="form-control" rows="3" placeholder="Short description..."></textarea>
+                </div>
+
+
+             
+                {{-- Unit --}}
+                <div class="mb-3">
+                    <label for="unit" class="form-label">Unit <span class="text-danger">*</span></label>
+                    <select name="unit" id="unit" class="form-select" required>
+                        <option value="">Select Unit</option>
+                        <option value="kg">Kilogram (kg)</option>
+                        <option value="piece">Piece</option>
+                        <option value="litre">Litre</option>
+                    </select>
+                </div>
+
+                <div id="unit-note" class="mb-2 text-muted fw-semibold" style="display: none;"></div>
+
+                {{-- Quantity --}}
+                <div class="mb-3" id="quantity-group" style="display: none;">
+                    <label for="quantity" class="form-label">Quantity <span class="text-danger">*</span></label>
+                    <input type="number" name="quantity" id="quantity" class="form-control" min="1" placeholder="Enter quantity">
+                </div>
+
+                {{-- Price --}}
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price (in USD) <span class="text-danger">*</span></label>
+                            <input type="price" name="price" id="price" class="form-control" min="1" placeholder="Enter price">
+                </div>
+                {{-- Submit --}}
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success px-4 py-2">
+                        <i class="bi bi-save me-1"></i> Save Crop
+                    </button>
+                </div>
+            </form>
         </div>
-    @endif
-
-    <form action="{{ route('crops.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        {{-- Crop Name --}}
-        <div class="mb-3">
-            <label for="name" class="form-label">Crop Name</label>
-            <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
-        </div>
-
-        {{-- Crop Type --}}
-        <div class="mb-3">
-            <label for="crop_type_id" class="form-label">Crop Type</label>
-            <select name="crop_type_id" class="form-select" required>
-                <option value="">-- Select Type --</option>
-                @foreach ($cropTypes as $type)
-                    <option value="{{ $type->id }}" {{ old('crop_type_id') == $type->id ? 'selected' : '' }}>
-                        {{ $type->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- Region --}}
-        <div class="mb-3">
-            <label for="region_id" class="form-label">Region (Optional)</label>
-            <select name="region_id" class="form-select">
-                <option value="">-- Select Region --</option>
-                @foreach ($regions as $region)
-                    <option value="{{ $region->id }}" {{ old('region_id') == $region->id ? 'selected' : '' }}>
-                        {{ $region->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- Image --}}
-        <div class="mb-3">
-            <label for="image" class="form-label">Crop Image (Optional)</label>
-            <input type="file" name="image" class="form-control" accept="image/*">
-        </div>
-
-        {{-- Description --}}
-        <div class="mb-4">
-            <label for="description" class="form-label">Description (Optional)</label>
-            <textarea name="description" rows="4" class="form-control">{{ old('description') }}</textarea>
-        </div>
-
-        {{-- Buttons --}}
-        <button type="submit" class="btn btn-success">
-            <i class="bi bi-save2"></i> Save Crop
-        </button>
-        <a href="{{ route('crops.index') }}" class="btn btn-secondary ms-2">
-            <i class="bi bi-arrow-left"></i> Cancel
-        </a>
-    </form>
+    </div>
 </div>
 @endsection
 
 @push('scripts')
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const unitSelect = document.getElementById('unit');
+    const unitNote = document.getElementById('unit-note');
+    const quantityGroup = document.getElementById('quantity-group');
+
+    unitSelect.addEventListener('change', function () {
+        const unit = this.value;
+        quantityGroup.style.display = unit ? 'block' : 'none';
+        unitNote.style.display = unit ? 'block' : 'none';
+
+        switch (unit) {
+            case 'kg':
+                unitNote.innerText = "Quantity in kilograms (kg).";
+                break;
+            case 'piece':
+                unitNote.innerText = "Quantity in pieces (e.g. 5 items).";
+                break;
+            case 'litre':
+                unitNote.innerText = "Quantity in litres (e.g. 3 litres).";
+                break;
+            default:
+                unitNote.innerText = "";
+        }
+    });
+});
+</script>
 @endpush

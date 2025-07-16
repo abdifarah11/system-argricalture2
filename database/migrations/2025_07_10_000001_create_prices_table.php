@@ -17,7 +17,10 @@ return new class extends Migration {
             $table->foreign('crop_id')->references('id')->on('regions')->onDelete('cascade');
             $table->foreignId('region_id')->constrained();
             $table->decimal('price', 10, 2);
-            $table->string('unit'); // e.g. kg, bag
+             $table->enum('unit', ['kg', 'piece', 'litre']);
+            $table->integer('quantity')->nullable();
+              $table->integer('kg')->nullable();
+          $table->integer('litre')->nullable(); // ✅ Use this
             $table->timestamps();
         });
     }

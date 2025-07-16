@@ -53,6 +53,18 @@ Route::middleware('auth')->group(function () {
 
     });
 
+    // routes/web.php
+
+// Route::resource('crops', CropController::class);
+
+// // Price actions handled via CropController
+// Route::get('/crops/{crop}/price', [CropController::class, 'showPrice'])->name('crops.price.show');
+// Route::get('/crops/{crop}/price/edit', [CropController::class, 'editPrice'])->name('crops.price.edit');
+// Route::put('/crops/{crop}/price', [CropController::class, 'updatePrice'])->name('crops.price.update');
+// Route::get('/crops/{crop}/price/create', [CropController::class, 'createPrice'])->name('crops.price.create');
+// Route::post('/crops/{crop}/price', [CropController::class, 'storePrice'])->name('crops.price.store');
+
+
     Route::group(['prefix' => 'Orders', 'as' => 'orders.'], function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/create', [OrderController::class, 'create'])->name('create');
