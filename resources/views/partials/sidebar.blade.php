@@ -45,20 +45,29 @@
                       <i class="nav-icon bi bi-circle"></i>
                       <p>User Management</p>
 
+
+                           <a href="{{ route('crop_types.index') }}" class="nav-link active">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>cropbs type  Management</p>
+                    </a> #
+                    
+
                        <a href="{{ route('crops.index') }}" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>cropbs Management</p>
                     </a>
 
 
-                          <a href="{{ route('crop_types.index') }}" class="nav-link active">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>cropbs type  Management</p>
-                    </a> #
-                    
+                     
                       <a href="{{ route('orders.index') }}" class="nav-link active">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Orders Management</p>
+
+                           <a href="{{ route('payment_methods.index') }}" class="nav-link active">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>payments   Management</p>
+                    </a> #
+                    
 
 
                     

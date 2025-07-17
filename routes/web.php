@@ -3,6 +3,7 @@
 use App\Http\Controllers\CropController;
 use App\Http\Controllers\CropTypeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -53,16 +54,17 @@ Route::middleware('auth')->group(function () {
 
     });
 
-    // routes/web.php
+        Route::group(['prefix' => 'payment_methods'], function () {
+        Route::get('/', [PaymentMethodController::class, 'index'])->name('payment_methods.index');
+        Route::get('/create', [PaymentMethodController::class, 'create'])->name('payment_methods.create');
+        Route::post('/store', [PaymentMethodController::class, 'store'])->name('payment_methods.store');
+        Route::get('crops/{id}/edit', [PaymentMethodController::class, 'edit'])->name('payment_methods.edit');
+        Route::get('{id}/show', [PaymentMethodController::class, 'show'])->name('payment_methods.show');
+        Route::put('{id}/update', [PaymentMethodController::class, 'update'])->name('payment_methods.update');
+        Route::delete('{id}/delete', [PaymentMethodController::class, 'destroy'])->name('payment_methods.delete');
 
-// Route::resource('crops', CropController::class);
+    });
 
-// // Price actions handled via CropController
-// Route::get('/crops/{crop}/price', [CropController::class, 'showPrice'])->name('crops.price.show');
-// Route::get('/crops/{crop}/price/edit', [CropController::class, 'editPrice'])->name('crops.price.edit');
-// Route::put('/crops/{crop}/price', [CropController::class, 'updatePrice'])->name('crops.price.update');
-// Route::get('/crops/{crop}/price/create', [CropController::class, 'createPrice'])->name('crops.price.create');
-// Route::post('/crops/{crop}/price', [CropController::class, 'storePrice'])->name('crops.price.store');
 
 
     Route::group(['prefix' => 'Orders', 'as' => 'orders.'], function () {
