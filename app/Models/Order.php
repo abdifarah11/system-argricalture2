@@ -9,20 +9,30 @@ class Order extends Model
 {
     use HasFactory;
 
-    /**
-     * Mass assignable attributes
-     */
+    // The attributes that are mass assignable
     protected $fillable = [
-        'buyer_id',
+        'user_id',
+        'crop_id',
+        'payment_method_id',
         'status',
         'total_amount',
+        'description',
     ];
 
-    /**
-     * Order belongs to a buyer (User)
-     */
-    public function buyer()
+    // Relationships
+
+    public function user()
     {
-        return $this->belongsTo(User::class, 'buyer_id');
+        return $this->belongsTo(User::class);
+    }
+
+    public function crop()
+    {
+        return $this->belongsTo(Crop::class);
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
     }
 }

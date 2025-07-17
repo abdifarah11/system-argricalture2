@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\User;
+use App\Models\Crop;
+use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
@@ -11,78 +13,72 @@ use Yajra\DataTables\Facades\DataTables;
 class OrderController extends Controller
 {
     /* ───────────────────────── Index ───────────────────────── */
-
     public function index(Request $request)
     {
-        // Ajax: server‑side DataTables
         if ($request->ajax()) {
-            $orders = Order::with('buyer:id,fullname')
+            $orders = Order::with(['user:id,fullname', 'crop:id,name', 'paymentMethod:id,name'])
                 ->select('orders.*');
 
             return DataTables::of($orders)
                 ->addIndexColumn()
-                ->addColumn('buyer', fn (Order $o) => $o->buyer->fullname ?? '—')
+                ->addColumn('user', fn (Order $o) => $o->user->fullname ?? '—')
+                ->addColumn('crop', fn (Order $o) => $o->crop->name ?? '—')
+                ->addColumn('payment_method', fn (Order $o) => $o->paymentMethod->name ?? '—')
                 ->addColumn('status', fn (Order $o) => $this->statusBadge($o->status))
+                ->addColumn('total_amount', fn (Order $o) => '$' . number_format($o->total_amount, 2))
                 ->addColumn('action', fn (Order $o) => $this->actionButtons($o))
-                ->addColumn('total_amount', fn ($o) => '$' . number_format($o->total_amount, 2))
-
                 ->rawColumns(['status', 'action'])
                 ->make(true);
         }
 
-        // Blade: first page load
-        $buyers = User::select('id', 'fullname')->orderBy('fullname')->get();
+        $user = User::select('id', 'fullname')->orderBy('fullname')->get();
 
-        return view('pages.Orders.index', compact('buyers'));
+        return view('pages.Orders.index', compact('user'));
     }
 
     /* ───────────────────────── Create ───────────────────────── */
-
     public function create()
     {
-        $buyers   = User::select('id', 'fullname')->orderBy('fullname')->get();
+        $user   = User::select('id', 'fullname')->orderBy('fullname')->get();
+        $crops    = Crop::select('id', 'name')->orderBy('name')->get();
+        $payments = PaymentMethod::select('id', 'name')->orderBy('name')->get();
         $statuses = $this->statuses();
 
-        return view('pages.Orders.create', compact('buyers', 'statuses'));
+        return view('pages.Orders.create', compact('user', 'crops', 'payments', 'statuses'));
     }
 
     public function store(Request $request)
     {
         Order::create($this->validated($request));
 
-        return redirect()
-            ->route('orders.index')
-            ->with('success', 'Order created successfully.');
+        return redirect()->route('orders.index')->with('success', 'Order created successfully.');
     }
 
     /* ───────────────────────── Show / Edit ───────────────────────── */
-
     public function show(Order $order)
     {
-        $order->load('buyer');
-
+        $order->load(['user', 'crop', 'paymentMethod']);
         return view('pages.Orders.show', compact('order'));
     }
 
     public function edit(Order $order)
     {
-        $buyers   = User::select('id', 'fullname')->orderBy('fullname')->get();
+        $user   = User::select('id', 'fullname')->orderBy('fullname')->get();
+        $crops    = Crop::select('id', 'name')->orderBy('name')->get();
+        $payments = PaymentMethod::select('id', 'name')->orderBy('name')->get();
         $statuses = $this->statuses();
 
-        return view('pages.Orders.edit', compact('order', 'buyers', 'statuses'));
+        return view('pages.Orders.edit', compact('order', 'user', 'crops', 'payments', 'statuses'));
     }
 
     public function update(Request $request, Order $order)
     {
         $order->update($this->validated($request));
 
-        return redirect()
-            ->route('orders.index')
-            ->with('success', 'Order updated successfully.');
+        return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
     }
 
     /* ───────────────────────── Destroy ───────────────────────── */
-
     public function destroy(Order $order)
     {
         $order->delete();
@@ -91,32 +87,31 @@ class OrderController extends Controller
     }
 
     /* ───────────────────────── Helpers ───────────────────────── */
-
-    /** Re‑useable validation */
     private function validated(Request $request): array
     {
         return $request->validate([
-            'buyer_id'     => ['required', 'exists:users,id'],
-            'status'       => ['required', Rule::in($this->statuses())],
-            'total_amount' => ['required', 'numeric', 'min:0'],
+            'user_id'           => ['required', 'exists:users,id'],
+            'crop_id'            => ['required', 'exists:crops,id'],
+            'payment_method_id'  => ['nullable', 'exists:payment_methods,id'],
+            'status'             => ['required', Rule::in($this->statuses())],
+            'total_amount'       => ['required', 'numeric', 'min:0'],
+            'description'        => ['nullable', 'string'],
         ]);
     }
 
-    /** Status list (single source of truth) */
     private function statuses(): array
     {
         return ['pending', 'confirmed', 'cancelled', 'completed', 'incompleted'];
     }
 
-    /** Build a coloured badge for DataTables */
     private function statusBadge(string $status): string
     {
         $colors = [
-            'pending'      => 'warning text-dark',
-            'confirmed'    => 'primary',
-            'cancelled'    => 'danger',
-            'completed'    => 'success',
-            'incompleted'  => 'secondary',
+            'pending'     => 'warning text-dark',
+            'confirmed'   => 'primary',
+            'cancelled'   => 'danger',
+            'completed'   => 'success',
+            'incompleted' => 'secondary',
         ];
 
         $class = $colors[$status] ?? 'light text-dark';
@@ -124,7 +119,6 @@ class OrderController extends Controller
         return '<span class="badge bg-' . $class . '">' . ucfirst($status) . '</span>';
     }
 
-    /** Quick inline action buttons */
     private function actionButtons(Order $o): string
     {
         return '
@@ -134,8 +128,8 @@ class OrderController extends Controller
             <a href="' . route('orders.edit', $o) . '" class="btn btn-sm btn-primary me-1">
                 <i class="bi bi-pencil"></i>
             </a>
-            <form action="' . route('orders.destroy', $o) . '" method="POST" class="d-inline"
-                  onsubmit="return confirm(\'Delete this order?\');">
+            <form action="' . route('orders.destroy', $o) . '" method="POST" class="d-inline" 
+                onsubmit="return confirm(\'Delete this order?\');">
                 ' . csrf_field() . method_field('DELETE') . '
                 <button class="btn btn-sm btn-danger">
                     <i class="bi bi-trash"></i>

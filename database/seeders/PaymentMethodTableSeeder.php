@@ -3,15 +3,15 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\PaymentMethod;
+use Illuminate\Support\Facades\DB;
 
 class PaymentMethodTableSeeder extends Seeder
 {
     public function run(): void
     {
-        PaymentMethod::insert([
+        DB::table('payment_methods')->insert([
             [
-                  'name' => 'Cash',
+                'name' => 'Cash',
                 'status' => 'active',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -23,12 +23,11 @@ class PaymentMethodTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Bank Transfer',
+                'name' => 'Credit Card',
                 'status' => 'inactive',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-         
         ]);
     }
 }

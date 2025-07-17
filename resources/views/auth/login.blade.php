@@ -1,8 +1,5 @@
 <x-guest-layout>
-    <div class="min-h-screen flex items-center justify-center bg-cover bg-no-repeat bg-center px-4 py-10"
-         style="background-image: url('{{ asset('img/login-bg.jpg') }}');">
 
-        <div class="w-full max-w-md bg-white bg-opacity-90 backdrop-blur-md border border-gray-200 shadow-xl rounded-xl p-8 sm:p-10">
             
             <!-- Heading -->
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">
