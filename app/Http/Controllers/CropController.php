@@ -47,55 +47,62 @@ class CropController extends Controller
         return view('pages.crops.create', compact('cropTypes', 'regions'));
     }
 
-            public function store(Request $request)
-            {
-                // Step 1: Validate request data
-                $validated = $request->validate([
-                    // Crop fields
-                    'name' => 'required|string|max:255',
-                    'crop_type_id' => 'required|exists:crop_types,id',
-                    'region_id' => 'nullable|exists:regions,id',
-                    'description' => 'nullable|string',
+    /**
+     * Store a newly created crop and its initial price.
+     */
 
-                    // Price fields
-                    'price' => 'required|numeric|min:0|max:999999.99',
-                    'unit' => ['required', Rule::in(['kg', 'piece', 'litre'])],
+    public function store(Request $request)
+    {
 
-                    // Unit-specific quantity validations
-                    'kg' => 'required_if:unit,kg|nullable|numeric|min:0',
-                    'litre' => 'required_if:unit,litre|nullable|numeric|min:0',
-                    'quantity' => 'required_if:unit,piece|nullable|numeric|min:0',
-                ]);
+      
+        // dd($request);// check if request reaches here
 
-                // Step 2: Create the crop
-                $crop = Crop::create([
-                    'name' => $request->name,
-                    'crop_type_id' => $request->crop_type_id,
-                    'region_id' => $request->region_id,
-                    'user_id' => Auth::id(),
-                    'description' => $request->description,
-                ]);
+        // Step 1: Validate request data
+        $validated = $request->validate([
+            // Crop fields
+              'name' => 'required|string|max:255',
+        'crop_type_id' => 'required|exists:crop_types,id',
+        'region_id' => 'nullable|exists:regions,id',
+        'description' => 'nullable|string|max:1000',
 
-                // Step 3: Determine quantity value based on unit
-                $unit = $request->unit;
-                $quantity = match($unit) {
-                    'kg' => $request->kg,
-                    'litre' => $request->litre,
-                    'piece' => $request->quantity,
-                };
+            // Price fields
+            'price' => 'required|numeric|min:0|max:999999.99',
+            'unit' => ['required', Rule::in(['kg', 'piece', 'litre'])],
 
-                // Step 4: Create the price entry
-                Price::create([
-                    'crop_id' => $crop->id,
-                    'region_id' => $request->region_id,
-                    'price' => $request->price,
-                    'unit' => $unit,
-                    'quantity' => $quantity,
-                ]);
+            // Unit-specific quantity validations
+            'kg' => 'required_if:unit,kg|nullable|numeric|min:0',
+            'litre' => 'required_if:unit,litre|nullable|numeric|min:0',
+            'quantity' => 'required_if:unit,piece|nullable|numeric|min:0',
+        ]);
+ 
+        // Step 2: Create the crop
+        $crop = Crop::create([
+             'name' => $request->name,
+        'crop_type_id' => $request->crop_type_id,
+        'region_id' => $request->region_id,
+        'user_id' => Auth::id(),
+        'description' => $request->description
+        ]);
 
-                return redirect()->route('crops.index')->with('success', 'Crop and price saved successfully!');
-            }
+        // Step 3: Determine quantity value based on unit
+        $unit = $request->unit;
+        $quantity = match ($unit) {
+            'kg' => $request->kg,
+            'litre' => $request->litre,
+            'piece' => $request->quantity,
+        };
 
+        // Step 4: Create the price entry
+        Price::create([
+            'crop_id' => $crop->id,
+            'region_id' => $request->region_id,
+            'price' => $request->price,
+            'unit' => $unit,
+            'quantity' => $quantity,
+        ]);
+
+        return redirect()->route('crops.index')->with('success', 'Crop and price saved successfully!');
+    }
 
     /**
      * Display the specified crop.
