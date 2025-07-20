@@ -8,15 +8,13 @@
         @csrf
         @method('PUT')
 
-        {{-- user --}}
+        {{-- Buyer --}}
         <div class="mb-3">
-            <label for="user_id" class="form-label">user</label>
+            <label for="user_id" class="form-label">User</label>
             <select name="user_id" id="user_id" class="form-select" required>
-                @foreach ($users as $user)
-                    <option value="{{ $user->id }}" {{ $order->user_id == $user->id ? 'selected' : '' }}>
-                        {{ $user->fullname }}
-                    </option>
-                @endforeach
+                <option value="">Select user</option>
+                <option value="1" {{ $order->user_id == 1 ? 'selected' : '' }}>John Doe</option>
+                <option value="2" {{ $order->user_id == 2 ? 'selected' : '' }}>Jane Smith</option>
             </select>
         </div>
 
@@ -24,11 +22,9 @@
         <div class="mb-3">
             <label for="crop_id" class="form-label">Crop</label>
             <select name="crop_id" id="crop_id" class="form-select" required>
-                @foreach ($crops as $crop)
-                    <option value="{{ $crop->id }}" {{ $order->crop_id == $crop->id ? 'selected' : '' }}>
-                        {{ $crop->name }}
-                    </option>
-                @endforeach
+                <option value="">Select crop</option>
+                <option value="1" {{ $order->crop_id == 1 ? 'selected' : '' }}>Maize</option>
+                <option value="2" {{ $order->crop_id == 2 ? 'selected' : '' }}>Sorghum</option>
             </select>
         </div>
 
@@ -37,11 +33,8 @@
             <label for="payment_method_id" class="form-label">Payment Method</label>
             <select name="payment_method_id" id="payment_method_id" class="form-select">
                 <option value="">None</option>
-                @foreach ($payments as $method)
-                    <option value="{{ $method->id }}" {{ $order->payment_method_id == $method->id ? 'selected' : '' }}>
-                        {{ $method->name }}
-                    </option>
-                @endforeach
+                <option value="1" {{ $order->payment_method_id == 1 ? 'selected' : '' }}>Cash</option>
+                <option value="2" {{ $order->payment_method_id == 2 ? 'selected' : '' }}>Mobile Money</option>
             </select>
         </div>
 
@@ -49,11 +42,9 @@
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select name="status" id="status" class="form-select" required>
-                @foreach ($statuses as $status)
-                    <option value="{{ $status }}" {{ $order->status == $status ? 'selected' : '' }}>
-                        {{ ucfirst($status) }}
-                    </option>
-                @endforeach
+                <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
             </select>
         </div>
 

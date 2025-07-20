@@ -3,63 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\PriceHistory;
-use App\Models\Region;
 use App\Models\Crop;
+use App\Models\Region;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class PriceHistoryController extends Controller
 {
-    public function index()
+    /* ───────────── Index (DataTables + View) ───────────── */
+    public function index(Request $request)
     {
-        $histories = PriceHistory::with(['region', 'crop'])->get();
-        return view('price_history.index', compact('histories'));
-    }
+        if ($request->ajax()) {
+            // Load related crop and region models for eager loading
+            $priceHistory = PriceHistory::with(['crop', 'region']);
 
-    public function create()
-    {
-        $regions = Region::all();
-        $crops = Crop::all();
-        return view('price_history.create', compact('regions', 'crops'));
-    }
+            return DataTables::of($priceHistory)
+                ->addIndexColumn()
+                ->addColumn('crop', fn(PriceHistory $p) => $p->crop->name ?? '—')
+                ->addColumn('region', fn(PriceHistory $p) => $p->region->name ?? '—')
+                ->editColumn('price', fn(PriceHistory $p) => '$' . number_format($p->price, 2))
+                ->editColumn('unit', fn(PriceHistory $p) => strtoupper($p->unit))
+                ->editColumn('quantity', fn(PriceHistory $p) => $p->quantity ?? '-')
+                ->editColumn('created_at', fn(PriceHistory $p) => $p->created_at->format('Y-m-d H:i'))
+                ->make(true);
+        }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'region_id' => 'required|exists:regions,id',
-            'crop_id' => 'required|exists:crops,id',
-            'price' => 'required|numeric|min:0',
-            'unit' => 'required|string|max:20',
-        ]);
-
-        PriceHistory::create($request->all());
-
-        return redirect()->route('price-history.index')->with('success', 'Price history recorded.');
-    }
-
-    public function edit(PriceHistory $priceHistory)
-    {
-        $regions = Region::all();
-        $crops = Crop::all();
-        return view('price_history.edit', compact('priceHistory', 'regions', 'crops'));
-    }
-
-    public function update(Request $request, PriceHistory $priceHistory)
-    {
-        $request->validate([
-            'region_id' => 'required|exists:regions,id',
-            'crop_id' => 'required|exists:crops,id',
-            'price' => 'required|numeric|min:0',
-            'unit' => 'required|string|max:20',
-        ]);
-
-        $priceHistory->update($request->all());
-
-        return redirect()->route('price-history.index')->with('success', 'Price history updated.');
-    }
-
-    public function destroy(PriceHistory $priceHistory)
-    {
-        $priceHistory->delete();
-        return redirect()->route('price-history.index')->with('success', 'Price history deleted.');
+        return view('pages.price_history.index');
     }
 }

@@ -1,4 +1,6 @@
       <!--begin::Sidebar-->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
       <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
@@ -6,7 +8,7 @@
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
             <img
-              src="{{ asset('img/AdminLTELogo.png') }}"
+              src="{{ asset('img/login-bg.jpg') }}"
           
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
@@ -18,10 +20,10 @@
           </a>
           <!--end::Brand Link-->
         </div>
-        <!--end::Sidebar Brand-->
-        <!--begin::Sidebar Wrapper-->
-        <div class="sidebar-wrapper">
-          <nav class="mt-2">
+
+
+
+         <nav class="mt-2">
             <!--begin::Sidebar Menu-->
             <ul
               class="nav sidebar-menu flex-column"
@@ -39,61 +41,78 @@
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{{ route('users.index') }}" class="nav-link active">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>User Management</p>
+               <ul class="nav nav-treeview">
 
+    {{-- User Management --}}
+    <li class="nav-item">
+        <a href="{{ route('users.index') }}" class="nav-link active">
+            <i class="nav-icon bi bi-people-fill"></i>
+            <p>User Management</p>
+        </a>
+    </li>
 
-                           <a href="{{ route('crop_types.index') }}" class="nav-link active">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>cropbs type  Management</p>
-                    </a> #
-                    
+    {{-- Crop Types Management --}}
+    <li class="nav-item">
+        <a href="{{ route('crop_types.index') }}" class="nav-link active">
+            <i class="nav-icon bi bi-tags-fill"></i>
+            <p>Crop Types Management</p>
+        </a>
+    </li>
 
-                       <a href="{{ route('crops.index') }}" class="nav-link active">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>cropbs Management</p>
-                    </a>
+    {{-- Crops Management --}}
+    <li class="nav-item">
+        <a href="{{ route('crops.index') }}" class="nav-link active">
+            <i class="nav-icon bi bi-flower1"></i>
+            <p>Crops Management</p>
+        </a>
+    </li>
 
+    {{-- Orders Management --}}
+    <li class="nav-item">
+        <a href="{{ route('orders.index') }}" class="nav-link active">
+            <i class="nav-icon bi bi-bag-check-fill"></i>
+            <p>Orders Management</p>
+        </a>
+    </li>
 
-                     
-                      <a href="{{ route('orders.index') }}" class="nav-link active">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Orders Management</p>
+    {{-- Payments Management --}}
+    <li class="nav-item">
+        <a href="{{ route('payment_methods.index') }}" class="nav-link active">
+            <i class="nav-icon bi bi-credit-card-2-front-fill"></i>
+            <p>Payments Management</p>
+        </a>
+    </li>
 
-                           <a href="{{ route('payment_methods.index') }}" class="nav-link active">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>payments   Management</p>
-                    </a> #
-                    
+    {{-- Transaction Management --}}
+    <li class="nav-item">
+        <a href="{{ route('transactions.index') }}" class="nav-link active">
+            <i class="nav-icon bi bi-currency-exchange"></i>
+            <p>Transaction Management</p>
+        </a>
+    </li>
 
+    {{-- Price History Management --}}
+    <li class="nav-item">
+        <a href="{{ route('PriceHistory.index') }}" class="nav-link active">
+            <i class="nav-icon bi bi-graph-up-arrow"></i>
+            <p>Price History Management</p>
+        </a>
+    </li>
 
-                    
+    {{-- Reports Management --}}
+    {{-- <li class="nav-item">
+        <a href="{{ route('reports.index') }}" class="nav-link active">
+            <i class="nav-icon bi bi-file-earmark-bar-graph-fill"></i>
+            <p>Reports Management</p>
+        </a> --}}
+    </li>
 
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index2.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index3.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v3</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
+</ul>
+        <!--end::Sidebar Brand-->
+        <!--begin::Sidebar Wrapper-->
+        <div class="sidebar-wrapper">
          
-             
-            </ul>
-            <!--end::Sidebar Menu-->
-          </nav>
-        </div>
+
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->

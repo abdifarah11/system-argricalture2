@@ -11,23 +11,16 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('price_history', function (Blueprint $table) {
-            $table->id();
-
-             // Define region_id as unsigned big integer
-        $table->unsignedBigInteger('region_id');
-        $table->foreign('region_id')
-            ->references('id')
-            ->on('regions')
-            ->onDelete('cascade');
-
-    $table->unsignedBigInteger('crop_id');
-
-    $table->foreign('crop_id')
-          ->references('id')
-          ->on('crops')
-            ->onDelete('cascade');
+              $table->id();
+            // $table->foreignId('crop_id')->constrained();
+            $table->unsignedBigInteger('crop_id');
+            $table->foreign('crop_id')->references('id')->on('regions')->onDelete('cascade');
+            $table->foreignId('region_id')->constrained();
             $table->decimal('price', 10, 2);
-            $table->string('unit');
+             $table->enum('unit', ['kg', 'piece', 'litre']);
+            $table->integer('quantity')->nullable();
+              $table->integer('kg')->nullable();
+          $table->integer('litre')->nullable(); // ✅ Use this
             $table->timestamps();
         });
     }

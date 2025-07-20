@@ -39,7 +39,7 @@
                     <th>Full Name</th>
                       <th>username</th>
                     <th>Email</th>
-                    <th>User Type</th>
+                    <th>rule User</th>
                     <th>Region</th>
                     <th>Created At</th>
                     <th>Actions</th>

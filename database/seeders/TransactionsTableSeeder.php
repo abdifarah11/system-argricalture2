@@ -17,7 +17,7 @@ class TransactionsTableSeeder extends Seeder
                 'payment_method_id' => 1,
                 'amount'            => 150.50,
                 'status'            => 'pending',
-                'description'       => 'Transaction for order #1',
+                'description'       => 'Transaction for order 1',
                 'transaction_date'  => now(),
                 'created_at'        => now(),
                 'updated_at'        => now(),

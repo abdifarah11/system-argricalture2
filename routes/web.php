@@ -4,7 +4,9 @@ use App\Http\Controllers\CropController;
 use App\Http\Controllers\CropTypeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\PriceHistoryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -77,6 +79,35 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{order}', [OrderController::class, 'destroy'])->name('destroy');
     });
 
+
+
+
+       Route::group(['prefix' => 'transactions'], function () {
+        Route::get('/', [TransactionController::class, 'index'])->name('transactions.index');
+        Route::get('/create', [TransactionController::class, 'create'])->name('transactions.create');
+        Route::post('/store', [TransactionController::class, 'store'])->name('transactions.store');
+        Route::get('crops/{id}/edit', [TransactionController::class, 'edit'])->name('transactions.edit');
+        Route::get('{id}/show', [TransactionController::class, 'show'])->name('transactions.show');
+        Route::put('{id}/update', [PaymentMethodController::class, 'update'])->name('transactions.update');
+        Route::delete('{id}/delete', [TransactionController::class, 'destroy'])->name('transactions.delete');
+
+    });
+
+       Route::group(['prefix' => 'PriceHistory'], function () {
+        Route::get('/', [PriceHistoryController::class, 'index'])->name('PriceHistory.index');
+        Route::get('/create', [PriceHistoryController::class, 'create'])->name('PriceHistory.create');
+        Route::post('/store', [PriceHistoryController::class, 'store'])->name('PriceHistory.store');
+        Route::get('crops/{id}/edit', [PriceHistoryController::class, 'edit'])->name('PriceHistory.edit');
+        Route::get('{id}/show', [PriceHistoryController::class, 'show'])->name('PriceHistory.show');
+        Route::put('{id}/update', [PriceHistoryController::class, 'update'])->name('PriceHistory.update');
+        Route::delete('{id}/delete', [PriceHistoryController::class, 'destroy'])->name('PriceHistory.delete');
+
+    });
+
+
+
+
+  
 
   
 });
