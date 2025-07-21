@@ -15,7 +15,7 @@ class Crop extends Model
         'region_id',
         'user_id',
         'description',
-        // 'image',
+         'image',
     ];
 
     /**

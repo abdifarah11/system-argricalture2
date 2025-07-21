@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CropController;
 use App\Http\Controllers\CropTypeController;
 use App\Http\Controllers\OrderController;
@@ -8,7 +9,31 @@ use App\Http\Controllers\PriceHistoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WebsiteController;
+
+
+Route::get('/home', function () {
+    return view('website.home');
+})->name('home');
+////
+// Middleware
+
+
+// Route::middleware(['auth', 'role:admin'])->group(function () {
+//     Route::get('/admin/dashboard', [AdminController::class, 'index']);
+// });
+
+// Route::middleware(['auth', 'role:market_officer'])->group(function () {
+//     Route::get('/officer/panel', [MarketOfficerController::class, 'index']);
+// });
+
+// Route::middleware(['auth', 'role:admin,market_officer'])->group(function () {
+//     Route::get('/shared/section', [SharedController::class, 'index']);
+// });
+
+
 
 Route::get('/', function () {
     return view('auth.login');

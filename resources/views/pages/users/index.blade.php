@@ -39,7 +39,7 @@
                     <th>Full Name</th>
                       <th>username</th>
                     <th>Email</th>
-                    <th>rule User</th>
+                    <th>User </th>
                     <th>Region</th>
                     <th>Created At</th>
                     <th>Actions</th>
@@ -78,8 +78,8 @@
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'fullname', name: 'fullname' },
                     { data: 'username', name: 'username' },
-                    { data: 'email', name: 'email' },
-                    { data: 'user_type', name: 'user_type' },
+                    { data: 'email', name: 'role' },
+                    { data: 'role', name: 'user_type' },
                     { data: 'region',     name: 'regions.name' }, // display “region”, sort on DB fiel
                     { data: 'created_at', name: 'created_at' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('username', 100)->unique(); // <-- ADD THIS LINE
 
             $table->string('email')->unique();
-            $table->enum('user_type', ['admin', 'market_officer', 'general']);
+            $table->enum('role', ['admin', 'market_officer', 'general']);
             $table->unsignedBigInteger('region_id')->nullable();
 
             $table->timestamp('email_verified_at')->nullable();

@@ -24,7 +24,7 @@ public function index(Request $request)
                 'users.fullname',
                 'users.username',
                 'users.email',
-                'users.user_type',
+                'users.role',
                 'regions.name as region',      // alias as "region" for JSON key
                 'users.created_at',
             ]);
@@ -62,7 +62,7 @@ public function index(Request $request)
             'fullname'   => 'required|string|max:255',
             'username'   => 'required|string|max:100|unique:users,username',
             'email'      => 'required|email|unique:users,email',
-            'user_type'  => ['required', Rule::in(['admin', 'market_officer', 'general'])],
+            'role'  => ['required', Rule::in(['admin', 'market_officer', 'general'])],
             'region_id'  => 'nullable|exists:regions,id',
             'password'   => 'required|string|min:6|confirmed',
         ]);
@@ -71,7 +71,7 @@ public function index(Request $request)
             'fullname'   => $request->fullname,
             'username'   => $request->username,
             'email'      => $request->email,
-            'user_type'  => $request->user_type,
+            'role'  => $request->role,
             'region_id'  => $request->region_id,
             'password'   => Hash::make($request->password),
         ]);
@@ -103,7 +103,7 @@ public function index(Request $request)
                 'required', 'email',
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
-            'user_type'  => ['required', Rule::in(['admin', 'market_officer', 'general'])],
+            'role'  => ['required', Rule::in(['admin', 'market_officer', 'general'])],
             'region_id'  => 'nullable|exists:regions,id',
             'password'   => 'nullable|string|min:6|confirmed',
         ]);
@@ -112,7 +112,7 @@ public function index(Request $request)
             'fullname'   => $request->fullname,
             'username'   => $request->username,
             'email'      => $request->email,
-            'user_type'  => $request->user_type,
+            'role'  => $request->role,
             'region_id'  => $request->region_id,
             'password'   => $request->filled('password') ? Hash::make($request->password) : $user->password,
         ]);

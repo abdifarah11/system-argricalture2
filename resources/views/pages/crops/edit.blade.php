@@ -22,16 +22,16 @@
         {{-- Crop Name --}}
         <div class="mb-3">
             <label for="name" class="form-label">Crop Name</label>
-            <input type="text" name="name" class="form-control" value="{{ old('name', $crop->name) }}" required>
+            <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $crop->name) }}" required>
         </div>
 
         {{-- Crop Type --}}
         <div class="mb-3">
             <label for="crop_type_id" class="form-label">Crop Type</label>
-            <select name="crop_type_id" class="form-select" required>
+            <select name="crop_type_id" id="crop_type_id" class="form-select" required>
                 <option value="">-- Select Type --</option>
                 @foreach ($cropTypes as $type)
-                    <option value="{{ $type->id }}" {{ $crop->crop_type_id == $type->id ? 'selected' : '' }}>
+                    <option value="{{ $type->id }}" {{ (old('crop_type_id', $crop->crop_type_id) == $type->id) ? 'selected' : '' }}>
                         {{ $type->name }}
                     </option>
                 @endforeach
@@ -41,10 +41,10 @@
         {{-- Region --}}
         <div class="mb-3">
             <label for="region_id" class="form-label">Region (Optional)</label>
-            <select name="region_id" class="form-select">
+            <select name="region_id" id="region_id" class="form-select">
                 <option value="">-- Select Region --</option>
                 @foreach ($regions as $region)
-                    <option value="{{ $region->id }}" {{ $crop->region_id == $region->id ? 'selected' : '' }}>
+                    <option value="{{ $region->id }}" {{ (old('region_id', $crop->region_id) == $region->id) ? 'selected' : '' }}>
                         {{ $region->name }}
                     </option>
                 @endforeach
@@ -55,20 +55,20 @@
         @if ($crop->image)
             <div class="mb-3">
                 <label class="form-label">Current Image:</label><br>
-                <img src="{{ asset('storage/' . $crop->image) }}" alt="Crop Image" width="100">
+                <img src="{{ asset('storage/' . $crop->image) }}" alt="Crop Image" width="150" class="img-thumbnail">
             </div>
         @endif
 
         {{-- New Image --}}
         <div class="mb-3">
             <label for="image" class="form-label">Change Image (Optional)</label>
-            <input type="file" name="image" class="form-control" accept="image/*">
+            <input type="file" name="image" id="image" class="form-control" accept="image/*">
         </div>
 
         {{-- Description --}}
         <div class="mb-4">
             <label for="description" class="form-label">Description (Optional)</label>
-            <textarea name="description" rows="4" class="form-control">{{ old('description', $crop->description) }}</textarea>
+            <textarea name="description" id="description" rows="4" class="form-control">{{ old('description', $crop->description) }}</textarea>
         </div>
 
         {{-- Buttons --}}

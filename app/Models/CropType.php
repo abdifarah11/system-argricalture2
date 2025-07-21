@@ -9,6 +9,7 @@ class CropType extends Model
     //
      protected $fillable = [
         'name',
+        'image',
         'description',
     ];
 
@@ -17,4 +18,6 @@ class CropType extends Model
     {
         return $this->hasMany(Crop::class);
     }
+
+    
 }

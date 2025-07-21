@@ -1,4 +1,4 @@
-<?php  
+<?php
 
 
 use Illuminate\Database\Migrations\Migration;
@@ -11,6 +11,7 @@ return new class extends Migration {
         Schema::create('crops', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('image')->nullable();
 
             $table->unsignedBigInteger('crop_type_id');
             $table->foreign('crop_type_id')->references('id')->on('crop_types')->onDelete('cascade');

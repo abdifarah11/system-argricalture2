@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -28,7 +26,7 @@ class CropsTableSeeder extends Seeder
                 'crop_type_id' => $cropTypeId,
                 'user_id' => $userId,
                 'region_id' => $regionId,
-                // 'image' => 'maize.jpg',
+                'image' => 'maize.jpg',  // added image
                 'description' => 'A common cereal crop grown widely in East Africa.',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -38,7 +36,7 @@ class CropsTableSeeder extends Seeder
                 'crop_type_id' => $cropTypeId,
                 'user_id' => $userId,
                 'region_id' => $regionId,
-                // 'image' => 'tomato.jpg',
+                'image' => 'tomato.jpg',  // added image
                 'description' => 'Fresh tomato crop for market distribution.',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -46,4 +44,3 @@ class CropsTableSeeder extends Seeder
         ]);
     }
 }
-

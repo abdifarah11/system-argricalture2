@@ -9,6 +9,7 @@ use App\Models\Price;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class CropController extends Controller
@@ -50,20 +51,15 @@ class CropController extends Controller
     /**
      * Store a newly created crop and its initial price.
      */
-
     public function store(Request $request)
     {
-
-      
-        // dd($request);// check if request reaches here
-
-        // Step 1: Validate request data
         $validated = $request->validate([
             // Crop fields
-              'name' => 'required|string|max:255',
-        'crop_type_id' => 'required|exists:crop_types,id',
-        'region_id' => 'nullable|exists:regions,id',
-        'description' => 'nullable|string|max:1000',
+            'name' => 'required|string|max:255',
+            'crop_type_id' => 'required|exists:crop_types,id',
+            'region_id' => 'nullable|exists:regions,id',
+            'description' => 'nullable|string|max:1000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
 
             // Price fields
             'price' => 'required|numeric|min:0|max:999999.99',
@@ -74,17 +70,24 @@ class CropController extends Controller
             'litre' => 'required_if:unit,litre|nullable|numeric|min:0',
             'quantity' => 'required_if:unit,piece|nullable|numeric|min:0',
         ]);
- 
-        // Step 2: Create the crop
+
+        // Handle image upload
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('crops', 'public');
+        }
+
+        // Create crop
         $crop = Crop::create([
-             'name' => $request->name,
-        'crop_type_id' => $request->crop_type_id,
-        'region_id' => $request->region_id,
-        'user_id' => Auth::id(),
-        'description' => $request->description
+            'name' => $request->name,
+            'crop_type_id' => $request->crop_type_id,
+            'region_id' => $request->region_id,
+            'user_id' => Auth::id(),
+            'description' => $request->description,
+            'image' => $imagePath,
         ]);
 
-        // Step 3: Determine quantity value based on unit
+        // Determine quantity based on unit
         $unit = $request->unit;
         $quantity = match ($unit) {
             'kg' => $request->kg,
@@ -92,7 +95,7 @@ class CropController extends Controller
             'piece' => $request->quantity,
         };
 
-        // Step 4: Create the price entry
+        // Create price record
         Price::create([
             'crop_id' => $crop->id,
             'region_id' => $request->region_id,
@@ -131,26 +134,31 @@ class CropController extends Controller
     {
         $crop = Crop::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'crop_type_id' => 'required|exists:crop_types,id',
             'region_id' => 'nullable|exists:regions,id',
             'description' => 'nullable|string',
-            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // $imagePath = $crop->image;
+        // Handle image update: delete old image if new one uploaded
+        $imagePath = $crop->image;
 
-        // if ($request->hasFile('image')) {
-        //     $imagePath = $request->file('image')->store('crops', 'public');
-        // }
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
+            $imagePath = $request->file('image')->store('crops', 'public');
+        }
 
         $crop->update([
             'name' => $request->name,
             'crop_type_id' => $request->crop_type_id,
             'region_id' => $request->region_id,
             'description' => $request->description,
-            // 'image' => $imagePath,
+            'image' => $imagePath,
         ]);
 
         return redirect()->route('crops.index')->with('success', 'Crop updated successfully.');
@@ -162,16 +170,14 @@ class CropController extends Controller
     public function destroy($id)
     {
         $crop = Crop::findOrFail($id);
+
+        // Delete image file from storage if exists
+        if ($crop->image && Storage::disk('public')->exists($crop->image)) {
+            Storage::disk('public')->delete($crop->image);
+        }
+
         $crop->delete();
 
         return redirect()->route('crops.index')->with('success', 'Crop deleted successfully.');
     }
 }
-
-
-
-
-//
-
-
-

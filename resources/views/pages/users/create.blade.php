@@ -42,12 +42,12 @@
 
         {{-- User Type --}}
         <div class="mb-3">
-            <label for="user_type" class="form-label">User Type</label>
-            <select name="user_type" class="form-select" required>
+            <label for="role" class="form-label">role</label>
+            <select name="role" class="form-select" required>
                 <option value="">-- Select Type --</option>
-                <option value="admin" {{ old('user_type') == 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="market_officer" {{ old('user_type') == 'market_officer' ? 'selected' : '' }}>Market Officer</option>
-                <option value="general" {{ old('user_type') == 'general' ? 'selected' : '' }}>General</option>
+                <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                <option value="market_officer" {{ old('role') == 'market_officer' ? 'selected' : '' }}>Market Officer</option>
+                <option value="general" {{ old('role') == 'general' ? 'selected' : '' }}>General</option>
             </select>
         </div>
 

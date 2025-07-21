@@ -8,7 +8,7 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <form action="{{ route('crop_types.update', $cropType->id) }}" method="POST" class="card shadow-sm border-0 p-4 rounded-4">
+    <form action="{{ route('crop_types.update', $cropType->id) }}" method="POST" enctype="multipart/form-data" class="card shadow-sm border-0 p-4 rounded-4">
         @csrf
         @method('PUT')
 
@@ -37,6 +37,30 @@
                       placeholder="Short description (optional)">{{ old('description', $cropType->description) }}</textarea>
 
             @error('description')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        {{-- ▸ Current Image Preview --}}
+        @if ($cropType->image)
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Current Image</label>
+                <div>
+                    <img src="{{ asset('storage/' . $cropType->image) }}" alt="{{ $cropType->name }}" style="max-width: 200px; border-radius: 6px;">
+                </div>
+            </div>
+        @endif
+
+        {{-- ▸ Image Upload --}}
+        <div class="mb-3">
+            <label for="image" class="form-label fw-semibold">Upload New Image (optional)</label>
+            <input type="file"
+                   name="image"
+                   id="image"
+                   accept="image/*"
+                   class="form-control @error('image') is-invalid @enderror">
+
+            @error('image')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>

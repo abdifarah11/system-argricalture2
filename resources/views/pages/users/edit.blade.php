@@ -46,8 +46,8 @@
 
                 {{-- User Type --}}
                 <div class="mb-3">
-                    <label for="user_type" class="form-label">User Type</label>
-                    <select name="user_type" id="user_type" class="form-select" required>
+                    <label for="role" class="form-label">role</label>
+                    <select name="role" id="role" class="form-select" required>
                         <option value="admin" {{ $user->user_type == 'admin' ? 'selected' : '' }}>Admin</option>
                         <option value="market_officer" {{ $user->user_type == 'market_officer' ? 'selected' : '' }}>Market Officer</option>
                         <option value="general" {{ $user->user_type == 'general' ? 'selected' : '' }}>General User</option>

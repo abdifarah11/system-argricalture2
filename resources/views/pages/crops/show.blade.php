@@ -18,16 +18,14 @@
                     <p class="fs-5 fw-semibold text-dark">{{ $crop->name }}</p>
                 </div>
 
-                {{-- Crop Type (from relation) --}}
+                {{-- Crop Type --}}
                 <div class="col-md-6 mb-3">
                     <h5 class="text-muted">🔖 Type:</h5>
-                    <p class="fs-5 fw-semibold text-dark">
-                        {{ $crop->cropType->name ?? 'N/A' }}
-                    </p>
+                    <p class="fs-5 fw-semibold text-dark">{{ $crop->cropType->name ?? 'N/A' }}</p>
                 </div>
 
-                {{-- Unit (optional, only if you have this column) --}}
-                @if (isset($crop->unit))
+                {{-- Unit (if exists) --}}
+                @if (!empty($crop->unit))
                     <div class="col-md-6 mb-3">
                         <h5 class="text-muted">⚖️ Unit:</h5>
                         <p class="fs-5 fw-semibold text-dark">{{ $crop->unit }}</p>
@@ -35,7 +33,7 @@
                 @endif
 
                 {{-- Crop Image --}}
-                @if ($crop->image)
+                @if (!empty($crop->image))
                     <div class="col-md-12 mb-3">
                         <h5 class="text-muted">🖼️ Crop Image:</h5>
                         <img src="{{ asset('storage/' . $crop->image) }}"

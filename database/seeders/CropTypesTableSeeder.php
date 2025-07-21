@@ -1,11 +1,9 @@
 <?php
 
 namespace Database\Seeders;
-use DB;
 
-
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class CropTypesTableSeeder extends Seeder
 {
@@ -14,26 +12,28 @@ class CropTypesTableSeeder extends Seeder
      */
     public function run(): void
     {
-       DB::table('crop_types')->insert([
-    [
-        'name' => 'Cereal',
-        'description' => 'Wheat, maize, rice, etc.',
-        'created_at' => now(),
-        'updated_at' => now(),
-    ],
-    [
-        'name' => 'Vegetable',
-        'description' => 'Onions, tomatoes, spinach.',
-        'created_at' => now(),
-        'updated_at' => now(),
-    ],
-    [
-        'name' => 'Fruit',
-        'description' => 'Bananas, mangoes, papayas.',
-        'created_at' => now(),
-        'updated_at' => now(),
-    ],
-]);
-
+        DB::table('crop_types')->insert([
+            [
+                'name' => 'Cereal',
+                'description' => 'Wheat, maize, rice, etc.',
+                'image' => 'crop_types/cereal.jpg', // You can replace with actual image
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Vegetable',
+                'description' => 'Onions, tomatoes, spinach.',
+                'image' => 'crop_types/vegetable.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Fruit',
+                'description' => 'Bananas, mangoes, papayas.',
+                'image' => 'crop_types/fruit.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
     }
 }
