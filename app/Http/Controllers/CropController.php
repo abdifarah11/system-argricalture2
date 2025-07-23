@@ -59,7 +59,8 @@ class CropController extends Controller
             'crop_type_id' => 'required|exists:crop_types,id',
             'region_id' => 'nullable|exists:regions,id',
             'description' => 'nullable|string|max:1000',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+
 
             // Price fields
             'price' => 'required|numeric|min:0|max:999999.99',
@@ -70,7 +71,6 @@ class CropController extends Controller
             'litre' => 'required_if:unit,litre|nullable|numeric|min:0',
             'quantity' => 'required_if:unit,piece|nullable|numeric|min:0',
         ]);
-
         // Handle image upload
         $imagePath = null;
         if ($request->hasFile('image')) {
@@ -139,7 +139,8 @@ class CropController extends Controller
             'crop_type_id' => 'required|exists:crop_types,id',
             'region_id' => 'nullable|exists:regions,id',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+           'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:1048576',
+
         ]);
 
         // Handle image update: delete old image if new one uploaded

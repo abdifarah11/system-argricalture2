@@ -23,7 +23,7 @@ class PriceTableSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
             [
-                'crop_id' => 2,
+                'crop_id' => 1,
                 'region_id' => 2,
                 'kg' => 0,
                 'litre' => 12,
@@ -34,7 +34,7 @@ class PriceTableSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
             [
-                'crop_id' => 3,
+                'crop_id' => 2,
                 'region_id' => 3,
                 'kg' => 33,
                 'litre' => 15,

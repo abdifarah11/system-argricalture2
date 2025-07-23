@@ -57,16 +57,16 @@
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
 
                     // IMAGE COLUMN
-                    { 
-                        data: 'image', 
+                    {
+                        data: 'image',
                         name: 'image',
-                        orderable: false, 
+                        orderable: false,
                         searchable: false,
-                        render: function(data, type, full, meta) {
-                            if(data) {
-                                return `<img src="{{ asset('storage') }}/${data}" alt="Crop Image" style="height:40px; width:auto; border-radius:4px;" />`;
+                        render: function (data, type, full, meta) {
+                            if (data) {
+                                return `<img src="/storage/${data}" alt="Crop Image" style="height:40px; width:auto; border-radius:4px;" />`;
                             }
-                            return '-';
+                            return 'not found';
                         }
                     },
 
@@ -82,14 +82,14 @@
                     { responsivePriority: 2, targets: -1 }
                 ],
                 dom: `<"row align-items-start mb-3"
-                        <"col-md-6 col-sm-12"l>
-                        <"col-md-6 col-sm-12 text-md-end text-sm-start"f>
-                    >
-                    <"row"<"col-sm-12"tr>>
-                    <"row mt-2"
-                        <"col-md-5 col-sm-12"i>
-                        <"col-md-7 col-sm-12 text-md-end text-sm-start"p>
-                    >`,
+                            <"col-md-6 col-sm-12"l>
+                            <"col-md-6 col-sm-12 text-md-end text-sm-start"f>
+                        >
+                        <"row"<"col-sm-12"tr>>
+                        <"row mt-2"
+                            <"col-md-5 col-sm-12"i>
+                            <"col-md-7 col-sm-12 text-md-end text-sm-start"p>
+                        >`,
                 language: {
                     search: "_INPUT_",
                     searchPlaceholder: "Search users..."

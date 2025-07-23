@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CropController;
 use App\Http\Controllers\CropTypeController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PriceHistoryController;
@@ -14,10 +15,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebsiteController;
 
 
-Route::get('/home', function () {
-    return view('website.home');
-})->name('home');
+// Route::get('/home', function () {
+//     return view('website.home');
+// })->name('home');
 ////
+Route::get('/home', [HomeController::class, 'index'])->name('homepage');
+
 // Middleware
 
 

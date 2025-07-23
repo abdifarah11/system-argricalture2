@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             // $table->foreignId('crop_id')->constrained();
             $table->unsignedBigInteger('crop_id');
-            $table->foreign('crop_id')->references('id')->on('regions')->onDelete('cascade');
+            $table->foreign('crop_id')->references('id')->on('crops')->onDelete('cascade');
             $table->foreignId('region_id')->constrained();
             $table->decimal('price', 10, 2);
              $table->enum('unit', ['kg', 'piece', 'litre']);
