@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CropController;
 use App\Http\Controllers\CropTypeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentMethodController;
@@ -22,12 +23,24 @@ Route::get('/', function () {
 Route::get('/home', [HomeController::class, 'index'])->name('homepage');
 
 // Dashboard with auth & email verification
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 // All authenticated routes
 Route::middleware(['auth'])->group(function () {
+
+
+
+
+    Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/'); // Or wherever you want to redirect after logout
+})->name('logout');
+
+
 
     // === Admin Only ===
     Route::middleware(['role:admin'])->group(function () {

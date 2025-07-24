@@ -15,7 +15,7 @@ class Crop extends Model
         'region_id',
         'user_id',
         'description',
-         'image',
+        'image',
     ];
 
     /**
@@ -48,5 +48,13 @@ class Crop extends Model
     public function prices()
     {
         return $this->hasMany(Price::class);
+    }
+
+    /**
+     * Get all orders related to this crop.
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }
