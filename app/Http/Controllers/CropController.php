@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Session;
 use Yajra\DataTables\Facades\DataTables;
 
 class CropController extends Controller
@@ -103,7 +104,7 @@ class CropController extends Controller
             'unit' => $unit,
             'quantity' => $quantity,
         ]);
-
+        //session()->put('cart', "This is test session");
         return redirect()->route('crops.index')->with('success', 'Crop and price saved successfully!');
     }
 

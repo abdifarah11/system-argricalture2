@@ -25,19 +25,44 @@ class EcommerceController extends Controller
 //             'categories' => $categories
 //         ]);
 //     }
-    public function index(Request $request)
-{
-    $regionId = $request->query('region_id');
+//     public function index(Request $request)
+// {
+//     $regionId = $request->query('region_id');
 
-    $categories = CropType::with([
-        'crops' => function ($query) use ($regionId) {
-            $query->with(['prices' => function ($q) use ($regionId) {
-                if ($regionId) {
-                    $q->where('region_id', $regionId);
-                }
-            }]);
+//     $categories = CropType::with([
+//         'crops' => function ($query) use ($regionId) {
+//             $query->with(['prices' => function ($q) use ($regionId) {
+//                 if ($regionId) {
+//                     $q->where('region_id', $regionId);
+//                 }
+//             }]);
+//         }
+//     ])->get(['id', 'name', 'description', 'image']);
+
+//     return response()->json([
+//         'success' => true,
+//         'categories' => $categories
+//     ]);
+// }
+public function index(Request $request)
+{
+    $cropTypeId = $request->query('crop_type'); // Get crop_type from query string
+
+    $query = CropType::with([
+        'crops' => function ($cropQuery) {
+            $cropQuery->select('id', 'name', 'description', 'image', 'crop_type_id')
+                ->with(['prices' => function ($priceQuery) {
+                    $priceQuery->select('id', 'crop_id', 'region_id', 'price', 'unit', 'quantity', 'kg', 'litre');
+                }]);
         }
-    ])->get(['id', 'name', 'description', 'image']);
+    ])->select('id', 'name', 'description', 'image');
+
+    // Apply filter if crop_type ID is provided
+    if ($cropTypeId) {
+        $query->where('id', $cropTypeId);
+    }
+
+    $categories = $query->get();
 
     return response()->json([
         'success' => true,

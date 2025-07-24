@@ -33,6 +33,8 @@ public function index(Request $request)
 
     $regions = \App\Models\Region::all();
 
+    session()->put('test', 'THis is test session value');
+
     return view('website.home', compact('categories', 'regions'));
 }
 

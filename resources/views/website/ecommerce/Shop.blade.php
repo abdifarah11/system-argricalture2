@@ -1,274 +1,164 @@
-  <div class="container-fluid fruite py-5">
-            <div class="container py-5">
-                <div class="tab-class text-center">
-                    <div class="row g-4">
-                        <div class="col-lg-4 text-start">
-                            <h1>Our Organic Products</h1>
-                        </div>
-                        <div class="col-lg-8 text-end">
-                         <ul class="nav nav-pills d-inline-flex text-center mb-5" id="categoryTabs">
-                             
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="tab-content">
-                        <div id="tab-1" class="tab-pane fade show p-0 active" id='crop-list'>
-                            
-                        </div>
-                        <div id="tab-2" class="tab-pane fade show p-0">
-                            <div class="row g-4">
-                                <div class="col-lg-12">
-                                    <div class="row g-4">
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Grapes</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-2.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Raspberries</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab-3" class="tab-pane fade show p-0">
-                            <div class="row g-4">
-                                <div class="col-lg-12">
-                                    <div class="row g-4">
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-1.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Oranges</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Apple</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab-4" class="tab-pane fade show p-0">
-                            <div class="row g-4">
-                                <div class="col-lg-12">
-                                    <div class="row g-4">
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Grapes</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-4.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Apricots</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab-5" class="tab-pane fade show p-0">
-                            <div class="row g-4">
-                                <div class="col-lg-12">
-                                    <div class="row g-4">
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-3.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Banana</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-2.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Raspberries</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img src="img/fruite-item-1.jpg" class="img-fluid w-100 rounded-top" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>Oranges</h4>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
-                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>      
+@include('website.ecommerce.nav-bar')
+
+<!-- ✅ Include CSRF Token -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+<div class="container-fluid fruite py-5">
+    <div class="container py-5">
+        <div class="tab-class text-center">
+            <div class="row g-4">
+                <div class="col-lg-4 text-start">
+                    <h1>Our Organic Products</h1>
+                </div>
+                <div class="col-lg-8 text-end">
+                    <ul class="nav nav-pills d-inline-flex text-center mb-5" id="category-tabs">
+                        <!-- Tabs will be added here dynamically -->
+                    </ul>
+                </div>
+            </div>
+            <div class="tab-content" id="crop-list">
+                <!-- Crop items will be loaded here -->
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- jQuery Script -->
+<!-- ✅ jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 <script>
-$(document).ready(function () {
-    $.ajax({
-        url: "http://127.0.0.1:8000/api/ecommerce/categories",
-        method: "GET",
-        timeout: 10000,
-        success: function (response) {
-            if (response.success && Array.isArray(response.categories)) {
-                const categories = response.categories;
+    $(document).ready(function () {
 
-                // Append "All Products" tab first
-                $('#categoryTabs').append(`
-                    <li class="nav-item">
-                        <a class="d-flex m-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill" href="#tab-all">
-                            <span class="text-dark" style="width: 130px;">All Products</span>
-                        </a>
-                    </li>
-                `);
+        const imageBase = "http://127.0.0.1:8000/storage/";
 
-                // Loop through categories and append tabs
-                categories.forEach((category, index) => {
-                    $('#categoryTabs').append(`
-                        <li class="nav-item">
-                            <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-${category.id}">
-                                <span class="text-dark" style="width: 130px;">${category.name}</span>
-                            </a>
-                        </li>
-                    `);
-                });
-            } else {
-                $('#error-message').text('No categories found.').removeClass('d-none');
+        // ✅ Setup CSRF token for all AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-        },
-        error: function (xhr, status, error) {
-            $('#error-message').text('Error fetching categories: ' + error).removeClass('d-none');
-        }
-    });
-});
+        });
 
- $(document).ready(function () {
+        // Load categories (crop types)
         $.ajax({
             url: "http://127.0.0.1:8000/api/ecommerce/categories",
             method: "GET",
-            timeout: 10000,
-            success: function (data) {
-                if (Array.isArray(data) && data.length > 0) {
-                    data.forEach(function (crop) {
-                        let price = crop.price?.price ?? 'N/A';
-                        let unit = crop.price?.unit ?? '';
-                        let img = crop.image_url ?? 'https://via.placeholder.com/300x200';
+            success: function (response) {
+                if (response.success && Array.isArray(response.categories)) {
+                    const categories = response.categories;
 
-                        $('#crop-list').append(`
-                            <div class="col-md-3">
-                                <div class="card h-100">
-                                    <img src="${img}" class="card-img-top" alt="${crop.name}">
-                                    <div class="card-body">
-                                        <h5 class="card-title">${crop.name}</h5>
-                                        <p class="card-text">${crop.description ?? ''}</p>
-                                        <p class="card-text fw-bold text-success">${price} ${unit}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        `);
+                    categories.forEach((cat, index) => {
+                        $('#category-tabs').append(`
+                        <li class="nav-item">
+                            <button class="nav-link ${index === 0 ? 'active' : ''}" data-id="${cat.id}" type="button">
+                                ${cat.name}
+                            </button>
+                        </li>
+                    `);
                     });
-                } else {
-                    $('#crop-list').html('<p class="text-danger">No crops found.</p>');
+
+                    if (categories.length > 0) {
+                        loadCrops(categories[0].id);
+                    }
                 }
             },
-            error: function (xhr, status, error) {
-                $('#crop-list').html('<p class="text-danger">Failed to load crops: ' + error + '</p>');
+            error: function () {
+                $('#crop-list').html('<p class="text-danger">Failed to load categories.</p>');
             }
         });
+
+        // Handle tab click
+        $(document).on('click', '.nav-link', function () {
+            $('.nav-link').removeClass('active');
+            $(this).addClass('active');
+
+            const cropTypeId = $(this).data('id');
+            loadCrops(cropTypeId);
+        });
+
+        function loadCrops(cropTypeId) {
+            $('#crop-list').html('<p>Loading crops...</p>');
+
+            $.ajax({
+                url: `http://127.0.0.1:8000/api/ecommerce/categories?crop_type=${cropTypeId}`,
+                method: "GET",
+                success: function (response) {
+                    $('#crop-list').empty();
+
+                    if (response.success && Array.isArray(response.categories)) {
+                        const category = response.categories[0];
+                        if (category && category.crops.length > 0) {
+                            let cropsHtml = '<div class="row g-4">';
+
+                            category.crops.forEach(crop => {
+                                let imageUrl = crop.image ? imageBase + crop.image : 'https://via.placeholder.com/300x200';
+                                let priceInfo = crop.prices.length > 0
+                                    ? `${crop.prices[0].price} per ${crop.prices[0].unit}`
+                                    : 'No price info';
+
+                                cropsHtml += `
+                                <div class="col-md-6 col-lg-4 col-xl-3">
+                                    <div class="rounded position-relative fruite-item bg-light p-3" data-id="${crop.id}">
+                                        <div class="fruite-img mb-3">
+                                            <img src="${imageUrl}" alt="${crop.name}" class="img-fluid w-100 rounded-top" style="height: 200px; object-fit: cover;">
+                                        </div>
+                                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
+                                            ${category.name}
+                                        </div>
+                                        <h5>${crop.name}</h5>
+                                        <p>${crop.description ?? ''}</p>
+                                        <div class="d-flex justify-content-between flex-lg-wrap align-items-center">
+                                            <p class="text-dark fs-5 fw-bold mb-0">${priceInfo}</p>
+                                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary add_cart">
+                                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            });
+
+                            cropsHtml += '</div>';
+                            $('#crop-list').html(cropsHtml);
+                        } else {
+                            $('#crop-list').html('<p>No crops found for this category.</p>');
+                        }
+                    } else {
+                        $('#crop-list').html('<p>No categories found.</p>');
+                    }
+                },
+                error: function () {
+                    $('#crop-list').html('<p class="text-danger">Error loading crops.</p>');
+                }
+            });
+        }
+
+        // ✅ Handle add to cart click with CSRF
+        $(document).on('click', '.add_cart', function (e) {
+            e.preventDefault();
+
+            const cropId = $(this).closest('.fruite-item').data('id');
+
+            $.ajax({
+                url: '/add-to-cart',
+                type: 'POST',
+                data: { id: cropId },
+                success: function (response) {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Crop added to cart",
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    window.location.reload(); // Reload to update cart count
+                },
+                error: function (xhr) {
+                    alert('Failed to add to cart');
+                }
+            });
+        });
+
     });
 </script>
