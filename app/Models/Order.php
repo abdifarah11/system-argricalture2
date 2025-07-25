@@ -9,7 +9,6 @@ class Order extends Model
 {
     use HasFactory;
 
-    // The attributes that are mass assignable
     protected $fillable = [
         'user_id',
         'crop_id',
@@ -19,18 +18,25 @@ class Order extends Model
         'description',
     ];
 
-    // Relationships
-
+    /**
+     * Get the user who made the order.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Get the crop associated with the order.
+     */
     public function crop()
     {
         return $this->belongsTo(Crop::class);
     }
 
+    /**
+     * Get the payment method used for this order.
+     */
     public function paymentMethod()
     {
         return $this->belongsTo(PaymentMethod::class);

@@ -1,3 +1,7 @@
+<!-- Include Bootstrap Icons and SweetAlert2 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <nav class="app-header navbar navbar-expand bg-body">
   <div class="container-fluid">
     <!-- Left navbar links -->
@@ -26,18 +30,17 @@
           </li>
           <li class="user-body d-flex justify-content-center">
             <a href="#" 
-               onclick="event.preventDefault(); document.getElementById('signout-form').submit();" 
+               onclick="quickLogoutConfirm(event)" 
                style="
                  font-size: 1.25rem; 
                  font-weight: 600; 
-                 color: #d6336c; 
-                 text-decoration: underline; 
                  text-underline-offset: 3px;
                  padding: 8px 20px;
                  border-radius: 6px;
                  display: inline-block;
                "
-            
+               onmouseover="this.style.backgroundColor='#d6336c'; this.style.color='white';"
+               onmouseout="this.style.backgroundColor='transparent'; this.style.color='#d6336c';"
             >
               Sign Out
             </a>
@@ -50,3 +53,25 @@
     </ul>
   </div>
 </nav>
+
+<!-- SweetAlert2 Fast Red Confirmation Script -->
+<script>
+  function quickLogoutConfirm(event) {
+    event.preventDefault();
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You will be signed out.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545', // Bootstrap red
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, Sign Out',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById('signout-form').submit();
+      }
+    });
+  }
+</script>

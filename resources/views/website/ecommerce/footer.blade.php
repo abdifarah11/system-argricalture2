@@ -1,3 +1,6 @@
+   
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
    <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
             <div class="container py-5">
                 <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
@@ -44,28 +47,41 @@
                             <a class="btn-link" href="">FAQs & Help</a>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="d-flex flex-column text-start footer-item">
-                            <h4 class="text-light mb-3">Account</h4>
-                            <a class="btn-link" href="">My Account</a>
-                            <a class="btn-link" href="">Shop details</a>
-                            <a class="btn-link" href="">Shopping Cart</a>
-                            <a class="btn-link" href="">Wishlist</a>
-                            <a class="btn-link" href="">Order History</a>
-                            <a class="btn-link" href="">International Orders</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-item">
-                            <h4 class="text-light mb-3">Contact</h4>
-                            <p>Address: 1429 Netus Rd, NY 48247</p>
-                            <p>Email: Example@gmail.com</p>
-                            <p>Phone: +0123 4567 8910</p>
-                            <p>Payment Accepted</p>
-                            <img src="img/payment.png" class="img-fluid" alt="">
-                        </div>
-                    </div>
-                </div>
+                  
+                   <div class="col-lg-3 col-md-6">
+  <div class="col-lg-3 col-md-6">
+    <div class="footer-item">
+        <h4 class="text-light mb-3">Contact</h4>
+
+        <p>
+            <i class="bi bi-geo-alt-fill me-2 text-warning"></i>
+            Mogadishu, Somalia
+        </p>
+
+        <p>
+            <i class="bi bi-envelope-fill me-2 text-danger"></i>
+            <a href="mailto:abdirahmanfarah1164@gmail.com" style="color: #fff;">
+                abdirahmanfarah1164@gmail.com
+            </a>
+        </p>
+
+        <p>
+            <i class="bi bi-telephone-fill me-2 text-success"></i>
+            +252 61 2345678
+        </p>
+
+        <p>
+            <i class="bi bi-whatsapp me-2 text-success"></i>
+            <a href="https://wa.me/252612345678" target="_blank" style="color: #25D366;">
+                Chat on WhatsApp
+            </a>
+        </p>
+
+        <p class="mt-3">Payment Accepted</p>
+        <img src="img/payment.png" class="img-fluid" alt="Payment Methods">
+    </div>
+</div>
+          </div>
             </div>
         </div>
         <!-- Footer End -->

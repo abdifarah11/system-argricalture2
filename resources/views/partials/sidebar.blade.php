@@ -1,7 +1,7 @@
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
   <div class="sidebar-brand">
     <a href="{{ route('dashboard') }}" class="brand-link">
-      <img src="{{ asset('img/AdminLTELogo.png') }}" alt="Logo" class="brand-image opacity-75 shadow" />
+      <img src="{{ asset('img/logo.jpg') }}" alt="Logo" class="brand-image opacity-75 shadow" />
       <span class="brand-text fw-light">Agriculture Market</span>
     </a>
   </div>

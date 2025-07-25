@@ -40,8 +40,8 @@ class UsersTableSeeder extends Seeder
     [
         'fullname'       => 'Buyer Ahmed',
         'username'   => 'jiisow',
-        'email'      => 'buyer@example.com',
-        'password'   => Hash::make('password'),
+        'email'      => 'buyer@gmail.com',
+        'password'   => Hash::make('12345678'),
         'role'  => 'general',
         'region_id'  => 3,
         'created_at' => now(),
