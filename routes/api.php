@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\EcommerceController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\CartController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -10,3 +11,4 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::get('/ecommerce/categories', [EcommerceController::class, 'index']);
+Route::post('/pay', [PaymentController::class, 'send']);

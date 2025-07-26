@@ -34,5 +34,12 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'payment' => [
+    'merchant_uid' => env('PAYMENT_MERCHANT_UID'),
+    'api_user_id'  => env('PAYMENT_API_USER_ID'),
+    'api_key'      => env('PAYMENT_API_KEY'),
+    
+],
+
 
 ];
