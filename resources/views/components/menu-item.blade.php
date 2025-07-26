@@ -13,6 +13,6 @@
         </span>
     </a>
     <a href="#" class="my-auto">
-        <i class="fas fa-user fa-2x"></i>
+        <i class="fas fa-user fa-2x"> {{ Auth::user()->fullname ?? null }}</i>
     </a>
 </div>

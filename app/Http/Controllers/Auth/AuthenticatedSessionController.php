@@ -31,6 +31,26 @@ class AuthenticatedSessionController extends Controller
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
+
+
+    public function CreateCustomForm(): View
+    {
+        return view('auth.customerForm');
+    }
+
+
+
+    public function customStore(LoginRequest $request): RedirectResponse
+    {
+        $request->authenticate();
+
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('home', absolute: false));
+    }
+    
+
+
     /**
      * Destroy an authenticated session.
      */

@@ -8,10 +8,18 @@ use App\Models\Order;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+use Illuminate\Routing\Controller as BaseController;
+
+class DashboardController extends BaseController
 {
+
+    public function __construct()
+    {
+        // $this->middleware(['auth', 'verified', 'role:admin']);
+    }
     public function index()
     {
+
         return view('dashboard', [
             'totalUsers' => User::count(),
             'totalCrops' => Crop::count(),

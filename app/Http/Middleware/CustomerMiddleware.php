@@ -17,7 +17,7 @@ class CustomerMiddleware
 {
     if (!auth()->check()) {
         // Not logged in → send to login page
-        return redirect()->route('login')->with('error', 'Please log in to continue.');
+        return redirect()->route('customer.login')->with('error', 'Please log in to continue.');
     }
 
     // Optional: check user role (assuming you have a `role` column)

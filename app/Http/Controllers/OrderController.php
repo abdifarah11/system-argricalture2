@@ -21,12 +21,12 @@ class OrderController extends Controller
 
             return DataTables::of($orders)
                 ->addIndexColumn()
-                ->addColumn('user', fn (Order $o) => $o->user->fullname ?? '—')
-                ->addColumn('crop', fn (Order $o) => $o->crop->name ?? '—')
-                ->addColumn('payment_method', fn (Order $o) => $o->paymentMethod->name ?? '—')
-                ->addColumn('status', fn (Order $o) => $this->statusBadge($o->status))
-                ->addColumn('total_amount', fn (Order $o) => '$' . number_format($o->total_amount, 2))
-                ->addColumn('action', fn (Order $o) => $this->actionButtons($o))
+                ->addColumn('user', fn(Order $o) => $o->user->fullname ?? '—')
+                ->addColumn('crop', fn(Order $o) => $o->crop->name ?? '—')
+                ->addColumn('payment_method', fn(Order $o) => $o->paymentMethod->name ?? '—')
+                ->addColumn('status', fn(Order $o) => $this->statusBadge($o->status))
+                ->addColumn('total_amount', fn(Order $o) => '$' . number_format($o->total_amount, 2))
+                ->addColumn('action', fn(Order $o) => $this->actionButtons($o))
                 ->rawColumns(['status', 'action'])
                 ->make(true);
         }
@@ -136,5 +136,59 @@ class OrderController extends Controller
                 </button>
             </form>
         ';
+    }
+
+
+
+    // Place order function
+    public function placeOrder(Request $request)
+    {
+        $validated = $request->validate([
+            'full_name'      => 'required|string|max:255',
+            'region_id'      => 'required|exists:regions,id',
+            'address'        => 'required|string|max:255',
+            'mobile'         => 'required|string|max:20',
+            'email'          => 'required|email|max:255',
+            'payment_method' => 'required|in:bank_transfer,check,cash_on_delivery,paypal',
+            'order_notes'    => 'nullable|string|max:1000',
+        ]);
+
+        // Map string payment methods to IDs
+        $paymentMethodMap = [
+            'bank_transfer'    => 1,
+            'check'            => 2,
+            'cash_on_delivery' => 3,
+            'paypal'           => 4,
+        ];
+
+        $user = auth()->user();
+
+        $cart = session('cart', []);
+        $totalAmount = collect($cart)->sum(function ($item) {
+            return $item['price'] * $item['quantity'];
+        });
+
+        $order = Order::create([
+            'user_id'           => $user->id,
+            'crop_id'           => null, // or assign if needed
+            'payment_method_id' => $paymentMethodMap[$validated['payment_method']],
+            'status'            => 'pending',
+            'total_amount'      => $totalAmount,
+            'description'       => $validated['order_notes'] ?? null,
+        ]);
+
+        foreach ($cart as $item) {
+            $order->items()->create([
+                'name'     => $item['name'],
+                'crop_id'  => $item['id'] ?? null,
+                'quantity' => $item['quantity'],
+                'price'    => $item['price'],
+                'total'    => $item['price'] * $item['quantity'],
+            ]);
+        }
+
+        session()->forget('cart');
+
+        return redirect()->route('orders.index')->with('success', 'Order placed successfully.');
     }
 }

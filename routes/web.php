@@ -26,7 +26,9 @@ Route::get('/home', [HomeController::class, 'index'])->name('homepage');
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
 // All authenticated routes
 Route::middleware(['auth'])->group(function () {
 
@@ -34,11 +36,11 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::post('/logout', function () {
-    Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect('/'); // Or wherever you want to redirect after logout
-})->name('logout');
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/'); // Or wherever you want to redirect after logout
+    })->name('logout');
 
 
 
@@ -76,7 +78,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Payment methods management
         Route::prefix('payment_methods')->group(function () {
-                 Route::get('/', action: [PaymentMethodController::class, 'index'])->name('payment_methods.index');
+            Route::get('/', action: [PaymentMethodController::class, 'index'])->name('payment_methods.index');
             Route::get('/create', [PaymentMethodController::class, 'create'])->name('payment_methods.create');
             Route::post('/store', [PaymentMethodController::class, 'store'])->name('payment_methods.store');
             Route::get('crops/{id}/edit', [PaymentMethodController::class, 'edit'])->name('payment_methods.edit');
@@ -159,4 +161,14 @@ Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('cart.ad
 Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
 Route::post('/update-cart', [CartController::class, 'updateCart'])->name('cart.update');
 Route::post('/remove-from-cart', [CartController::class, 'removeFromCart'])->name('cart.remove');
+
+// Order Routes
+Route::middleware(['role:customer'])->prefix('order')->group(function () {
+    Route::post('/place', [OrderController::class, 'placeOrder'])->name('order.place');
+    Route::get('/history', [OrderController::class, 'orderHistory'])->name('order.history');
+    Route::get('/{id}', [OrderController::class, 'viewOrder'])->name('order.view');
+});
+
+
+
 require __DIR__ . '/auth.php';

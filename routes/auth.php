@@ -57,3 +57,12 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });
+
+// Custom authentication routes
+Route::prefix('auth')->group(function () {
+    Route::get('/customer/login', [AuthenticatedSessionController::class, 'CreateCustomForm'])->name('customer.login');
+    Route::post('/customer/login', [AuthenticatedSessionController::class, 'customStore'])->name('customer.login.store');
+    Route::get('/customer/register', [RegisteredUserController::class, 'showRegistrationForm'])->name('customer.register');
+    Route::post('/customer/register', [RegisteredUserController::class, 'register'])->name('customer.register.post');
+    Route::get('/customer/logout', [AuthenticatedSessionController::class, 'destroy'])->name('customer.logout');
+});
