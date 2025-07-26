@@ -12,7 +12,22 @@
 
         </span>
     </a>
-    <a href="#" class="my-auto">
-        <i class="fas fa-user fa-2x"> {{ Auth::user()->fullname ?? null }}</i>
-    </a>
+    <div class="dropdown my-auto">
+        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{{ Auth::user()->avatar ?? asset('https://placehold.co/100x100') }}" alt="Avatar" class="rounded-circle me-2" width="32" height="32">
+            <span>{{ Auth::user()->fullname ?? 'Guest' }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item" href=""><i class="fas fa-user me-2"></i>Profile</a></li>
+            <li><a class="dropdown-item" href=""><i class="fas fa-box me-2"></i>My Orders</a></li>
+            <li><a class="dropdown-item" href=""><i class="fas fa-cog me-2"></i>Settings</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="dropdown-item" type="submit"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
 </div>

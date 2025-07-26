@@ -26,7 +26,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('homepage');
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
-Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 // All authenticated routes
@@ -166,7 +166,7 @@ Route::post('/remove-from-cart', [CartController::class, 'removeFromCart'])->nam
 Route::middleware(['role:customer'])->prefix('order')->group(function () {
     Route::post('/place', [OrderController::class, 'placeOrder'])->name('order.place');
     Route::get('/history', [OrderController::class, 'orderHistory'])->name('order.history');
-    Route::get('/{id}', [OrderController::class, 'viewOrder'])->name('order.view');
+    Route::get('/orders', [OrderController::class, 'viewOrder'])->name('order.view');
 });
 
 

@@ -3,49 +3,33 @@
 @section('content')
 <div class="container">
     <div class="row align-items-end mb-3 gy-2">
-        {{-- <div class="col-sm-3">
-            <label class="form-label">Filter by Region</label>
-            <select id="regionFilter" class="form-select">
-                <option value="">All Regions</option>
-                @foreach ($regions as $region)
-                    <option value="{{ $region->name }}">{{ $region->name }}</option>
-                @endforeach
-            </select>
-        </div> --}}
-
-        {{-- <div class="col-sm-3">
-            <label class="form-label">Filter by User Type</label>
-            <select id="typeFilter" class="form-select">
-                <option value="">All Types</option>
-                @foreach ($userTypes as $type)
-                    <option value="{{ $type }}">{{ ucfirst($type) }}</option>
-                @endforeach
-            </select>
-        </div> --}}
-{{--  --}}
+     
         <div class="d-flex justify-content-between align-items-center mb-4">
             <a href="{{ route('users.create') }}" class="btn btn-success d-inline-flex align-items-center gap-2">
                 <i class="bi bi-person-plus-fill"></i> Add User
             </a>
         </div>
     </div>
+    <div class="card">
+        
+        <div class="card-body">
+            <table id="usersTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Full Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Region</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
 
-    {{-- ── Users Table ───────────────────────────────────────── --}}
-    <div class="table-responsive">
-        <table id="usersTable" class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%">
-            <thead class="table-light">
-                <tr>
-                    <th>#</th>
-                    <th>Full Name</th>
-                      <th>username</th>
-                    <th>Email</th>
-                    <th>User </th>
-                    <th>Region</th>
-                    <th>Created At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-        </table>
     </div>
 </div>
 @endsection

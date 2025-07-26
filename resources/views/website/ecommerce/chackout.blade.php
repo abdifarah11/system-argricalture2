@@ -20,8 +20,6 @@
              <!-- Libraries Stylesheet -->
              <link href="{{ asset('lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
              <link href="{{ asset('lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
-
-
              <!-- Customized Bootstrap Stylesheet -->
              {{-- <link href="css/bootstrap.min.css" rel="stylesheet"> --}}
              <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
@@ -30,6 +28,7 @@
              {{-- <link href="css/style.css" rel="stylesheet"> --}}
 
              <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+
          </head>
 
          <body>
@@ -55,6 +54,7 @@
 
                  <div class="container-fluid py-5">
                      <div class="container py-5">
+                      
                          <h1 class="mb-4">Billing details</h1>
                          <form action="{{ route('order.place') }}" method="POST">
                              @csrf
@@ -62,49 +62,69 @@
                                  <div class="col-md-12 col-lg-6 col-xl-7">
                                      <div class="row"></div>
 
-                                     <input type="hidden" name="cart" value='@json(session('cart'))'>
+                                    <input type="hidden" name="cart" value='@json(session('cart'))'>
 
-                                     <div class="form-item">
-                                         <label class="form-label my-3">Full Name<sup>*</sup></label>
-                                         <input type="text" class="form-control" name="full_name">
-                                     </div>
+                                    <div class="form-item">
+                                        <label class="form-label my-3">Full Name<sup>*</sup></label>
+                                        <input type="text" class="form-control @error('full_name') is-invalid @enderror" name="full_name" value="{{ old('full_name') }}">
+                                        @error('full_name')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
-                                     <div class="form-item">
-                                         <label class="form-label my-3">Region<sup>*</sup></label>
-                                         <select class="form-select" name="region_id">
-                                             <option value="" selected disabled>Select Region</option>
-                                             @foreach ($regions as $region)
-                                             <option value="{{ $region->id }}">{{ $region->name }}</option>
-                                             @endforeach
-                                         </select>
-                                     </div>
+                                    <div class="form-item">
+                                        <label class="form-label my-3">Region<sup>*</sup></label>
+                                        <select class="form-select @error('region_id') is-invalid @enderror" name="region_id">
+                                            <option value="" selected disabled>Select Region</option>
+                                            @foreach ($regions as $region)
+                                                <option value="{{ $region->id }}" {{ old('region_id') == $region->id ? 'selected' : '' }}>{{ $region->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('region_id')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
-                                     <div class="form-item">
-                                         <label class="form-label my-3">Address <sup>*</sup></label>
-                                         <input type="text" class="form-control" name="address" placeholder="House Number Street Name">
-                                     </div>
+                                    <div class="form-item">
+                                        <label class="form-label my-3">Address <sup>*</sup></label>
+                                        <input type="text" class="form-control @error('address') is-invalid @enderror" name="address" placeholder="House Number Street Name" value="{{ old('address') }}">
+                                        @error('address')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
-                                     <div class="form-item">
-                                         <label class="form-label my-3">Mobile<sup>*</sup></label>
-                                         <input type="tel" class="form-control" name="mobile">
-                                     </div>
+                                    <div class="form-item">
+                                        <label class="form-label my-3">Mobile<sup>*</sup></label>
+                                        <input type="tel" class="form-control @error('mobile') is-invalid @enderror" name="mobile" value="{{ old('mobile') }}">
+                                        @error('mobile')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
-                                     <div class="form-item">
-                                         <label class="form-label my-3">Email Address<sup>*</sup></label>
-                                         <input type="email" class="form-control" name="email">
-                                     </div>
+                                    <div class="form-item">
+                                        <label class="form-label my-3">Email Address<sup>*</sup></label>
+                                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}">
+                                        @error('email')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
-                                     <div class="form-check my-3">
-                                         <input type="checkbox" class="form-check-input" id="Account-1" name="create_account" value="1">
-                                         <label class="form-check-label" for="Account-1">Create an account?</label>
-                                     </div>
+                                    <div class="form-check my-3">
+                                        <input type="checkbox" class="form-check-input @error('create_account') is-invalid @enderror" id="Account-1" name="create_account" value="1" {{ old('create_account') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="Account-1">Create an account?</label>
+                                        @error('create_account')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
-                                     <hr>
+                                    <hr>
 
-                                     <div class="form-item">
-                                         <textarea name="order_notes" class="form-control" cols="30" rows="11" placeholder="Order Notes (Optional)"></textarea>
-                                     </div>
-                                 </div>
+                                    <div class="form-item">
+                                        <textarea name="order_notes" class="form-control @error('order_notes') is-invalid @enderror" cols="30" rows="11" placeholder="Order Notes (Optional)">{{ old('order_notes') }}</textarea>
+                                        @error('order_notes')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>         </div>
 
                                  <div class="col-md-12 col-lg-6 col-xl-5">
                                      <div class="table-responsive">
@@ -141,21 +161,10 @@
                                              </tbody>
                                          </table>
                                      </div>
-
                                      <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
                                          <div class="col-12">
                                              <div class="form-check text-start my-3">
-                                                 <input type="radio" class="form-check-input bg-primary border-0" id="Transfer-1" name="payment_method" value="bank_transfer">
-                                                 <label class="form-check-label" for="Transfer-1">Direct Bank Transfer</label>
-                                             </div>
-                                             <p class="text-start text-dark">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
-                                         </div>
-                                     </div>
-
-                                     <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                                         <div class="col-12">
-                                             <div class="form-check text-start my-3">
-                                                 <input type="radio" class="form-check-input bg-primary border-0" id="Payments-1" name="payment_method" value="check">
+                                                 <input type="radio" class="form-check-input bg-primary border-0" id="Payments-1" name="payment_method" value="Cash">
                                                  <label class="form-check-label" for="Payments-1">Check Payments</label>
                                              </div>
                                          </div>
@@ -164,7 +173,7 @@
                                      <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
                                          <div class="col-12">
                                              <div class="form-check text-start my-3">
-                                                 <input type="radio" class="form-check-input bg-primary border-0" id="Delivery-1" name="payment_method" value="cash_on_delivery">
+                                                 <input type="radio" class="form-check-input bg-primary border-0" id="Delivery-1" name="payment_method" value="Credit_Card">
                                                  <label class="form-check-label" for="Delivery-1">Cash On Delivery</label>
                                              </div>
                                          </div>
@@ -173,7 +182,7 @@
                                      <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
                                          <div class="col-12">
                                              <div class="form-check text-start my-3">
-                                                 <input type="radio" class="form-check-input bg-primary border-0" id="Paypal-1" name="payment_method" value="paypal">
+                                                 <input type="radio" class="form-check-input bg-primary border-0" id="Paypal-1" name="payment_method" value="Cash_on_Delivery">
                                                  <label class="form-check-label" for="Paypal-1">Paypal</label>
                                              </div>
                                          </div>
@@ -296,6 +305,7 @@
                  <!-- Template Javascript -->
                  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                  <script src="{{ asset('js/main.js') }}"></script>
+
 
          </body>
 

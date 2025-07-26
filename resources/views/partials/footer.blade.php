@@ -8,9 +8,9 @@
     {{-- <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>. --}}
   </strong>
 
-<h4>  Agriculture Market Price Trade  </h4>  
+  <h4> Agriculture Market Price Trade </h4>
 
-<!--end::Copyright-->
+  <!--end::Copyright-->
 </footer>
 <!--end::Footer-->
 </div>
@@ -36,7 +36,7 @@
     scrollbarAutoHide: 'leave',
     scrollbarClickScroll: true,
   };
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function() {
     const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
     if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined) {
       OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
@@ -79,8 +79,7 @@
   // ++++++++++++++++++++++++++++++++++++++++++
 
   const sales_chart_options = {
-    series: [
-      {
+    series: [{
         name: 'Digital Goods',
         data: [28, 48, 40, 19, 86, 27, 90],
       },
@@ -146,11 +145,9 @@
 
   // Sparkline charts
   const option_sparkline1 = {
-    series: [
-      {
-        data: [1000, 1200, 920, 927, 931, 1027, 819, 930, 1021],
-      },
-    ],
+    series: [{
+      data: [1000, 1200, 920, 927, 931, 1027, 819, 930, 1021],
+    }, ],
     chart: {
       type: 'area',
       height: 50,
@@ -174,11 +171,9 @@
   sparkline1.render();
 
   const option_sparkline2 = {
-    series: [
-      {
-        data: [515, 519, 520, 522, 652, 810, 370, 627, 319, 630, 921],
-      },
-    ],
+    series: [{
+      data: [515, 519, 520, 522, 652, 810, 370, 627, 319, 630, 921],
+    }, ],
     chart: {
       type: 'area',
       height: 50,
@@ -202,11 +197,9 @@
   sparkline2.render();
 
   const option_sparkline3 = {
-    series: [
-      {
-        data: [15, 19, 20, 22, 33, 27, 31, 27, 19, 30, 21],
-      },
-    ],
+    series: [{
+      data: [15, 19, 20, 22, 33, 27, 31, 27, 19, 30, 21],
+    }, ],
     chart: {
       type: 'area',
       height: 50,

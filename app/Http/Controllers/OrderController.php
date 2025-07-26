@@ -149,16 +149,15 @@ class OrderController extends Controller
             'address'        => 'required|string|max:255',
             'mobile'         => 'required|string|max:20',
             'email'          => 'required|email|max:255',
-            'payment_method' => 'required|in:bank_transfer,check,cash_on_delivery,paypal',
+            'payment_method' => 'required|in:Credit_Card,Cash,Cash_on_Delivery',
             'order_notes'    => 'nullable|string|max:1000',
         ]);
 
         // Map string payment methods to IDs
         $paymentMethodMap = [
-            'bank_transfer'    => 1,
-            'check'            => 2,
-            'cash_on_delivery' => 3,
-            'paypal'           => 4,
+            'Cash'    => 1,
+            'Credit_Card'   => 2,
+            'Cash_on_Delivery' => 3,
         ];
 
         $user = auth()->user();
@@ -189,6 +188,6 @@ class OrderController extends Controller
 
         session()->forget('cart');
 
-        return redirect()->route('orders.index')->with('success', 'Order placed successfully.');
+        return redirect()->route('homepage')->with('success', 'Order placed successfully.');
     }
 }
