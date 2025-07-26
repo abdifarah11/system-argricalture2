@@ -57,4 +57,12 @@ class Crop extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    /**
+     * ✅ Get all order items related to this crop.
+     */
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class, 'crop_id');
+    }
 }

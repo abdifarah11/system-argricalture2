@@ -12,7 +12,7 @@ class OrdersTableSeeder extends Seeder
         DB::table('orders')->insert([
             [
                 'user_id' => 1,
-                // 'crop_id' => 1,
+                 'crop_id' => 1,
                 'payment_method_id' => 1,
                 'status' => 'pending',
                 'total_amount' => 150.50,
@@ -22,7 +22,7 @@ class OrdersTableSeeder extends Seeder
             ],
             [
                 'user_id' => 2,
-                // 'crop_id' => 2,
+                'crop_id' => 2,
                 'payment_method_id' => 2,
                 'status' => 'confirmed',
                 'total_amount' => 320.75,
@@ -32,7 +32,7 @@ class OrdersTableSeeder extends Seeder
             ],
             [
                 'user_id' => 3,
-                // 'crop_id' => 1,
+                'crop_id' => 1,
                 'payment_method_id' => 1,
                 'status' => 'completed',
                 'total_amount' => 199.99,
