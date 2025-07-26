@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+<div class="container">
+    <div class="row align-items-end mb-3 gy-2">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="mb-0">Price History</h4>
             {{-- Uncomment if you want a create button --}}
@@ -9,13 +10,15 @@
                 <i class="bi bi-clock-history"></i> Add Price History
             </a> --}}
         </div>
+    </div>
 
-        @if (session('success'))
-            <div class="alert alert-success mb-3">{{ session('success') }}</div>
-        @endif
+    @if(session('success'))
+        <div class="alert alert-success mb-3">{{ session('success') }}</div>
+    @endif
 
-        <div class="table-responsive">
-            <table id="priceHistoryTable" class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%">
+    <div class="card">
+        <div class="card-body">
+            <table id="priceHistoryTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
                 <thead class="table-light">
                     <tr>
                         <th>#</th>
@@ -30,6 +33,7 @@
             </table>
         </div>
     </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -49,13 +53,8 @@
             $('#priceHistoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                responsive: {
-                    details: {
-                        type: 'column',
-                        target: 'tr'
-                    }
-                },
-                ajax: '{{ route('PriceHistory.index') }}',
+                responsive: true,
+                ajax: '{{ route("PriceHistory.index") }}',
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'crop', name: 'crop' },
@@ -68,7 +67,7 @@
                 columnDefs: [
                     { responsivePriority: 1, targets: 1 }
                 ],
-                order: [[6, 'desc']],  // Sort by Date descending (7th column, index 6)
+                order: [[6, 'desc']], // Sort by Date descending
                 dom: `<"row align-items-start mb-3"
                         <"col-md-6 col-sm-12"l>
                         <"col-md-6 col-sm-12 text-md-end text-sm-start"f>

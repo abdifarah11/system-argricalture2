@@ -5,19 +5,7 @@
 @section('content')
 <div class="container">
     <div class="row align-items-end mb-3 gy-2">
-        {{-- Optional future filters --}}
-        {{--
-        <div class="col-sm-3">
-            <label class="form-label">Filter by Status</label>
-            <select id="statusFilter" class="form-select">
-                <option value="">All Statuses</option>
-                <option value="pending">Pending</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
-            </select>
-        </div>
-        --}}
+   
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="mb-0">Orders</h4>
             <a href="{{ route('orders.create') }}" class="btn btn-success d-inline-flex align-items-center gap-2">
@@ -73,17 +61,18 @@
                     details: { type: 'column', target: 'tr' }
                 },
                 ajax: '{{ route('orders.index') }}',
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'user', name: 'user' },
-                    { data: 'crop', name: 'crop' },
-                    { data: 'payment_method', name: 'payment_method' },
-                    { data: 'status', name: 'status', orderable: false, searchable: false },
-                    { data: 'total_amount', name: 'total_amount' },
-                    { data: 'description', name: 'description' },
-                    { data: 'created_at', name: 'created_at' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false }
-                ],
+           columns: [
+    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+    { data: 'user', name: 'user' },
+    { data: 'items', name: 'items', orderable: false, searchable: false },
+    { data: 'payment_method', name: 'payment_method' },
+    { data: 'status', name: 'status', orderable: false, searchable: false },
+    { data: 'total_amount', name: 'total_amount' },
+    { data: 'description', name: 'description' },
+    { data: 'created_at', name: 'created_at' },
+    { data: 'action', name: 'action', orderable: false, searchable: false }
+],
+
                 columnDefs: [
                     { responsivePriority: 1, targets: 1 },
                     { responsivePriority: 2, targets: -1 }

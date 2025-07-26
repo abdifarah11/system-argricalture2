@@ -13,28 +13,37 @@ use Yajra\DataTables\Facades\DataTables;
 class OrderController extends Controller
 {
     /* ───────────────────────── Index ───────────────────────── */
-    public function index(Request $request)
-    {
-        if ($request->ajax()) {
-            $orders = Order::with(['user:id,fullname', 'crop:id,name', 'paymentMethod:id,name'])
-                ->select('orders.*');
+ public function index(Request $request)
+{
+    if ($request->ajax()) {
+        $orders = Order::with([
+            'user:id,fullname', 
+            'paymentMethod:id,name', 
+            'items.crop'  // eager load items and their crop
+        ])->select('orders.*');
 
-            return DataTables::of($orders)
-                ->addIndexColumn()
-                ->addColumn('user', fn(Order $o) => $o->user->fullname ?? '—')
-                ->addColumn('crop', fn(Order $o) => $o->crop->name ?? '—')
-                ->addColumn('payment_method', fn(Order $o) => $o->paymentMethod->name ?? '—')
-                ->addColumn('status', fn(Order $o) => $this->statusBadge($o->status))
-                ->addColumn('total_amount', fn(Order $o) => '$' . number_format($o->total_amount, 2))
-                ->addColumn('action', fn(Order $o) => $this->actionButtons($o))
-                ->rawColumns(['status', 'action'])
-                ->make(true);
-        }
-
-        $user = User::select('id', 'fullname')->orderBy('fullname')->get();
-
-        return view('pages.Orders.index', compact('user'));
+        return DataTables::of($orders)
+            ->addIndexColumn()
+            ->addColumn('user', fn(Order $o) => $o->user->fullname ?? '—')
+            ->addColumn('payment_method', fn(Order $o) => $o->paymentMethod->name ?? '—')
+            ->addColumn('status', fn(Order $o) => $this->statusBadge($o->status))
+            ->addColumn('total_amount', fn(Order $o) => '$' . number_format($o->total_amount, 2))
+            ->addColumn('items', function(Order $o) {
+                return $o->items->map(function($item) {
+                    $cropName = $item->crop->name ?? $item->name;
+                    return $cropName . ' (x' . $item->quantity . ')';
+                })->implode(', ');
+            })
+            ->addColumn('action', fn(Order $o) => $this->actionButtons($o))
+            ->rawColumns(['status', 'action'])
+            ->make(true);
     }
+
+    $user = User::select('id', 'fullname')->orderBy('fullname')->get();
+
+    return view('pages.Orders.index', compact('user'));
+}
+
 
     /* ───────────────────────── Create ───────────────────────── */
     public function create()
@@ -143,6 +152,7 @@ class OrderController extends Controller
     // Place order function
     public function placeOrder(Request $request)
     {
+
         $validated = $request->validate([
             'full_name'      => 'required|string|max:255',
             'region_id'      => 'required|exists:regions,id',
@@ -152,7 +162,7 @@ class OrderController extends Controller
             'payment_method' => 'required|in:Credit_Card,Cash,Cash_on_Delivery',
             'order_notes'    => 'nullable|string|max:1000',
         ]);
-
+// dd($validated);
         // Map string payment methods to IDs
         $paymentMethodMap = [
             'Cash'    => 1,
@@ -163,13 +173,14 @@ class OrderController extends Controller
         $user = auth()->user();
 
         $cart = session('cart', []);
+    
         $totalAmount = collect($cart)->sum(function ($item) {
             return $item['price'] * $item['quantity'];
         });
 
         $order = Order::create([
             'user_id'           => $user->id,
-            'crop_id'           => null, // or assign if needed
+            //'crop_id'           => 1, // or assign if needed
             'payment_method_id' => $paymentMethodMap[$validated['payment_method']],
             'status'            => 'pending',
             'total_amount'      => $totalAmount,

@@ -25,11 +25,8 @@ class DashboardController extends BaseController
             'totalCrops' => Crop::count(),
             'totalOrders' => Order::count(),
             'totalTransactions' => Transaction::count(),
-            'cropOrders' => Crop::withCount('orders')
-                ->orderByDesc('orders_count')
-                ->take(10)
-                ->get()
-                ->pluck('orders_count', 'name'),
+            'cropOrders' => Order::count(),
+               
         ]);
     }
 }

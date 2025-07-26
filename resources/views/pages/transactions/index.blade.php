@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+<div class="container">
+    <div class="row align-items-end mb-3 gy-2">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="mb-0">Transactions</h4>
             {{-- Uncomment if you want a create button --}}
@@ -9,16 +10,18 @@
                 <i class="bi bi-cash-coin"></i> Create Transaction
             </a> --}}
         </div>
+    </div>
 
-        @if (session('success'))
-            <div class="alert alert-success mb-3">{{ session('success') }}</div>
-        @endif
+    @if(session('success'))
+        <div class="alert alert-success mb-3">{{ session('success') }}</div>
+    @endif
 
-        <div class="table-responsive">
-            <table id="transactionsTable" class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%">
+    <div class="card">
+        <div class="card-body">
+            <table id="transactionsTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
                 <thead class="table-light">
                     <tr>
-                        <th>id</th>
+                        <th>ID</th>
                         <th>User</th>
                         <th>Crop</th>
                         <th>Order</th>
@@ -26,12 +29,13 @@
                         <th>Amount</th>
                         <th>Description</th>
                         <th>Status</th>
-                        <th>transactions_date</th>
+                        <th>Transaction Date</th>
                     </tr>
                 </thead>
             </table>
         </div>
     </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -51,12 +55,7 @@
             $('#transactionsTable').DataTable({
                 processing: true,
                 serverSide: true,
-                responsive: {
-                    details: {
-                        type: 'column',
-                        target: 'tr'
-                    }
-                },
+                responsive: true,
                 ajax: '{{ route("transactions.index") }}',
                 columns: [
                     { data: 'id', name: 'id' },
@@ -72,7 +71,7 @@
                 columnDefs: [
                     { responsivePriority: 1, targets: 1 }
                 ],
-                order: [[8, 'desc']],  // sort by transaction_date (9th column, index 8)
+                order: [[8, 'desc']], // sort by transaction_date
                 dom: `<"row align-items-start mb-3"
                         <"col-md-6 col-sm-12"l>
                         <"col-md-6 col-sm-12 text-md-end text-sm-start"f>

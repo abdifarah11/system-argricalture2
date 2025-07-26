@@ -94,7 +94,7 @@
                             category.crops.forEach(crop => {
                                 let imageUrl = crop.image ? imageBase + crop.image : 'https://via.placeholder.com/300x200';
                                 let priceInfo = crop.prices.length > 0
-                                    ? `${crop.prices[0].price} per ${crop.prices[0].unit}`
+                                    ? `$${crop.prices[0].price}/per ${crop.prices[0].unit}`
                                     : 'No price info';
 
                                 cropsHtml += `
@@ -109,7 +109,7 @@
                                         <h5>${crop.name}</h5>
                                         <p>${crop.description ?? ''}</p>
                                         <div class="d-flex justify-content-between flex-lg-wrap align-items-center">
-                                            <p class="text-dark fs-5 fw-bold mb-0">${priceInfo}</p>
+                                            <p class="text-dark fs-5 fw-bold mb-0"> ${priceInfo}</p>
                                             <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary add_cart">
                                                 <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                             </a>

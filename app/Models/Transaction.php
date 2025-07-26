@@ -4,11 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\Crop;
+use App\Models\Order;
+use App\Models\PaymentMethod;
 
 class Transaction extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     */
     protected $fillable = [
         'user_id',
         'crop_id',
@@ -20,6 +27,9 @@ class Transaction extends Model
         'transaction_date',
     ];
 
+    /**
+     * The attributes that should be cast.
+     */
     protected $casts = [
         'transaction_date' => 'datetime',
         'amount' => 'decimal:2',
@@ -44,6 +54,6 @@ class Transaction extends Model
 
     public function paymentMethod()
     {
-        return $this->belongsTo(PaymentMethod::class);
+        return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
     }
 }

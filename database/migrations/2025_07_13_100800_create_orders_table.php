@@ -35,7 +35,7 @@ return new class extends Migration {
                 'cancelled',
                 'completed'
             ])->default('pending')->index();
-           $table->foreignId('crop_id')->constrained()->onDelete('cascade'); // references 'id' on 'crops'
+          // $table->foreignId('crop_id')->constrained()->onDelete('cascade'); // references 'id' on 'crops'
 
 
             $table->decimal('total_amount', 10, 2)
