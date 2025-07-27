@@ -12,14 +12,14 @@ class PriceController extends Controller
     public function index()
     {
         $prices = Price::with(['crop', 'region'])->get();
-        return view('prices.index', compact('prices'));
+        return view('pages.prices.index', compact('prices'));
     }
 
     public function create()
     {
         $crops = Crop::all();
         $regions = Region::all();
-        return view('prices.create', compact('crops', 'regions'));
+        return view('pages.prices.create', compact('crops', 'regions'));
     }
 
     public function store(Request $request)
@@ -40,7 +40,7 @@ class PriceController extends Controller
     {
         $crops = Crop::all();
         $regions = Region::all();
-        return view('prices.edit', compact('price', 'crops', 'regions'));
+        return view('pages.prices.edit', compact('price', 'crops', 'regions'));
     }
 
     public function update(Request $request, Price $price)

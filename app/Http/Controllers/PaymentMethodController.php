@@ -9,22 +9,29 @@ use Yajra\DataTables\Facades\DataTables;
 
 class PaymentMethodController extends Controller
 {
-    /* ───────────── Index ───────────── */
+    /* ───────────── Index (with Filters + DataTables) ───────────── */
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $methods = PaymentMethod::select(['id', 'name', 'status', ]);
+            $methods = PaymentMethod::query();
+
+            // ✅ Apply Filter: Status
+            if ($request->filled('status')) {
+                $methods->where('status', $request->status);
+            }
 
             return DataTables::of($methods)
                 ->addIndexColumn()
-                ->editColumn('status', fn($row) => $this->badge($row->status))
-                // ->editColumn('created_at', fn($row) => $row->created_at->format('Y-m-d H:i'))
-                ->addColumn('action', fn($row) => view('pages.payment_methods.acctions', compact('row'))->render())
+                ->editColumn('status', fn(PaymentMethod $row) => $this->badge($row->status))
+                ->addColumn('action', fn(PaymentMethod $row) =>
+                    view('pages.payment_methods.acctions', compact('row'))->render()
+                )
                 ->rawColumns(['status', 'action'])
                 ->make(true);
         }
 
-        return view('pages.payment_methods.index');
+        $statuses = ['active', 'inactive'];
+        return view('pages.payment_methods.index', compact('statuses'));
     }
 
     /* ───────────── Create ───────────── */
@@ -61,6 +68,15 @@ class PaymentMethodController extends Controller
             ->with('success', 'Payment method updated successfully.');
     }
 
+    /* ───────────── Destroy ───────────── */
+    public function destroy($id)
+    {
+        $paymentMethod = PaymentMethod::findOrFail($id);
+        $paymentMethod->delete();
+
+        return redirect()->route('payment_methods.index')
+            ->with('success', 'Payment method deleted successfully.');
+    }
 
     /* ───────────── Helpers ───────────── */
     private function validateData(Request $request)
@@ -75,15 +91,5 @@ class PaymentMethodController extends Controller
     {
         $class = $status === 'active' ? 'success' : 'secondary';
         return '<span class="badge bg-' . $class . '">' . ucfirst($status) . '</span>';
-    }
-
-    /* ───────────── Destroy ───────────── */
-    public function destroy($id)
-    {
-        $paymentMethod = PaymentMethod::findOrFail($id);
-        $paymentMethod->delete();
-
-        return redirect()->route('payment_methods.index')
-            ->with('success', 'Payment method deleted successfully.');
     }
 }

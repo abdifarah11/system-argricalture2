@@ -130,22 +130,68 @@ class UserController extends Controller
     return view('pages.users.reset-password', compact('user'));
 }
 
-public function resetPassword(Request $request, $id)
+// public function changePassword(Request $request, $id)
+// {
+//     // Check if current user is admin
+//     if (auth()->user()->role !== 'admin') {
+//         abort(403, 'Unauthorized action.');
+//     }
+
+//     $request->validate([
+//         'password' => 'required|string|min:6|confirmed',
+//     ]);
+
+//     $user = User::findOrFail($id);
+//     $user->password = Hash::make($request->password);
+//     $user->save();
+
+//     return redirect()->route('users.index')->with('success', 'Password reset successfully.');
+// }
+public function showChangePasswordForm($id)
 {
-    // Check if current user is admin
-    if (auth()->user()->role !== 'admin') {
+    $authUser = auth()->user();
+
+    if ($authUser->role !== 'admin') {
         abort(403, 'Unauthorized action.');
+    }
+
+    $user = User::findOrFail($id);
+
+    $allowedRoles = ['customer', 'general_officer'];
+
+    if (!in_array($user->role, $allowedRoles)) {
+        abort(403, 'You cannot change the password for this user.');
+    }
+
+    return view('pages.users.changepassword', compact('user'));
+}
+
+public function changepassword(Request $request, $id)
+{
+    $authUser = auth()->user();
+
+    if ($authUser->role !== 'admin') {
+        abort(403, 'Unauthorized action.');
+    }
+
+    $user = User::findOrFail($id);
+
+    $allowedRoles = ['customer', 'general_officer'];
+
+    if (!in_array($user->role, $allowedRoles)) {
+        abort(403, 'You cannot change the password for this user.');
     }
 
     $request->validate([
         'password' => 'required|string|min:6|confirmed',
     ]);
 
-    $user = User::findOrFail($id);
     $user->password = Hash::make($request->password);
     $user->save();
 
-    return redirect()->route('users.index')->with('success', 'Password reset successfully.');
+    return redirect()->route('users.index')->with('success', 'Password updated successfully.');
 }
+
+
 
 }

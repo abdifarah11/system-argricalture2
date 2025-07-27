@@ -22,7 +22,7 @@ class CropTypeController extends Controller
                 ->editColumn('created_at', fn($row) => $row->created_at->format('Y-m-d H:i'))
                 ->addColumn('image', function ($row) {
                     if ($row->image) {
-                        return '<img src="' . asset('storage/' . $row->image) . '" alt="' . e($row->name) . '" style="height:40px; width:auto; border-radius:4px;">';
+                        return '<img src="' . asset('storage/' . $row->image) . '" alt="' . e($row->name) . '" style="height:40px;width:auto;border-radius:4px;">';
                     }
                     return '-';
                 })
@@ -33,7 +33,10 @@ class CropTypeController extends Controller
                 ->make(true);
         }
 
-        return view('pages.crop_types.index');
+        // ✅ Added for filters (list all crop types for dropdown if needed)
+        $allTypes = CropType::orderBy('name')->get(['id', 'name']);
+
+        return view('pages.crop_types.index', compact('allTypes'));
     }
 
     /**
@@ -50,9 +53,9 @@ class CropTypeController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:crop_types,name',
+            'name'        => 'required|string|max:255|unique:crop_types,name',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048', // max 2MB
+            'image'       => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
@@ -61,8 +64,7 @@ class CropTypeController extends Controller
 
         CropType::create($validated);
 
-        return redirect()->route('crop_types.index')
-                         ->with('success', 'Crop type created successfully.');
+        return redirect()->route('crop_types.index')->with('success', 'Crop type created successfully.');
     }
 
     /**
@@ -82,9 +84,9 @@ class CropTypeController extends Controller
         $cropType = CropType::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:crop_types,name,' . $cropType->id,
+            'name'        => 'required|string|max:255|unique:crop_types,name,' . $cropType->id,
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
@@ -96,8 +98,7 @@ class CropTypeController extends Controller
 
         $cropType->update($validated);
 
-        return redirect()->route('crop_types.index')
-                         ->with('success', 'Crop type updated successfully.');
+        return redirect()->route('crop_types.index')->with('success', 'Crop type updated successfully.');
     }
 
     /**
@@ -113,7 +114,6 @@ class CropTypeController extends Controller
 
         $cropType->delete();
 
-        return redirect()->route('crop_types.index')
-                         ->with('success', 'Crop type deleted successfully.');
+        return redirect()->route('crop_types.index')->with('success', 'Crop type deleted successfully.');
     }
 }

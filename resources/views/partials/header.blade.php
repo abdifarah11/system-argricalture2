@@ -25,7 +25,7 @@
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-3" style="min-width: 220px;">
           <li class="user-header bg-primary rounded text-center p-3 mb-3">
             <img src="{{ asset('img/C.RAHMAN-1.jpg') }}" class="rounded-circle shadow mb-2" alt="User Image" style="width: 80px; height: 80px; object-fit: cover;" />
-            <p class="mb-0 fw-semibold text-white">Eng Abdirahman project builder</p>
+            <p class="mb-0 fw-semibold text-white">Eng Abdirahman</p>
             <small class="text-white-50">in year 2025</small>
           </li>
           <li class="user-body d-flex justify-content-center">

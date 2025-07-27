@@ -4,17 +4,30 @@
 <div class="container">
     <div class="row align-items-end mb-3 gy-2">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="mb-0">Price History</h4>
-            {{-- Uncomment if you want a create button --}}
-            {{-- <a href="{{ route('price_history.create') }}" class="btn btn-success d-inline-flex align-items-center gap-2">
-                <i class="bi bi-clock-history"></i> Add Price History
-            </a> --}}
+            <h1 class="mb-0">Price History</h1>
         </div>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success mb-3">{{ session('success') }}</div>
-    @endif
+    {{-- ✅ Filters --}}
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <select id="cropFilter" class="form-select">
+                <option value="">All Crops</option>
+                @foreach($crops as $crop)
+                    <option value="{{ $crop->id }}">{{ $crop->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <select id="regionFilter" class="form-select">
+                <option value="">All Regions</option>
+                @foreach($regions as $region)
+                    <option value="{{ $region->id }}">{{ $region->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
 
     <div class="card">
         <div class="card-body">
@@ -27,7 +40,7 @@
                         <th>Price</th>
                         <th>Unit</th>
                         <th>Quantity</th>
-                        <th>Date</th>
+                        <th>Created At</th>
                     </tr>
                 </thead>
             </table>
@@ -37,51 +50,45 @@
 @endsection
 
 @push('scripts')
-    {{-- Bootstrap Icons --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 
-    {{-- DataTables core & extensions --}}
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script>
+$(function () {
+    var table = $('#priceHistoryTable').DataTable({
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        ajax: {
+            url: "{{ route('PriceHistory.index') }}",
+            data: function (d) {
+                d.crop_id = $('#cropFilter').val();
+                d.region_id = $('#regionFilter').val();
+            }
+        },
+        columns: [
+            { data: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'crop', name: 'crop.name' },
+            { data: 'region', name: 'region.name' },
+            { data: 'price', name: 'price' },
+            { data: 'unit', name: 'unit' },
+            { data: 'quantity', name: 'quantity' },
+            { data: 'created_at', name: 'created_at' }
+        ],
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search price history..."
+        }
+    });
 
-    <script>
-        $(function () {
-            $('#priceHistoryTable').DataTable({
-                processing: true,
-                serverSide: true,
-                responsive: true,
-                ajax: '{{ route("PriceHistory.index") }}',
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'crop', name: 'crop' },
-                    { data: 'region', name: 'region' },
-                    { data: 'price', name: 'price' },
-                    { data: 'unit', name: 'unit' },
-                    { data: 'quantity', name: 'quantity' },
-                    { data: 'created_at', name: 'created_at' }
-                ],
-                columnDefs: [
-                    { responsivePriority: 1, targets: 1 }
-                ],
-                order: [[6, 'desc']], // Sort by Date descending
-                dom: `<"row align-items-start mb-3"
-                        <"col-md-6 col-sm-12"l>
-                        <"col-md-6 col-sm-12 text-md-end text-sm-start"f>
-                    >
-                    <"row"<"col-sm-12"tr>>
-                    <"row mt-2"
-                        <"col-md-5 col-sm-12"i>
-                        <"col-md-7 col-sm-12 text-md-end text-sm-start"p>
-                    >`,
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search price history..."
-                }
-            });
-        });
-    </script>
+    $('#cropFilter, #regionFilter').on('change', function () {
+        table.draw();
+    });
+});
+</script>
 @endpush

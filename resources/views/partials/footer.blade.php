@@ -1,6 +1,6 @@
 <footer class="app-footer">
   <!--begin::To the end-->
-  <div class="float-end d-none d-sm-inline">prebared by Eng Abdirahman</div>
+  <div class="float-end d-none d-sm-inline">we  prebared by team </div>
   <!--end::To the end-->
   <!--begin::Copyright-->
   <strong>

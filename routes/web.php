@@ -47,21 +47,20 @@ Route::middleware(['auth'])->group(function () {
     
 
     // === Admin Only ===
-    Route::middleware(['role:admin'])->group(function () {
+      Route::middleware(['role:admin'])->prefix('users')->group(function () {
+    // User Management
+    Route::get('/', [UserController::class, 'index'])->name('users.index');
+    Route::get('/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/store', [UserController::class, 'store'])->name('users.store');
+    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/{id}/update', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/{id}/delete', [UserController::class, 'destroy'])->name('users.delete');
+    Route::get('/get-data', [UserController::class, 'getData'])->name('users.get.data');
 
-        // User management
-        Route::prefix('users')->group(function () {
-            Route::get('/', [UserController::class, 'index'])->name('users.index');
-            Route::get('/create', [UserController::class, 'create'])->name('users.create');
-            Route::post('/store', [UserController::class, 'store'])->name('users.store');
-            Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-            Route::put('{id}/update', [UserController::class, 'update'])->name('users.update');
-            Route::delete('{id}/delete', [UserController::class, 'destroy'])->name('users.delete');
-            Route::get('/get-data', [UserController::class, 'getData'])->name('users.get.data');
-
-
-        });
-
+    // ✅ Change Password
+    Route::get('/{id}/changepassword', [UserController::class, 'showChangePasswordForm'])->name('users.changePasswordForm');
+    Route::post('/{id}/changepassword', [UserController::class, 'changepassword'])->name('users.changePassword');
+});
 
 
           
@@ -72,7 +71,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('crop_types/{id}/edit', [CropTypeController::class, 'edit'])->name('crop_types.edit');
             Route::put('{id}/update', [CropTypeController::class, 'update'])->name('crop_types.update');
             Route::delete('{id}/delete', [CropTypeController::class, 'destroy'])->name('crop_types.delete');
+
+
+
+
+            
         });
+
+        
 
         // Crops management
         Route::prefix('crops')->group(function () {
@@ -157,7 +163,6 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
-});
 
 Route::get('/chackout', [CartController::class, 'gocToCheckout'])->name('chackout.view');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

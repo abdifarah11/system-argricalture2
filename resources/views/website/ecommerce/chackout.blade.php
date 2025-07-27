@@ -165,7 +165,7 @@
                                          <div class="col-12">
                                              <div class="form-check text-start my-3">
                                                  <input type="radio" class="form-check-input bg-primary border-0" id="Payments-1" name="payment_method" value="Cash">
-                                                 <label class="form-check-label" for="Payments-1">Check Payments</label>
+                                                 <label class="form-check-label" for="Payments-1">edahab</label>
                                              </div>
                                          </div>
                                      </div>
@@ -174,7 +174,7 @@
                                          <div class="col-12">
                                              <div class="form-check text-start my-3">
                                                  <input type="radio" class="form-check-input bg-primary border-0" id="Delivery-1" name="payment_method" value="Credit_Card">
-                                                 <label class="form-check-label" for="Delivery-1">Cash On Delivery</label>
+                                                 <label class="form-check-label" for="Delivery-1">saad</label>
                                              </div>
                                          </div>
                                      </div>
@@ -183,7 +183,7 @@
                                          <div class="col-12">
                                              <div class="form-check text-start my-3">
                                                  <input type="radio" class="form-check-input bg-primary border-0" id="Paypal-1" name="payment_method" value="Cash_on_Delivery">
-                                                 <label class="form-check-label" for="Paypal-1">Paypal</label>
+                                                 <label class="form-check-label" for="Paypal-1">waafi</label>
                                              </div>
                                          </div>
                                      </div>

@@ -8,17 +8,26 @@ use App\Models\Crop;
 use App\Models\Order;
 use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
 class TransactionController extends Controller
 {
-    /* ───────────── Index (DataTables + View) ───────────── */
     public function index(Request $request)
     {
         if ($request->ajax()) {
             $transactions = Transaction::query()
                 ->with(['user', 'crop', 'order', 'paymentMethod']);
+
+            // ✅ Filters
+            if ($request->filled('status')) {
+                $transactions->where('status', $request->status);
+            }
+
+            if ($request->filled('payment_method')) {
+                $transactions->whereHas('paymentMethod', function ($q) use ($request) {
+                    $q->where('name', $request->payment_method);
+                });
+            }
 
             return DataTables::of($transactions)
                 ->addIndexColumn()
@@ -36,10 +45,11 @@ class TransactionController extends Controller
         }
 
         $statuses = ['pending', 'completed', 'failed', 'cancelled'];
-        return view('pages.transactions.index', compact('statuses'));
+        $paymentMethods = PaymentMethod::orderBy('name')->get(['id', 'name']);
+
+        return view('pages.transactions.index', compact('statuses', 'paymentMethods'));
     }
 
-    /* ───────────── Helpers ───────────── */
     private function statusBadge(string $status): string
     {
         $colors = [

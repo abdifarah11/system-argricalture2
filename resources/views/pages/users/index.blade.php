@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container">
+    <!-- Top Bar -->
     <div class="row align-items-end mb-3 gy-2">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <a href="{{ route('users.create') }}" class="btn btn-success d-inline-flex align-items-center gap-2">
@@ -10,7 +11,22 @@
         </div>
     </div>
 
-    {{-- Optional filters --}}
+    <!-- Flash Messages -->
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+            <i class="bi bi-check-circle"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    <!-- Filters -->
     <div class="row mb-3">
         <div class="col-md-4">
             <select id="regionFilter" class="form-select">

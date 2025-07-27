@@ -10,12 +10,19 @@ use Yajra\DataTables\Facades\DataTables;
 
 class PriceHistoryController extends Controller
 {
-    /* ───────────── Index (DataTables + View) ───────────── */
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            // Load related crop and region models for eager loading
             $priceHistory = PriceHistory::with(['crop', 'region']);
+
+            // ✅ Apply Filters
+            if ($request->filled('crop_id')) {
+                $priceHistory->where('crop_id', $request->crop_id);
+            }
+
+            if ($request->filled('region_id')) {
+                $priceHistory->where('region_id', $request->region_id);
+            }
 
             return DataTables::of($priceHistory)
                 ->addIndexColumn()
@@ -28,6 +35,9 @@ class PriceHistoryController extends Controller
                 ->make(true);
         }
 
-        return view('pages.price_history.index');
+        $crops   = Crop::orderBy('name')->get(['id', 'name']);
+        $regions = Region::orderBy('name')->get(['id', 'name']);
+
+        return view('pages.price_history.index', compact('crops', 'regions'));
     }
 }
