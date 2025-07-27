@@ -1,5 +1,6 @@
-<x-guest-layout>
- @section('content')
+@extends('layouts.app')
+
+@section('content')
 <div class="container mt-4">
     <h3>Reset Password for <strong>{{ $user->fullname }}</strong></h3>
 
@@ -30,4 +31,4 @@
         <a href="{{ route('users.index') }}" class="btn btn-secondary ms-2">Cancel</a>
     </form>
 </div>
-</x-guest-layout>
+@endsection

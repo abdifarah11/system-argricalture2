@@ -13,6 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+    use App\Http\Controllers\AdminPasswordController;
 
 // Public home page
 Route::get('/', function () {
@@ -43,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('logout');
 
 
+    
 
     // === Admin Only ===
     Route::middleware(['role:admin'])->group(function () {
@@ -56,8 +58,13 @@ Route::middleware(['auth'])->group(function () {
             Route::put('{id}/update', [UserController::class, 'update'])->name('users.update');
             Route::delete('{id}/delete', [UserController::class, 'destroy'])->name('users.delete');
             Route::get('/get-data', [UserController::class, 'getData'])->name('users.get.data');
+
+
         });
 
+
+
+          
         // Crop types management
         Route::prefix('crop_types')->group(function () {
             Route::get('/create', [CropTypeController::class, 'create'])->name('crop_types.create');
