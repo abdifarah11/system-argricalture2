@@ -11,58 +11,50 @@ use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $users = User::query()
+                ->leftJoin('regions', 'regions.id', '=', 'users.region_id')
+                ->select([
+                    'users.id',
+                    'users.fullname',
+                    'users.username',
+                    'users.email',
+                    'users.role',
+                    'regions.name as region',
+                    'users.created_at',
+                ]);
 
-public function index(Request $request)
-{
-    /* ───────────── AJAX: DataTables request ───────────── */
-    if ($request->ajax()) {
-        // ⬇ join regions so we can order / search on region name
-        $users = User::query()
-            ->leftJoin('regions', 'regions.id', '=', 'users.region_id')
-            ->select([
-                'users.id',
-                'users.fullname',
-                'users.username',
-                'users.email',
-                'users.role',
-                'regions.name as region',      // alias as "region" for JSON key
-                'users.created_at',
-            ]);
+            return DataTables::of($users)
+                ->addIndexColumn()
+                ->editColumn('created_at', fn($row) => $row->created_at->format('Y-m-d H:i'))
+                ->addColumn('action', function ($row) {
+                    return view('pages.users.actions', compact('row'))->render();
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
 
-        return DataTables::of($users)
-            ->addIndexColumn()                     // DT_RowIndex
-            ->editColumn('created_at', fn ($row)   // nice date format
-                => $row->created_at->format('Y-m-d H:i'))
-            ->addColumn('action', function ($row) { // buttons / dropdown
-                return view('pages.users.actions', compact('row'))->render();
-            })
-            ->rawColumns(['action'])               // allow HTML in “action”
-            ->make(true);
+        $regions   = Region::orderBy('name')->get(['id', 'name']);
+        $userTypes = ['admin', 'market_officer', 'general'];
+
+        return view('pages.users.index', compact('regions', 'userTypes'));
     }
 
-    /* ───────────── First page load: Blade view ───────────── */
-    $regions   = Region::orderBy('name')->get(['id', 'name']);
-    $userTypes = ['admin', 'market_officer', 'general'];
-
-    return view('pages.users.index', compact('regions', 'userTypes'));
-}
-
-
-    /* ───────────── Create ───────────── */
     public function create()
     {
         $regions = Region::orderBy('name')->get();
         return view('pages.users.create', compact('regions'));
     }
 
-    /* ───────────── Store ───────────── */
     public function store(Request $request)
     {
         $request->validate([
             'fullname'   => 'required|string|max:255',
             'username'   => 'required|string|max:100|unique:users,username',
             'email'      => 'required|email|unique:users,email',
-            'role'  => ['required', Rule::in(['admin', 'market_officer', 'general'])],
+            'role'       => ['required', Rule::in(['admin', 'market_officer', 'general'])],
             'region_id'  => 'nullable|exists:regions,id',
             'password'   => 'required|string|min:6|confirmed',
         ]);
@@ -71,7 +63,7 @@ public function index(Request $request)
             'fullname'   => $request->fullname,
             'username'   => $request->username,
             'email'      => $request->email,
-            'role'  => $request->role,
+            'role'       => $request->role,
             'region_id'  => $request->region_id,
             'password'   => Hash::make($request->password),
         ]);
@@ -79,7 +71,6 @@ public function index(Request $request)
         return redirect()->route('users.index')->with('success', 'User created.');
     }
 
-    /* ───────────── Edit ───────────── */
     public function edit($id)
     {
         $user    = User::findOrFail($id);
@@ -88,7 +79,6 @@ public function index(Request $request)
         return view('pages.users.edit', compact('user', 'regions'));
     }
 
-    /* ───────────── Update ───────────── */
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -103,7 +93,7 @@ public function index(Request $request)
                 'required', 'email',
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
-            'role'  => ['required', Rule::in(['admin', 'market_officer', 'general'])],
+            'role'       => ['required', Rule::in(['admin', 'market_officer', 'general'])],
             'region_id'  => 'nullable|exists:regions,id',
             'password'   => 'nullable|string|min:6|confirmed',
         ]);
@@ -112,7 +102,7 @@ public function index(Request $request)
             'fullname'   => $request->fullname,
             'username'   => $request->username,
             'email'      => $request->email,
-            'role'  => $request->role,
+            'role'       => $request->role,
             'region_id'  => $request->region_id,
             'password'   => $request->filled('password') ? Hash::make($request->password) : $user->password,
         ]);
@@ -120,7 +110,6 @@ public function index(Request $request)
         return redirect()->route('users.index')->with('success', 'User updated.');
     }
 
-    /* ───────────── Destroy ───────────── */
     public function destroy($id)
     {
         $user = User::findOrFail($id);
@@ -128,4 +117,35 @@ public function index(Request $request)
 
         return redirect()->route('users.index')->with('success', 'User deleted.');
     }
+
+    /* ───────────── ADMIN RESET PASSWORD (NO EMAIL) ───────────── */
+   public function resetPasswor($id)
+{
+    // Check if current user is admin
+    if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized action.');
+    }
+
+    $user = User::findOrFail($id);
+    return view('pages.users.reset-password', compact('user'));
+}
+
+public function resetPassword(Request $request, $id)
+{
+    // Check if current user is admin
+    if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized action.');
+    }
+
+    $request->validate([
+        'password' => 'required|string|min:6|confirmed',
+    ]);
+
+    $user = User::findOrFail($id);
+    $user->password = Hash::make($request->password);
+    $user->save();
+
+    return redirect()->route('users.index')->with('success', 'Password reset successfully.');
+}
+
 }
