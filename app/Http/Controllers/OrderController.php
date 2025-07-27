@@ -2,47 +2,83 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\paymentRequest;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Crop;
 use App\Models\PaymentMethod;
+use App\Models\Transaction;
+use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
 {
-    /* ───────────────────────── Index ───────────────────────── */
- public function index(Request $request)
-{
-    if ($request->ajax()) {
-        $orders = Order::with([
-            'user:id,fullname', 
-            'paymentMethod:id,name', 
-            'items.crop'  // eager load items and their crop
-        ])->select('orders.*');
 
-        return DataTables::of($orders)
-            ->addIndexColumn()
-            ->addColumn('user', fn(Order $o) => $o->user->fullname ?? '—')
-            ->addColumn('payment_method', fn(Order $o) => $o->paymentMethod->name ?? '—')
-            ->addColumn('status', fn(Order $o) => $this->statusBadge($o->status))
-            ->addColumn('total_amount', fn(Order $o) => '$' . number_format($o->total_amount, 2))
-            ->addColumn('items', function(Order $o) {
-                return $o->items->map(function($item) {
-                    $cropName = $item->crop->name ?? $item->name;
-                    return $cropName . ' (x' . $item->quantity . ')';
-                })->implode(', ');
-            })
-            ->addColumn('action', fn(Order $o) => $this->actionButtons($o))
-            ->rawColumns(['status', 'action'])
-            ->make(true);
+
+    
+    protected $payment_service;
+    public function __construct(PaymentService $payment_service){
+        $this->payment_service=$payment_service;
+
     }
+    public function send(Request $request){
+       
+        $data=[
+            'sender'=>trim($request->input('sender'),'0'),
+            'amount'=>$request->input('amount'),
+            'description'=>$request->input('description'),
+        ];
 
-    $user = User::select('id', 'fullname')->orderBy('fullname')->get();
+        $result=$this->payment_service->pay($data);
+           $resCode = $result['responseCode'] ?? null;
 
-    return view('pages.Orders.index', compact('user'));
-}
+        if ($resCode === '2001') {
+            return response()->json(['message' => 'successfully'], 200);
+        } elseif ($resCode === '5306') {
+            return response()->json(['message' => 'unsuccessfully'], 400);
+        }
+
+        return response()->json([
+            'message' => 'unknown response',
+            'data' => $result
+        ], 500);
+
+
+
+    }
+    /* ───────────────────────── Index ───────────────────────── */
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $orders = Order::with([
+                'user:id,fullname',
+                'paymentMethod:id,name',
+                'items.crop'  // eager load items and their crop
+            ])->select('orders.*');
+
+            return DataTables::of($orders)
+                ->addIndexColumn()
+                ->addColumn('user', fn(Order $o) => $o->user->fullname ?? '—')
+                ->addColumn('payment_method', fn(Order $o) => $o->paymentMethod->name ?? '—')
+                ->addColumn('status', fn(Order $o) => $this->statusBadge($o->status))
+                ->addColumn('total_amount', fn(Order $o) => '$' . number_format($o->total_amount, 2))
+                ->addColumn('items', function (Order $o) {
+                    return $o->items->map(function ($item) {
+                        $cropName = $item->crop->name ?? $item->name;
+                        return $cropName . ' (x' . $item->quantity . ')';
+                    })->implode(', ');
+                })
+                ->addColumn('action', fn(Order $o) => $this->actionButtons($o))
+                ->rawColumns(['status', 'action'])
+                ->make(true);
+        }
+
+        $user = User::select('id', 'fullname')->orderBy('fullname')->get();
+
+        return view('pages.Orders.index', compact('user'));
+    }
 
 
     /* ───────────────────────── Create ───────────────────────── */
@@ -162,18 +198,19 @@ class OrderController extends Controller
             'payment_method' => 'required|in:Credit_Card,Cash,Cash_on_Delivery',
             'order_notes'    => 'nullable|string|max:1000',
         ]);
-// dd($validated);
-        // Map string payment methods to IDs
+        
         $paymentMethodMap = [
             'Cash'    => 1,
             'Credit_Card'   => 2,
             'Cash_on_Delivery' => 3,
         ];
 
+
+
         $user = auth()->user();
 
         $cart = session('cart', []);
-    
+
         $totalAmount = collect($cart)->sum(function ($item) {
             return $item['price'] * $item['quantity'];
         });
@@ -197,8 +234,46 @@ class OrderController extends Controller
             ]);
         }
 
-        session()->forget('cart');
+        if($order){
+               $data=[
+            'sender'=>trim($request->input('mobile'),'0'),
+            'amount'=>$order->total_amount,
+            'description'=>$order->description ?? 'Order Payment',
+        ];
+            $result=$this->payment_service->pay($data);
+           $resCode = $result['responseCode'] ?? null;
+
+        if ($resCode === '2001') {
+            // create transaction record or handle success
+            Transaction::create([
+                'user_id' => $user->id,
+                'order_id' => $order->id,
+                'payment_method_id' => $paymentMethodMap[$validated['payment_method']],
+                'amount' => $order->total_amount,
+                'status' => 'completed',
+                'description' => $order->description ?? 'Order Payment',
+                'transaction_date' => now(),
+            ]);
+         session()->forget('cart');
 
         return redirect()->route('homepage')->with('success', 'Order placed successfully.');
+          
+        } elseif ($resCode === '5310') {
+            return response()->json(['message' => 'unsuccessfully'], 400);
+        }
+        
+
+        return response()->json([
+            'message' => 'unknown response',
+            'data' => $result
+        ], 500);
+            
+        }
+         
+
+
+        // session()->forget('cart');
+
+        // return redirect()->route('homepage')->with('success', 'Order placed successfully.');
     }
 }

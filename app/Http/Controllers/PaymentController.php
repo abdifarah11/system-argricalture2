@@ -63,4 +63,7 @@ class PaymentController extends Controller
 
         return redirect()->route('payments.index')->with('success', 'Payment deleted.');
     }
+
+
+ 
 }

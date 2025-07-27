@@ -223,5 +223,6 @@
   sparkline3.render();
 </script>
 
+
 @stack('scripts')
 <!--end::Script-->

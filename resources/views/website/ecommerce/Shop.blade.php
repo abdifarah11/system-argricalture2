@@ -29,7 +29,7 @@
 
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         const imageBase = "http://127.0.0.1:8000/storage/";
 
@@ -44,7 +44,7 @@
         $.ajax({
             url: "http://127.0.0.1:8000/api/ecommerce/categories",
             method: "GET",
-            success: function (response) {
+            success: function(response) {
                 if (response.success && Array.isArray(response.categories)) {
                     const categories = response.categories;
 
@@ -63,13 +63,13 @@
                     }
                 }
             },
-            error: function () {
+            error: function() {
                 $('#crop-list').html('<p class="text-danger">Failed to load categories.</p>');
             }
         });
 
         // Handle tab click
-        $(document).on('click', '.nav-link', function () {
+        $(document).on('click', '.nav-link', function() {
             $('.nav-link').removeClass('active');
             $(this).addClass('active');
 
@@ -83,7 +83,7 @@
             $.ajax({
                 url: `http://127.0.0.1:8000/api/ecommerce/categories?crop_type=${cropTypeId}`,
                 method: "GET",
-                success: function (response) {
+                success: function(response) {
                     $('#crop-list').empty();
 
                     if (response.success && Array.isArray(response.categories)) {
@@ -93,9 +93,9 @@
 
                             category.crops.forEach(crop => {
                                 let imageUrl = crop.image ? imageBase + crop.image : 'https://via.placeholder.com/300x200';
-                                let priceInfo = crop.prices.length > 0
-                                    ? `$${crop.prices[0].price}/per ${crop.prices[0].unit}`
-                                    : 'No price info';
+                                let priceInfo = crop.prices.length > 0 ?
+                                    `$${crop.prices[0].price}/per ${crop.prices[0].unit}` :
+                                    'No price info';
 
                                 cropsHtml += `
                                 <div class="col-md-6 col-lg-4 col-xl-3">
@@ -128,14 +128,14 @@
                         $('#crop-list').html('<p>No categories found.</p>');
                     }
                 },
-                error: function () {
+                error: function() {
                     $('#crop-list').html('<p class="text-danger">Error loading crops.</p>');
                 }
             });
         }
 
         // ✅ Handle add to cart click with CSRF
-        $(document).on('click', '.add_cart', function (e) {
+        $(document).on('click', '.add_cart', function(e) {
             e.preventDefault();
 
             const cropId = $(this).closest('.fruite-item').data('id');
@@ -143,8 +143,10 @@
             $.ajax({
                 url: '/add-to-cart',
                 type: 'POST',
-                data: { id: cropId },
-                success: function (response) {
+                data: {
+                    id: cropId
+                },
+                success: function(response) {
                     Swal.fire({
                         position: "top-end",
                         icon: "success",
@@ -154,11 +156,24 @@
                     });
                     window.location.reload(); // Reload to update cart count
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     alert('Failed to add to cart');
                 }
             });
         });
 
+
     });
+
+    @if(session('success'))
+
+    Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: '{{ session('
+        success ') }}',
+        showConfirmButton: false,
+        timer: 3000
+    });
+    @endif
 </script>

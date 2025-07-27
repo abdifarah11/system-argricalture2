@@ -17,9 +17,9 @@ return new class extends Migration {
         ->constrained('users')
         ->onDelete('cascade');
 
-    $table->foreignId('crop_id')
-        ->constrained('crops')
-        ->onDelete('cascade');
+    // $table->foreignId('crop_id')
+    //     ->constrained('crops')
+    //     ->onDelete('cascade');
 
     $table->foreignId('order_id')
         ->constrained('orders')

@@ -12,3 +12,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/ecommerce/categories', [EcommerceController::class, 'index']);
 Route::post('/pay', [PaymentController::class, 'send']);
+
+Route::get('/waafi-payment', [PaymentController::class, 'payNow'])->name('waafi.payment');
