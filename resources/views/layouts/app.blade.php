@@ -41,6 +41,9 @@
       media="print"
       onload="this.media='all'"
     />
+
+
+    
     <!--end::Fonts-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <link
@@ -82,6 +85,9 @@
     />
     
   </head>
+
+
+  
   <!--end::Head-->
   <!--begin::Body-->
   <body class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary">
@@ -101,7 +107,7 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Dashboard</h3></div>
+              {{-- <div class="col-sm-6"><h3 class="mb-0">Dashboard</h3></div> --}}
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>

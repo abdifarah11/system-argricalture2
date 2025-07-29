@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
        // PurchasesTableSeeder::class,
      //  PaymentsTableSeeder::class,
         TransactionsTableSeeder::class,
+        SettingSeeder::class,
   
         ]);
 

@@ -1,8 +1,9 @@
 <?php
-
+  use App\Http\Controllers\SettingController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\CropController;
+use App\Http\Controllers\ControllerSearch;
+    use App\Http\Controllers\CropController;
 use App\Http\Controllers\CropTypeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
@@ -14,6 +15,11 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\AdminPasswordController;
+
+    // routes/web.php
+
+
+
 
 // Public home page
 Route::get('/', function () {
@@ -60,8 +66,22 @@ Route::middleware(['auth'])->group(function () {
     // ✅ Change Password
     Route::get('/{id}/changepassword', [UserController::class, 'showChangePasswordForm'])->name('users.changePasswordForm');
     Route::post('/{id}/changepassword', [UserController::class, 'changepassword'])->name('users.changePassword');
+
+
+
 });
 
+
+
+
+Route::prefix('settings')->group(function () {
+    Route::get('/', [SettingController::class, 'index'])->name('settings.index');
+    Route::get('/create', [SettingController::class, 'create'])->name('settings.create');
+    Route::post('/store', [SettingController::class, 'store'])->name('settings.store');
+    Route::get('/{id}/edit', [SettingController::class, 'edit'])->name('settings.edit');
+    Route::put('/{id}/update', [SettingController::class, 'update'])->name('settings.update');
+    Route::delete('/{id}/delete', [SettingController::class, 'destroy'])->name('settings.destroy');
+});
 
           
         // Crop types management
@@ -87,6 +107,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('crops/{id}/edit', [CropController::class, 'edit'])->name('crops.edit');
             Route::put('{id}/update', [CropController::class, 'update'])->name('crops.update');
             Route::delete('{id}/delete', [CropController::class, 'destroy'])->name('crops.delete');
+            
+    
+    Route::get('/search', [CropController::class, 'search'])->name('crops.search');
+
         });
 
         // Payment methods management
@@ -154,6 +178,9 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('PriceHistory')->group(function () {
             Route::get('/', [PriceHistoryController::class, 'index'])->name('PriceHistory.index');
             Route::get('{id}/show', [PriceHistoryController::class, 'show'])->name('PriceHistory.show');
+
+            Route::get('/price-history/report', [PriceHistoryController::class, 'report'])->name('price_history.report');
+
         });
     });
 

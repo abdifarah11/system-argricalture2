@@ -54,7 +54,7 @@ class UserController extends Controller
             'fullname'   => 'required|string|max:255',
             'username'   => 'required|string|max:100|unique:users,username',
             'email'      => 'required|email|unique:users,email',
-            'role'       => ['required', Rule::in(['admin', 'market_officer', 'general'])],
+            'role'       => ['required', Rule::in(['admin', 'market_officer', 'general ,'])],
             'region_id'  => 'nullable|exists:regions,id',
             'password'   => 'required|string|min:6|confirmed',
         ]);
@@ -127,26 +127,10 @@ class UserController extends Controller
     }
 
     $user = User::findOrFail($id);
-    return view('pages.users.reset-password', compact('user'));
+    return view('pages.users.changepassword', compact('user'));
 }
 
-// public function changePassword(Request $request, $id)
-// {
-//     // Check if current user is admin
-//     if (auth()->user()->role !== 'admin') {
-//         abort(403, 'Unauthorized action.');
-//     }
 
-//     $request->validate([
-//         'password' => 'required|string|min:6|confirmed',
-//     ]);
-
-//     $user = User::findOrFail($id);
-//     $user->password = Hash::make($request->password);
-//     $user->save();
-
-//     return redirect()->route('users.index')->with('success', 'Password reset successfully.');
-// }
 public function showChangePasswordForm($id)
 {
     $authUser = auth()->user();

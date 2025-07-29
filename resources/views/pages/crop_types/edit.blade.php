@@ -8,7 +8,7 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <form action="{{ route('crop_types.update', $cropType->id) }}" method="POST" enctype="multipart/form-data" class="card shadow-sm border-0 p-4 rounded-4">
+    <form action="{{ route('crop_types.update', parameters: $cropType->id) }}" method="POST" enctype="multipart/form-data" class="card shadow-sm border-0 p-4 rounded-4">
         @csrf
         @method('PUT')
 

@@ -2,16 +2,14 @@
 
 @section('content')
 <div class="container">
-    <div class="row align-items-end mb-3 gy-2">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0">Transactions</h1>
-        </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Transactions</h1>
     </div>
 
-    {{-- ✅ Filter Dropdowns --}}
+    {{-- ✅ Filters --}}
     <div class="row mb-3">
         <div class="col-md-4">
-            <select id="statusFilter" class="form-select">
+            <select id="status_filter" class="form-select">
                 <option value="">All Statuses</option>
                 @foreach($statuses as $status)
                     <option value="{{ $status }}">{{ ucfirst($status) }}</option>
@@ -20,12 +18,17 @@
         </div>
 
         <div class="col-md-4">
-            <select id="paymentMethodFilter" class="form-select">
+            <select id="payment_method_filter" class="form-select">
                 <option value="">All Payment Methods</option>
                 @foreach($paymentMethods as $method)
-                    <option value="{{ $method->name }}">{{ $method->name }}</option>
+                    <option value="{{ $method->name }}">{{ ucfirst($method->name) }}</option>
                 @endforeach
             </select>
+        </div>
+
+        <div class="col-md-4 d-flex gap-2">
+            <button id="apply_filters" class="btn btn-primary">Filter</button>
+            <button id="reset_filters" class="btn btn-secondary">Reset</button>
         </div>
     </div>
 
@@ -35,13 +38,12 @@
 
     <div class="card">
         <div class="card-body">
-            <table id="transactionsTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <table id="transactions_table" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
                 <thead class="table-light">
                     <tr>
                         <th>#</th>
-                        <th>User</th>
-                        <th>Crop</th>
-                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>Order Items</th>
                         <th>Payment Method</th>
                         <th>Amount</th>
                         <th>Status</th>
@@ -66,23 +68,22 @@
 
 <script>
 $(function () {
-    var table = $('#transactionsTable').DataTable({
+    var table = $('#transactions_table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
         ajax: {
             url: "{{ route('transactions.index') }}",
             data: function (d) {
-                d.status = $('#statusFilter').val();
-                d.payment_method = $('#paymentMethodFilter').val();
+                d.status = $('#status_filter').val();
+                d.payment_method = $('#payment_method_filter').val();
             }
         },
         columns: [
             { data: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'user', name: 'user.name' },
-            { data: 'crop', name: 'crop.name' },
-            { data: 'order', name: 'order.id' },
-            { data: 'payment_method', name: 'paymentMethod.name' },
+            { data: 'customer', name: 'customer' },
+            { data: 'order_items', name: 'order_items' },
+            { data: 'payment_method', name: 'payment_method' },
             { data: 'amount', name: 'amount' },
             { data: 'status', name: 'status' },
             { data: 'transaction_date', name: 'transaction_date' },
@@ -94,7 +95,13 @@ $(function () {
         }
     });
 
-    $('#statusFilter, #paymentMethodFilter').on('change', function () {
+    $('#apply_filters').on('click', function () {
+        table.draw();
+    });
+
+    $('#reset_filters').on('click', function () {
+        $('#status_filter').val('');
+        $('#payment_method_filter').val('');
         table.draw();
     });
 });

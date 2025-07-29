@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
-use App\Models\User;
-use App\Models\Crop;
-use App\Models\Order;
 use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -16,9 +13,9 @@ class TransactionController extends Controller
     {
         if ($request->ajax()) {
             $transactions = Transaction::query()
-                ->with(['user', 'crop', 'order', 'paymentMethod']);
+                ->with(['user', 'order.items.crop', 'paymentMethod']); // preload items & crops
 
-            // ✅ Filters
+            // ✅ Apply filters
             if ($request->filled('status')) {
                 $transactions->where('status', $request->status);
             }
@@ -31,15 +28,27 @@ class TransactionController extends Controller
 
             return DataTables::of($transactions)
                 ->addIndexColumn()
-                ->addColumn('user', fn(Transaction $t) => $t->user->name ?? '—')
-                ->addColumn('crop', fn(Transaction $t) => $t->crop->name ?? '—')
-                ->addColumn('order', fn(Transaction $t) => 'Order #' . ($t->order->id ?? '—'))
-                ->addColumn('payment_method', fn(Transaction $t) => $t->paymentMethod->name ?? 'N/A')
+
+                // ✅ Matches Blade names
+                ->addColumn('customer', fn(Transaction $t) => ucfirst($t->user->username ?? '—'))
+
+                // ✅ List order items like "Tomato, Banana"
+                ->addColumn('order_items', function (Transaction $t) {
+                    if ($t->order && $t->order->items->count()) {
+                        return $t->order->items
+                            ->map(fn($item) => ucfirst($item->crop->name ?? $item->name))
+                            ->implode(', ');
+                    }
+                    return '—';
+                })
+
+                ->addColumn('payment_method', fn(Transaction $t) => ucfirst($t->paymentMethod->name ?? 'N/A'))
                 ->editColumn('amount', fn(Transaction $t) => '$' . number_format($t->amount, 2))
                 ->editColumn('status', fn(Transaction $t) => $this->statusBadge($t->status))
                 ->editColumn('transaction_date', fn(Transaction $t) =>
                     $t->transaction_date ? $t->transaction_date->format('Y-m-d H:i') : '-')
-                ->addColumn('description', fn(Transaction $t) => $t->description ?? '-')
+                ->addColumn('description', fn(Transaction $t) => ucfirst($t->description ?? '-'))
+
                 ->rawColumns(['status'])
                 ->make(true);
         }
@@ -60,7 +69,6 @@ class TransactionController extends Controller
         ];
 
         $class = $colors[$status] ?? 'light text-dark';
-
         return '<span class="badge bg-' . $class . '">' . ucfirst($status) . '</span>';
     }
 }

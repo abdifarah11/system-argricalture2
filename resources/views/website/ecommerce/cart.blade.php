@@ -71,48 +71,61 @@
                           </tr>
                         </thead>
                         <tbody>
-                            @foreach(session('cart') as $id => $details)
-                         
-                                <tr data-id="{{ $id }}">
-                                        <th scope="row">
-                                            <div class="d-flex align-items-center">
-                                                <img src="{{ asset('storage/' . $details['image']) }}" 
-                                                    class="img-fluid me-5 rounded-circle" 
-                                                    style="width: 80px; height: 80px;" 
-                                                    alt="Product Image">
-                                            </div>
-                                        </th>
-                                        <td><p class="mb-0 mt-4">{{ $details['name'] }}</p></td>
-                                        <td><p class="mb-0 mt-4">{{ $details['price'] }} $</p></td>
-                                        <td>
-                                            <div class="input-group quantity mt-4" style="width: 100px;">
-                                                <div class="input-group-btn">
-                                                    <button class="btn btn-sm btn-minus rounded-circle bg-light border updateCart">
-                                                        <i class="fa fa-minus"></i>
-                                                       {{-- // {{ $details['quantity'] }} --}}
-                                                    </button>
-                                                </div>
-                                                <input type="text" class="form-control form-control-sm text-center border-0" 
-                                                    min="1" max="4" id="quantity-{{ $id }}" value="{{ $details['quantity'] }}">
-                                                <div class="input-group-btn">
-                                                    <button class="btn btn-sm btn-plus rounded-circle bg-light border updateCart">
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td><p class="mb-0 mt-4">${{ $details['price'] * $details['quantity'] }} </p></td>
-                                        <td>
-                                            <button class="btn btn-md rounded-circle bg-light border mt-4 removeCart">
-                                                <i class="fa fa-times text-danger"></i>
-                                            </button>
-                                        </td>
-                                    </tr>   
+               
 
+                @if(session()->has('cart') && is_array(session('cart')))
+                    @foreach(session('cart') as $id => $details)
+                        <tr data-id="{{ $id }}">
+                            <th scope="row">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ asset('storage/' . $details['image']) }}" 
+                                        class="img-fluid me-5 rounded-circle" 
+                                        style="width: 80px; height: 80px;" 
+                                        alt="Product Image">
+                                </div>
+                            </th>
+                            <td><p class="mb-0 mt-4">{{ $details['name'] }}</p></td>
+                            <td><p class="mb-0 mt-4">{{ $details['price'] }} $</p></td>
+                            <td>
+                                <div class="input-group quantity mt-4" style="width: 100px;">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border updateCart">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" 
+                                        class="form-control form-control-sm text-center border-0" 
+                                        min="1" max="4" 
+                                        id="quantity-{{ $id }}" 
+                                        value="{{ $details['quantity'] }}">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-plus rounded-circle bg-light border updateCart">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><p class="mb-0 mt-4">${{ $details['price'] * $details['quantity'] }}</p></td>
+                            <td>
+                                <button class="btn btn-md rounded-circle bg-light border mt-4 removeCart">
+                                    <i class="fa fa-times text-danger"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="6" class="text-center">Your cart is empty</td>
+                    </tr>
+                @endif
 
-                            @endforeach
                             
                            
+
+
+
+
+
                         </tbody>
                     </table>
                 </div>
@@ -145,6 +158,8 @@
                 </div>
             </div>
         </div>
+
+        
 
            <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
             <div class="container py-5">

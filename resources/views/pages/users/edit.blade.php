@@ -43,15 +43,15 @@
             </select>
         </div>
 
-        <div class="mb-3">
+        {{-- <div class="mb-3">
             <label>New Password (leave blank to keep current)</label>
             <input type="password" name="password" class="form-control">
-        </div>
+        </div> --}}
 
-        <div class="mb-3">
+        {{-- <div class="mb-3">
             <label>Confirm New Password</label>
             <input type="password" name="password_confirmation" class="form-control">
-        </div>
+        </div> --}}
 
         <button type="submit" class="btn btn-primary">Update</button>
         <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a>

@@ -10,30 +10,49 @@
         </div>
     </div>
 
-    {{-- Filters --}}
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <select id="regionFilter" class="form-select">
-                <option value="">All Regions</option>
-                @foreach($regions as $region)
-                    <option value="{{ $region->name }}">{{ $region->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-4">
-            <select id="typeFilter" class="form-select">
-                <option value="">All Crop Types</option>
-                @foreach($cropTypes as $type)
-                    <option value="{{ $type->name }}">{{ $type->name }}</option>
-                @endforeach
-            </select>
+    {{-- ✅ Filters --}}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row gy-2">
+                <div class="col-md-3">
+                    <select id="regionFilter" class="form-select">
+                        <option value="">All Regions</option>
+                        @foreach($regions as $region)
+                            <option value="{{ $region->name }}">{{ $region->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <select id="typeFilter" class="form-select">
+                        <option value="">All Crop Types</option>
+                        @foreach($cropTypes as $type)
+                            <option value="{{ $type->name }}">{{ $type->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="button" class="btn btn-primary w-50" id="applyFilters">
+                        <i class="bi bi-funnel"></i> Filter
+                    </button>
+                    <button type="button" class="btn btn-secondary w-50" id="resetFilters">
+                        <i class="bi bi-arrow-repeat"></i> Reset
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
+    {{-- ✅ Flash Message --}}
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+            <i class="bi bi-check-circle"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     @endif
 
+    {{-- ✅ Table --}}
     <div class="card">
         <div class="card-body">
             <table id="crops-table" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
@@ -70,12 +89,17 @@ $(function () {
         processing: true,
         serverSide: true,
         responsive: true,
-        ajax: '{{ route('crops.index') }}',
+        ajax: {
+            url: '{{ route('crops.index') }}',
+            data: function (d) {
+                d.region = $('#regionFilter').val();
+                d.type   = $('#typeFilter').val();
+            }
+        },
         columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'DT_RowIndex', orderable: false, searchable: false },
             {
                 data: 'image',
-                name: 'image',
                 orderable: false,
                 searchable: false,
                 render: function (data) {
@@ -90,7 +114,7 @@ $(function () {
             { data: 'region', name: 'region.name' },
             { data: 'user', name: 'user.fullname' },
             { data: 'created_at', name: 'created_at' },
-            { data: 'action', name: 'action', orderable: false, searchable: false }
+            { data: 'action', orderable: false, searchable: false }
         ],
         language: {
             search: "_INPUT_",
@@ -98,13 +122,16 @@ $(function () {
         }
     });
 
-    // Filter events
-    $('#regionFilter').on('change', function () {
-        table.column(4).search(this.value).draw();
+    // ✅ Apply Filters
+    $('#applyFilters').on('click', function () {
+        table.draw();
     });
 
-    $('#typeFilter').on('change', function () {
-        table.column(3).search(this.value).draw();
+    // ✅ Reset Filters
+    $('#resetFilters').on('click', function () {
+        $('#regionFilter').val('');
+        $('#typeFilter').val('');
+        table.draw();
     });
 });
 </script>

@@ -27,6 +27,7 @@
                 <option value="">-- Select Role --</option>
                 <option value="admin">Admin</option>
                 <option value="market_officer">Market Officer</option>
+                <option value="customer">customer</option>
                 <option value="general">General</option>
             </select>
         </div>

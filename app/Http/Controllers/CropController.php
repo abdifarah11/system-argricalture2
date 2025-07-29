@@ -14,31 +14,56 @@ use Session;
 use Yajra\DataTables\Facades\DataTables;
 
 class CropController extends Controller
+{public function index(Request $request)
 {
-    public function index(Request $request)
-    {
-        if ($request->ajax()) {
-            $crops = Crop::with(['cropType', 'region', 'user'])->select('crops.*');
+    if ($request->ajax()) {
+        $crops = Crop::with(['cropType', 'region', 'user'])->select('crops.*');
 
-            return DataTables::of($crops)
-                ->addIndexColumn()
-                ->addColumn('cropType', fn($row) => $row->cropType->name ?? '-')
-                ->addColumn('region', fn($row) => $row->region->name ?? '-')
-                ->addColumn('user', fn($row) => $row->user->fullname ?? '-')
-                ->editColumn('created_at', fn($row) => $row->created_at->format('Y-m-d H:i'))
-                ->addColumn('action', function ($row) {
-                    return view('pages.crops.crop_actions', compact('row'))->render();
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        // ✅ Apply Filters
+        if ($request->filled('region')) {
+            $crops->whereHas('region', function ($q) use ($request) {
+                $q->where('name', $request->region);
+            });
         }
 
-        // ✅ Add these lines (just like UserController)
-        $regions   = Region::orderBy('name')->get(['id', 'name']);
-        $cropTypes = CropType::orderBy('name')->get(['id', 'name']);
+        if ($request->filled('type')) {
+            $crops->whereHas('cropType', function ($q) use ($request) {
+                $q->where('name', $request->type);
+            });
+        }
 
-        return view('pages.crops.index', compact('regions', 'cropTypes'));
+        return DataTables::of($crops)
+            ->addIndexColumn()
+            ->addColumn('image', fn($crop) => $crop->image ?? '')
+            ->addColumn('cropType', fn($crop) => $crop->cropType->name ?? '—')
+            ->addColumn('region', fn($crop) => $crop->region->name ?? '—')
+            ->addColumn('user', fn($crop) => $crop->user->fullname ?? '—')
+            ->editColumn('created_at', fn($crop) => $crop->created_at->format('Y-m-d H:i'))
+            ->addColumn('action', function ($crop) {
+                return '
+                    <a href="'.route('crops.edit', $crop->id).'" class="btn btn-sm btn-primary">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form action="'.route('crops.delete', $crop->id).'" method="POST" style="display:inline;">
+                        '.csrf_field().method_field('DELETE').'
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm(\'Delete this crop?\')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                ';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
+
+    // ✅ For Blade View
+    $regions   = Region::select('name')->orderBy('name')->get();
+    $cropTypes = CropType::select('name')->orderBy('name')->get();
+
+    return view('pages.crops.index', compact('regions', 'cropTypes'));
+}
+
 
     public function create()
     {
@@ -153,4 +178,17 @@ class CropController extends Controller
 
         return redirect()->route('crops.index')->with('success', 'Crop deleted successfully.');
     }
+////search 
+      public function search(Request $request)
+    {
+        $query = $request->input('q');
+
+        $crops = Crop::where('name', 'LIKE', "%{$query}%")
+                     ->orWhere('description', 'LIKE', "%{$query}%")
+                     ->get();
+
+        return view('website.ecommerce.search_results', compact('crops', 'query'));
+    }
 }
+
+

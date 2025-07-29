@@ -49,9 +49,18 @@
         <li class="nav-item">
           <a href="{{ route('PriceHistory.index') }}" class="nav-link">
             <i class="nav-icon bi bi-graph-up-arrow"></i>
-            <p>Price History Management</p>
+            <p>report Management</p>
           </a>
         </li>
+
+  <li class="nav-item">
+          <a href="{{ route('settings.index') }}" class="nav-link">
+            <i class="nav-icon bi bi-graph-up-arrow"></i>
+            <p>settings Management</p>
+          </a>
+        </li>
+
+
         @endif
 
         {{-- All roles: admin, market_officer, general --}}
