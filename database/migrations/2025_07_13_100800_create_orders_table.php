@@ -12,22 +12,13 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->onDelete('cascade');
-
-                
-
-            // $table->foreignId('crop_id')
-            //     ->constrained('crops')
-            //     ->onDelete('cascade');
-
             $table->foreignId('payment_method_id')
                 ->nullable()
                 ->constrained('payment_methods')
                 ->onDelete('set null');
-
             $table->enum('status', [
                 'pending',
                 'incompleted',
@@ -35,9 +26,6 @@ return new class extends Migration {
                 'cancelled',
                 'completed'
             ])->default('pending')->index();
-          // $table->foreignId('crop_id')->constrained()->onDelete('cascade'); // references 'id' on 'crops'
-
-
             $table->decimal('total_amount', 10, 2)
                 ->default(0)
                 ->comment('Total amount of the order');
@@ -48,8 +36,6 @@ return new class extends Migration {
         });
 
     }
-
-
 
     public function down(): void
     {

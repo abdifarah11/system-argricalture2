@@ -12,15 +12,13 @@ class CreateSettingsTable extends Migration
             $table->id();
 
             $table->string('system_name');
-            $table->string('phone')->nullable();
-            $table->string('location')->nullable();   // Google Maps link
-            $table->string('email')->nullable();      // mailto: link
-            $table->string('url')->nullable();        // System homepage URL
-            $table->string('logo_path')->nullable();  // Path to logo (e.g., public/img/logo.jpg)
-
-            // ✅ Newly added fields
-            $table->string('address')->nullable();    // Physical address
-            $table->string('whatsapp')->nullable();   // WhatsApp contact link
+            $table->integer('phone')->nullable();
+            $table->string('location')->nullable();   
+            $table->string('email')->nullable();      
+            $table->string('url')->nullable();        
+            $table->string('logo_path')->nullable(); 
+            $table->string('address')->nullable();    
+            $table->string('whatsapp')->nullable();  
 
             $table->timestamps();
         });
