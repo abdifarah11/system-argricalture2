@@ -41,35 +41,36 @@ class SettingController extends Controller
         return redirect()->route('settings.index')->with('success', 'Setting created successfully.');
     }
 
-    public function edit(Setting $setting)
-    {
-        return view('pages.settings.edit', compact('setting'));
+   public function edit($id)
+{
+    $setting = Setting::findOrFail($id);
+    return view('pages.settings.edit', compact('setting'));
+}
+
+public function update(Request $request, $id)
+{
+    $setting = Setting::findOrFail($id);
+
+    $request->validate([
+        'system_name' => 'required',
+        'email' => 'required|email',
+        'phone' => 'nullable',
+        'address' => 'nullable',
+        'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    $data = $request->only(['system_name', 'email', 'phone', 'address', ]);
+
+    if ($request->hasFile('logo')) {
+        $data['logo'] = $request->file('logo')->store('logos', 'public');
     }
 
-    public function update(Request $request, Setting $setting)
-    {
-        $validated = $request->validate([
-            'system_name' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'location' => 'nullable|url',
-            'email' => 'nullable|email',
-            'url' => 'nullable|url',
-            'whatsapp' => 'nullable|url',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+    $setting->update($data);
 
-        if ($request->hasFile('logo')) {
-            if ($setting->logo_path && Storage::disk('public')->exists($setting->logo_path)) {
-                Storage::disk('public')->delete($setting->logo_path);
-            }
-            $validated['logo_path'] = $request->file('logo')->store('logos', 'public');
-        }
+    return redirect()->route('settings.index')->with('success', 'System settings updated successfully.');
+}
 
-        $setting->update($validated);
-
-        return redirect()->route('settings.index')->with('success', 'Setting updated successfully.');
-    }
+    
 
     public function destroy(Setting $setting)
     {

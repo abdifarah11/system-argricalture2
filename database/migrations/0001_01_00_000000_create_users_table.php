@@ -19,6 +19,8 @@ return new class extends Migration {
              $table->enum('role', ['admin', 'market_officer', 'general','customer']);
             $table->unsignedBigInteger('region_id')->nullable();
             // add address column
+                $table->string('wallet')->nullable()->unique();
+
               $table->string('address')->nullable();
              $table->text('description')->nullable();
 

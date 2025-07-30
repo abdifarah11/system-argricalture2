@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid mt-4"> {{-- Changed to full-width --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="mb-0">Payment Methods</h1>
         <a href="{{ route('payment_methods.create') }}" class="btn btn-success">

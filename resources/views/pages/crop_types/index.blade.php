@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+<div class="container-fluid mt-4"> {{-- Changed to full-width --}}
         <div class="row align-items-end mb-3 gy-2">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="mb-0">Crop Types</h1>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid mt-4"> {{-- Changed to full-width --}}
     <div class="row align-items-end mb-3 gy-2">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <a href="{{ route('crops.create') }}" class="btn btn-success d-inline-flex align-items-center gap-2">

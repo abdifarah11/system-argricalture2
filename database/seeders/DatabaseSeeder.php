@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         CropTypesTableSeeder::class,
         CropsTableSeeder::class,
         PriceTableSeeder::class,
-        PriceHistoryTableSeeder::class,
+        ReportSeeder::class,
       PaymentMethodTableSeeder::class,
         OrdersTableSeeder::class,
        // PurchasesTableSeeder::class,

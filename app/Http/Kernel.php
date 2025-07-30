@@ -50,6 +50,7 @@ class Kernel extends HttpKernel
         'customer' => \App\Http\Middleware\CustomerMiddleware::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+       'check.web3' => \App\Http\Middleware\CheckWeb3Address::class,
 
         // Custom middleware
        

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid mt-4"> {{-- Changed to full-width --}}
     <div class="card shadow-sm border-0 rounded-4">
         <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">

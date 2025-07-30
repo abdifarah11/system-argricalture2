@@ -5,26 +5,24 @@
 @section('content')
 
 <style>
-  /* Background logo as watermark */
   body::before {
     content: "";
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;       /* full viewport width */
-    height: 100vh;      /* full viewport height */
+    width: 100vw;
+    height: 100vh;
     background-image: url('{{ asset('img/logo.jpg') }}');
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: cover;  /* cover entire background */
-    opacity: 0.05;           /* faint watermark */
+    background-size: cover;
+    opacity: 0.05;
     pointer-events: none;
     z-index: -1;
   }
 
-  /* Table styling */
   table.table {
-    background-color: rgba(255, 255, 255, 0.85); /* semi-transparent white background */
+    background-color: rgba(255, 255, 255, 0.85);
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     border-radius: 8px;
     overflow: hidden;
@@ -44,23 +42,27 @@
     text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
   }
 
-  /* Link hover effect */
   a.text-decoration-none:hover {
     text-decoration: underline;
     text-shadow: 0 0 5px rgba(0, 123, 255, 0.7);
   }
 
-  /* Badge styling */
   .badge.bg-secondary {
     box-shadow: 0 0 6px rgba(0,0,0,0.1);
   }
 </style>
 
-<div class="container mt-4">
+<div class="container-fluid mt-4">
     <h2 class="mb-4">
         <i class="bi bi-gear-fill me-2"></i> System Settings
     </h2>
-    
+
+    <div class="mb-3">
+        <a href="{{ route('settings.edit', $setting->id) }}" class="btn btn-primary shadow-sm">
+            <i class="bi bi-pencil-square me-1"></i> Edit Settings
+        </a>
+    </div>
+
     @if(session('success'))
         <div class="alert alert-success d-flex align-items-center" role="alert" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
             <i class="bi bi-check-circle-fill me-2"></i>
@@ -98,7 +100,7 @@
                 </th>
                 <td>
                     @if($setting->whatsapp)
-                        <a href="{{ $setting->whatsapp }}" target="_blank" class="text-success text-decoration-none" 
+                        <a href="{{ $setting->whatsapp }}" target="_blank" class="text-success text-decoration-none"
                            data-bs-toggle="tooltip" data-bs-placement="top" title="Chat on WhatsApp">
                             <i class="bi bi-chat-dots-fill me-1"></i> Chat on WhatsApp
                         </a>
@@ -121,7 +123,7 @@
                 </th>
                 <td>
                     @if($setting->location)
-                        <a href="{{ $setting->location }}" target="_blank" class="text-warning text-decoration-none" 
+                        <a href="{{ $setting->location }}" target="_blank" class="text-warning text-decoration-none"
                            data-bs-toggle="tooltip" data-bs-placement="top" title="View on Google Maps">
                             <i class="bi bi-pin-map-fill me-1"></i> View on Map
                         </a>
@@ -137,7 +139,7 @@
                 </th>
                 <td>
                     @if($setting->url)
-                        <a href="{{ $setting->url }}" target="_blank" class="text-info text-decoration-none" 
+                        <a href="{{ $setting->url }}" target="_blank" class="text-info text-decoration-none"
                            data-bs-toggle="tooltip" data-bs-placement="top" title="Visit System Homepage">
                             <i class="bi bi-box-arrow-up-right me-1"></i> {{ $setting->url }}
                         </a>
@@ -153,7 +155,7 @@
                 </th>
                 <td>
                     @if($setting->email)
-                        <a href="mailto:{{ $setting->email }}" class="text-danger text-decoration-none" 
+                        <a href="mailto:{{ $setting->email }}" class="text-danger text-decoration-none"
                            data-bs-toggle="tooltip" data-bs-placement="top" title="Send Email">
                             <i class="bi bi-envelope-paper-fill me-1"></i> {{ $setting->email }}
                         </a>
@@ -164,12 +166,12 @@
             </tr>
 
             <tr>
-                {{-- <th scope="row">
+                <th scope="row">
                     <i class="bi bi-image-fill text-secondary me-2"></i> Logo
-                </th> --}}
+                </th>
                 <td>
                     @if($setting->logo_path)
-                        <img src="{{ asset('storage/' . $setting->logo_path) }}" alt="Logo">
+                        <img src="{{ asset('storage/' . $setting->logo_path) }}" alt="Logo" height="80">
                     @else
                         <span class="badge bg-secondary">No Logo Uploaded</span>
                     @endif
