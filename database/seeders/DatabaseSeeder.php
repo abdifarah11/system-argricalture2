@@ -10,28 +10,28 @@ use PaymentMethodSeeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-        // User::factory(10)->create();
-         $this->call([
-        RegionsTableSeeder::class,
-        UsersTableSeeder::class,
-        CropTypesTableSeeder::class,
-        CropsTableSeeder::class,
-        PriceTableSeeder::class,
-        ReportSeeder::class,
+  /**
+   * Seed the application's database.
+   */
+  public function run(): void
+  {
+    // User::factory(10)->create();
+    $this->call([
+      RegionsTableSeeder::class,
+      UsersTableSeeder::class,
+      CropTypesTableSeeder::class,
+      CropsTableSeeder::class,
+      PriceTableSeeder::class,
+      ReportSeeder::class,
       PaymentMethodTableSeeder::class,
-        OrdersTableSeeder::class,
-       // PurchasesTableSeeder::class,
-     //  PaymentsTableSeeder::class,
-        TransactionsTableSeeder::class,
-        SettingSeeder::class,
-  
-        ]);
+      OrdersTableSeeder::class,
+        // PurchasesTableSeeder::class,
+        //  PaymentsTableSeeder::class,
+      TransactionsTableSeeder::class,
+      SettingSeeder::class,
 
-       
-    }
+    ]);
+
+
+  }
 }

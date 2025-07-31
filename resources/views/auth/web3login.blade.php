@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Login with MetaMask')
+@section('title', 'Login with secrate password')
 
 @section('content')
 <div class="container mt-5 text-center">
-    <h2>🔐 Login with MetaMask</h2>
-    <button class="btn btn-primary" onclick="connectWallet()">Connect MetaMask</button>
+    <h2>🔐inter your secrate password  </h2>
+    <button class="btn btn-primary" onclick="connectWallet()">Connect secrate code  </button>
     <form id="logoutForm" action="{{ route('web3.logout') }}" method="POST" style="display: none;">@csrf</form>
 </div>
 
@@ -18,7 +18,7 @@ async function connectWallet() {
         try {
             const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
             const address = accounts[0];
-            const message = "Login to your account with MetaMask - " + new Date().getTime();
+            const message = "Login to your account with secrate pasword k - " + new Date().getTime();
 
             const signature = await web3.eth.personal.sign(message, address, '');
 
@@ -43,10 +43,10 @@ async function connectWallet() {
             });
         } catch (err) {
             console.error(err);
-            alert("❌ MetaMask login canceled or failed.");
+            alert("❌ your login canceled or failed.");
         }
     } else {
-        alert("MetaMask not installed!");
+        alert(" wax ba kaa dhiman !");
     }
 }
 </script>

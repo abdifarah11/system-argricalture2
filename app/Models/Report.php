@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     use HasFactory;
-    protected $table = 'reports'; // ✅ this is important
 
     protected $fillable = [
         'crop_id',
         'region_id',
+        'order_id',
         'price',
         'unit',
         'quantity',
@@ -21,7 +21,6 @@ class Report extends Model
     ];
 
     // Relationships
-
     public function crop()
     {
         return $this->belongsTo(Crop::class);
@@ -30,5 +29,10 @@ class Report extends Model
     public function region()
     {
         return $this->belongsTo(Region::class);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }

@@ -14,7 +14,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('users.resetPassword', $user->id) }}" class="mt-3">
+    <form method="POST" action="{{ route('users.changePassword', $user->id) }}" class="mt-3">
         @csrf
 
         <div class="mb-3">

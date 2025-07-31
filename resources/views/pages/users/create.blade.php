@@ -11,10 +11,6 @@
             <input type="text" name="fullname" class="form-control" required value="{{ old('fullname') }}">
         </div>
 
-        <div class="mb-3">
-            <label>Username</label>
-            <input type="text" name="username" class="form-control" required value="{{ old('username') }}">
-        </div>
 
         <div class="mb-3">
             <label>Email</label>

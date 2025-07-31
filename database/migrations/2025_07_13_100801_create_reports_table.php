@@ -16,6 +16,9 @@ return new class extends Migration
 
     $table->unsignedBigInteger('crop_id');
     $table->foreign('crop_id')->references('id')->on('crops')->onDelete('cascade');
+     $table->foreignId('order_id')
+        ->constrained('orders')
+        ->onDelete('cascade');
 
     $table->foreignId('region_id')->constrained(); // Automatically references regions.id
     $table->decimal('price', 10, 2);

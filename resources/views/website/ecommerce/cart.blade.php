@@ -150,7 +150,7 @@
                                 <p class="mb-0 pe-4" id="total"> </p>
                             </div>
                             <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">
-                                <a href="{{ route('chackout.view') }}" class="position-relative me-4 my-auto">   Proceed Checkout </a>
+                                <a href="{{ route('checkout.view') }}" class="position-relative me-4 my-auto">   Proceed Checkout </a>
                              
                             </button>
                         </div>

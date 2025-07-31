@@ -15,7 +15,7 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Report::with(['crop', 'region']);
+            $query = Report::with(['crop', 'region', 'order']);
 
             if ($request->filled('crop_id')) {
                 $query->where('crop_id', $request->crop_id);
@@ -23,6 +23,10 @@ class ReportController extends Controller
 
             if ($request->filled('region_id')) {
                 $query->where('region_id', $request->region_id);
+            }
+
+            if ($request->filled('order_id')) {
+                $query->where('order_id', $request->order_id);
             }
 
             if ($request->filled('from_date') && $request->filled('to_date')) {
@@ -34,8 +38,9 @@ class ReportController extends Controller
 
             return DataTables::of($query)
                 ->addIndexColumn()
-                ->addColumn('crop', fn(Report $r) => $r->crop->name ?? '—')
-                ->addColumn('region', fn(Report $r) => $r->region->name ?? '—')
+                ->addColumn('order_id', fn(Report $r) => $r->order->id) // if you want to show more info, use $r->order->code or similar
+                ->addColumn('crop', fn(Report $r) => $r->crop->name)
+                ->addColumn('region', fn(Report $r) => $r->region->name)
                 ->editColumn('price', fn(Report $r) => '$' . number_format($r->price, 2))
                 ->editColumn('unit', fn(Report $r) => strtoupper($r->unit))
                 ->editColumn('quantity', fn(Report $r) => $r->quantity ?? '-')
@@ -52,7 +57,7 @@ class ReportController extends Controller
     // Generate PDF report based on filters
     public function exportPdf(Request $request)
     {
-        $query = Report::with(['crop', 'region']);
+        $query = Report::with(['crop', 'region', 'order']);
 
         if ($request->filled('crop_id')) {
             $query->where('crop_id', $request->crop_id);
@@ -60,6 +65,10 @@ class ReportController extends Controller
 
         if ($request->filled('region_id')) {
             $query->where('region_id', $request->region_id);
+        }
+
+        if ($request->filled('order_id')) {
+            $query->where('order_id', $request->order_id);
         }
 
         if ($request->filled('from_date') && $request->filled('to_date')) {
@@ -79,6 +88,5 @@ class ReportController extends Controller
 
         return $pdf->download('report_' . now()->format('Ymd_His') . '.pdf');
     }
-
-    // Edit and update methods removed since you don’t want edit/create features.
 }
+

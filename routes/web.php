@@ -143,8 +143,12 @@ Route::middleware(['auth', 'check.web3'])->group(function () {
         Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
-    // 🛍️ Customer Routes
-    Route::middleware(['role:customer'])->prefix('order')->group(function () {
+  
+
+
+});
+  // 🛍️ Customer Routes
+    Route::prefix('order')->group(function () {
         Route::post('/place', [OrderController::class, 'placeOrder'])->name('order.place');
         Route::get('/history', [OrderController::class, 'orderHistory'])->name('order.history');
         Route::get('/orders', [OrderController::class, 'viewOrder'])->name('order.view');
@@ -156,7 +160,7 @@ Route::middleware(['auth', 'check.web3'])->group(function () {
     Route::post('/update-cart', [CartController::class, 'updateCart'])->name('cart.update');
     Route::post('/remove-from-cart', [CartController::class, 'removeFromCart'])->name('cart.remove');
     Route::get('/checkout', [CartController::class, 'gocToCheckout'])->name('checkout.view');
-});
+
 
 // ✅ Breeze/Fortify/Auth routes
 require __DIR__ . '/auth.php';

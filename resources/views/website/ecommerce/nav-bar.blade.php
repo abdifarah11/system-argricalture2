@@ -12,8 +12,8 @@
             </button>
             <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                 <div class="navbar-nav mx-auto">
-                    <a href="index.html" class="nav-item nav-link active">Home</a>
-                    <a href="home.page" class="nav-item nav-link">Shop</a>
+                    {{-- <a href="index.html" class="nav-item nav-link active">Home</a>
+                    <a href="home.page" class="nav-item nav-link">Shop</a> --}}
 
                 </div>
                 {{-- You want to include it here --}}

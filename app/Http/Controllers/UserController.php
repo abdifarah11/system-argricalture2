@@ -19,7 +19,7 @@ class UserController extends Controller
                 ->select([
                     'users.id',
                     'users.fullname',
-                    'users.username',
+                    // 'users.username',
                     'users.email',
                     'users.role',
                     'regions.name as region',
@@ -52,16 +52,14 @@ class UserController extends Controller
     {
         $request->validate([
             'fullname'   => 'required|string|max:255',
-            'username'   => 'required|string|max:100|unique:users,username',
             'email'      => 'required|email|unique:users,email',
-            'role'       => ['required', Rule::in(['admin', 'market_officer', 'general ,'])],
+            'role'       => ['required', Rule::in(['admin', 'market_officer', 'general'])],
             'region_id'  => 'nullable|exists:regions,id',
             'password'   => 'required|string|min:6|confirmed',
         ]);
 
         User::create([
             'fullname'   => $request->fullname,
-            'username'   => $request->username,
             'email'      => $request->email,
             'role'       => $request->role,
             'region_id'  => $request->region_id,
@@ -83,24 +81,19 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $request->validate([
-            'fullname'   => 'required|string|max:255',
-            'username'   => [
-                'required', 'string', 'max:100',
-                Rule::unique('users', 'username')->ignore($user->id),
-            ],
-            'email'      => [
-                'required', 'email',
-                Rule::unique('users', 'email')->ignore($user->id),
-            ],
-            'role'       => ['required', Rule::in(['admin', 'market_officer', 'general'])],
-            'region_id'  => 'nullable|exists:regions,id',
-            'password'   => 'nullable|string|min:6|confirmed',
-        ]);
+$request->validate([
+    'fullname'   => 'required|string|max:255',
+    'email'      => [
+        'required', 'email',
+        Rule::unique('users', 'email')->ignore($user->id),
+    ],
+    'role'       => ['required', Rule::in(['admin', 'market_officer', 'general'])],
+    'region_id'  => 'nullable|exists:regions,id',
+    'password'   => 'nullable|string|min:6|confirmed',
+]);
 
         $user->update([
             'fullname'   => $request->fullname,
-            'username'   => $request->username,
             'email'      => $request->email,
             'role'       => $request->role,
             'region_id'  => $request->region_id,
@@ -119,63 +112,55 @@ class UserController extends Controller
     }
 
     /* ───────────── ADMIN RESET PASSWORD (NO EMAIL) ───────────── */
-   public function resetPasswor($id)
-{
-    // Check if current user is admin
-    if (auth()->user()->role !== 'admin') {
-        abort(403, 'Unauthorized action.');
+
+    public function resetPasswor($id)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $user = User::findOrFail($id);
+        return view('pages.users.changepassword', compact('user'));
     }
 
-    $user = User::findOrFail($id);
-    return view('pages.users.changepassword', compact('user'));
-}
+    public function showChangePasswordForm($id)
+    {
+        $authUser = auth()->user();
 
+        if ($authUser->role !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
 
-public function showChangePasswordForm($id)
-{
-    $authUser = auth()->user();
+        $user = User::findOrFail($id);
 
-    if ($authUser->role !== 'admin') {
-        abort(403, 'Unauthorized action.');
+        $allowedRoles = ['customer', 'market_officer','general'];
+
+        if (!in_array($user->role, $allowedRoles)) {
+            abort(403, 'You cannot change the password for this user.');
+        }
+
+        return view('pages.users.changepassword', compact('user'));
     }
 
-    $user = User::findOrFail($id);
+    // New improved changePassword method with 403 block and error page response
+    public function changePassword(Request $request, $userId)
+    {
+        $currentUser = auth()->user();
+        $targetUser = User::findOrFail($userId);
 
-    $allowedRoles = ['customer', 'general_officer'];
+        // Block if target user is admin and current user is not admin
+        if ($targetUser->role === 'admin' && $currentUser->role !== 'admin') {
+            // Return 403 view with custom button
+            return response()->view('pages.users.errors.403', [], 403);
+        }
 
-    if (!in_array($user->role, $allowedRoles)) {
-        abort(403, 'You cannot change the password for this user.');
+        $request->validate([
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $targetUser->password = Hash::make($request->password);
+        $targetUser->save();
+
+        return redirect()->route('users.index')->with('success', 'Password updated successfully.');
     }
-
-    return view('pages.users.changepassword', compact('user'));
-}
-
-public function changepassword(Request $request, $id)
-{
-    $authUser = auth()->user();
-
-    if ($authUser->role !== 'admin') {
-        abort(403, 'Unauthorized action.');
-    }
-
-    $user = User::findOrFail($id);
-
-    $allowedRoles = ['customer', 'general_officer'];
-
-    if (!in_array($user->role, $allowedRoles)) {
-        abort(403, 'You cannot change the password for this user.');
-    }
-
-    $request->validate([
-        'password' => 'required|string|min:6|confirmed',
-    ]);
-
-    $user->password = Hash::make($request->password);
-    $user->save();
-
-    return redirect()->route('users.index')->with('success', 'Password updated successfully.');
-}
-
-
-
 }

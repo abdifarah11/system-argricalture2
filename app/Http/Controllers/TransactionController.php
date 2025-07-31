@@ -30,7 +30,7 @@ class TransactionController extends Controller
                 ->addIndexColumn()
 
                 // ✅ Matches Blade names
-                ->addColumn('customer', fn(Transaction $t) => ucfirst($t->user->username ?? '—'))
+                ->addColumn('customer', fn(Transaction $t) => ucfirst($t->user->fullname ?? '—'))
 
                 // ✅ List order items like "Tomato, Banana"
                 ->addColumn('order_items', function (Transaction $t) {

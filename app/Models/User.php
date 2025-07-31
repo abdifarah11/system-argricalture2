@@ -19,12 +19,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'fullname',
-        'username',
         'email',
         'role',
         'region_id',
         'password',
-            ];
+        'phone'
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -48,7 +48,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-        public function region()
+    public function region()
     {
         return $this->belongsTo(Region::class);
     }

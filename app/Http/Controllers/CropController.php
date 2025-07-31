@@ -179,16 +179,21 @@ class CropController extends Controller
         return redirect()->route('crops.index')->with('success', 'Crop deleted successfully.');
     }
 ////search 
-      public function search(Request $request)
-    {
-        $query = $request->input('q');
+public function search(Request $request)
+{
+    $query = $request->input('q');
 
-        $crops = Crop::where('name', 'LIKE', "%{$query}%")
-                     ->orWhere('description', 'LIKE', "%{$query}%")
-                     ->get();
+    $crops = Crop::with('prices', 'cropType')->
+where('name', 'LIKE', "%{$query}%")
+                 ->orWhere('description', 'LIKE', "%{$query}%")
+                 ->get();
 
-        return view('website.ecommerce.search_results', compact('crops', 'query'));
-    }
+    return response()->json([
+        'success' => true,
+        'data' => $crops
+    ]);
+}
+
 }
 
 

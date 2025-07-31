@@ -13,11 +13,6 @@
         </div>
 
         <div class="mb-3">
-            <label>Username</label>
-            <input type="text" name="username" class="form-control" value="{{ old('username', $user->username) }}">
-        </div>
-
-        <div class="mb-3">
             <label>Email</label>
             <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}">
         </div>

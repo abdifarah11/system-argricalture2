@@ -53,7 +53,6 @@
                     <tr>
                         <th>#</th>
                         <th>Full Name</th>
-                        <th>Username</th>
                         <th>Email</th>
                         <th>Role</th>
                         <th>Region</th>
@@ -87,7 +86,6 @@ $(function () {
         columns: [
             { data: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'fullname', name: 'fullname' },
-            { data: 'username', name: 'username' },
             { data: 'email', name: 'email' },
             { data: 'role', name: 'role' },
             { data: 'region', name: 'regions.name' },
@@ -101,11 +99,11 @@ $(function () {
     });
 
     $('#regionFilter').on('change', function () {
-        table.column(5).search(this.value).draw();
+        table.column(4).search(this.value).draw();
     });
 
     $('#typeFilter').on('change', function () {
-        table.column(4).search(this.value).draw();
+        table.column(3).search(this.value).draw();
     });
 });
 </script>
