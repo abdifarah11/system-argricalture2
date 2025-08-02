@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Report;
-use App\Models\Crop;
-use App\Models\Region;
 use App\Models\Order;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
@@ -18,7 +16,8 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Transaction::with(['user', 'order','order.items.crop', 'paymentMethod'])
+            $query = Transaction::with(['user', 'order', 'order.items.crop', 'paymentMethod'])
+                ->where('status', 'completed') // ✅ Only completed transactions
                 ->select('transactions.*');
 
             if ($request->filled('order_id')) {
@@ -35,10 +34,7 @@ class ReportController extends Controller
 
             return DataTables::of($query)
                 ->addIndexColumn()
-                // ->editColumn('customer', fn($report) => $report->user->name ?? 'N/A')
-
-                 ->addColumn('customer', content: fn(Transaction $t) => ucfirst($t->user->fullname ?? '—'))
-
+                ->addColumn('customer', fn(Transaction $t) => ucfirst($t->user->fullname ?? '—'))
                 ->addColumn('order_items', function (Transaction $t) {
                     if ($t->order && $t->order->items->count()) {
                         return $t->order->items
@@ -47,10 +43,10 @@ class ReportController extends Controller
                     }
                     return '—';
                 })
-                ->editColumn('payment_method', fn($report) => $report->paymentMethod->name ?? 'N/A')
-                ->editColumn('amount', fn($report) => number_format($report->amount, 2))
-                ->editColumn('status', fn($report) => ucfirst($report->status))
-                ->editColumn('created_at', fn($report) => $report->created_at->format('Y-m-d H:i'))
+                ->editColumn('payment_method', fn($t) => $t->paymentMethod->name ?? 'N/A')
+                ->editColumn('amount', fn($t) => number_format($t->amount, 2))
+                ->editColumn('status', fn($t) => ucfirst($t->status))
+                ->editColumn('created_at', fn($t) => $t->created_at->format('Y-m-d H:i'))
                 ->make(true);
         }
 
@@ -62,16 +58,13 @@ class ReportController extends Controller
     /**
      * Export filtered reports to PDF
      */
-    public function export_pdf(Request $request)
+    public function exportPdf(Request $request)
     {
-        $query = Report::with(['crop', 'region', 'order']);
+        $query = Transaction::with(['user', 'order.items.crop', 'paymentMethod'])
+            ->where('status', 'completed'); // ✅ Only completed
 
-        if ($request->filled('crop_id')) {
-            $query->where('crop_id', $request->crop_id);
-        }
-
-        if ($request->filled('region_id')) {
-            $query->where('region_id', $request->region_id);
+        if ($request->filled('order_id')) {
+            $query->where('order_id', $request->order_id);
         }
 
         if ($request->filled('from_date')) {
@@ -84,6 +77,7 @@ class ReportController extends Controller
 
         $reports = $query->get();
 
-        return view('pages.reports.pdf', compact('reports'));
+        $pdf = Pdf::loadView('pages.reports.pdf', compact('reports'))->setPaper('a4', 'landscape');
+        return $pdf->download('reports_' . now()->format('Ymd_His') . '.pdf');
     }
 }
