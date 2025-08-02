@@ -53,7 +53,7 @@
     
     <style>
         :root {
-            --primary-color: #5C8D4E;
+            --primary-color: #214612ff;
             --secondary-color: #F7C35F;
             --accent-color: #E74C3C;
             --light-bg: #F9F9F7;
@@ -75,11 +75,11 @@
         }
         
         .hero-header {
-            background: linear-gradient(135deg, rgba(92, 141, 78, 0.9) 0%, rgba(140, 194, 75, 0.8) 100%), 
+            /* background: linear-gradient(135deg, rgba(92, 141, 78, 0.9) 0%, rgba(140, 194, 75, 0.8) 100%), 
                         url('img/hero-bg-pattern.png') center/cover no-repeat;
             color: white;
             position: relative;
-            overflow: hidden;
+            overflow: hidden; */
         }
         
         .hero-header::before {
@@ -325,8 +325,9 @@
         <div class="container h-100">
             <div class="row g-5 align-items-center h-100">
                 <div class="col-lg-6">
-                    <h4 class="mb-3 text-white-50">100% Organic & Locally Sourced</h4>
-                    <h1 class="mb-4 display-3 fw-bold text-white">Farm Fresh Delivered To Your Door</h1>
+                    {{-- <h4 class="mb-3 text-white-50">100% Organic & Locally Sourced</h4> --}}
+                    <h1 class="mb-4 display-3 fw-bold text-black ">     Welcome to Pure Vegetables & Fresh Fruits
+</h1>
                     <p class="mb-5 lead text-white-75">Discover the freshest organic produce from local farmers near you. Healthy eating made simple.</p>
                     
                     <div class="position-relative w-100 mb-4">
@@ -488,8 +489,13 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Main Script -->
-    <script>
+
+    {{-- <script>
+       
+    </script>
+
+    @stack('scripts') --}}
+   <script>
         // Wait for everything to load
         $(window).on('load', function() {
             // Hide spinner with fade out effect
@@ -513,6 +519,15 @@
                 });
             });
         });
+
+
+
+
+        //#
+
+
+
+        //
 
         // Dark/Light mode toggle
         $('#themeToggle').click(function() {
@@ -552,27 +567,20 @@
         }, 4000);
 
         // Initialize vegetable carousel
-        $(document).ready(function () {
+       $(document).ready(function() {
             $(".vegetable-carousel").owlCarousel({
                 autoplay: true,
-                smartSpeed: 1000,
                 loop: true,
-                margin: 24,
-                nav: true,
-                dots: false,
-                navText: [
-                    '<i class="fas fa-chevron-left"></i>',
-                    '<i class="fas fa-chevron-right"></i>'
-                ],
+                margin: 20,
+                nav: false,
+                dots: true,
                 responsive: {
                     0: { items: 1 },
-                    576: { items: 2 },
-                    768: { items: 3 },
-                    992: { items: 4 }
+                    600: { items: 2 },
+                    1000: { items: 3 }
                 }
             });
         });
-
         // Main AJAX functionality
         $(document).ready(function () {
             const imageBase = "http://127.0.0.1:8000/storage/";
@@ -888,5 +896,7 @@
     </script>
     
     @stack('scripts')
+
+
 </body>
 </html>

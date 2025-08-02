@@ -6,16 +6,16 @@ use App\Models\Report;
 use App\Models\Crop;
 use App\Models\Region;
 use Illuminate\Http\Request;
-use Yajra\DataTables\Facades\DataTables;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Yajra\DataTables\DataTables;
 
 class ReportController extends Controller
 {
-    // Show report page or return DataTables JSON
+    // Show reports page with crops and regions data for filters
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Report::with(['crop', 'region', 'order']);
+            $query = Report::with(['crop', 'region', 'order'])
+                ->select('reports.*');
 
             if ($request->filled('crop_id')) {
                 $query->where('crop_id', $request->crop_id);
@@ -25,68 +25,49 @@ class ReportController extends Controller
                 $query->where('region_id', $request->region_id);
             }
 
-            if ($request->filled('order_id')) {
-                $query->where('order_id', $request->order_id);
+            if ($request->filled('from_date')) {
+                $query->whereDate('created_at', '>=', $request->from_date);
             }
 
-            if ($request->filled('from_date') && $request->filled('to_date')) {
-                $query->whereBetween('created_at', [
-                    $request->from_date . ' 00:00:00',
-                    $request->to_date . ' 23:59:59',
-                ]);
+            if ($request->filled('to_date')) {
+                $query->whereDate('created_at', '<=', $request->to_date);
             }
 
             return DataTables::of($query)
                 ->addIndexColumn()
-                ->addColumn('order_id', fn(Report $r) => $r->order->id) // if you want to show more info, use $r->order->code or similar
-                ->addColumn('crop', fn(Report $r) => $r->crop->name)
-                ->addColumn('region', fn(Report $r) => $r->region->name)
-                ->editColumn('price', fn(Report $r) => '$' . number_format($r->price, 2))
-                ->editColumn('unit', fn(Report $r) => strtoupper($r->unit))
-                ->editColumn('quantity', fn(Report $r) => $r->quantity ?? '-')
-                ->editColumn('created_at', fn(Report $r) => $r->created_at->format('Y-m-d H:i'))
+                ->editColumn('crop', fn($report) => $report->crop->name ?? '-')
+                ->editColumn('region', fn($report) => $report->region->name ?? '-')
+                ->editColumn('order', fn($report) => $report->order->name ?? '-') // order name here
+                ->editColumn('created_at', fn($report) => $report->created_at->format('Y-m-d'))
                 ->make(true);
         }
 
-        $crops = Crop::orderBy('name')->get(['id', 'name']);
-        $regions = Region::orderBy('name')->get(['id', 'name']);
+        $crops = Crop::orderBy('name')->get();
+        $regions = Region::orderBy('name')->get();
 
         return view('pages.reports.index', compact('crops', 'regions'));
     }
 
-    // Generate PDF report based on filters
-    public function exportPdf(Request $request)
+    // Export filtered reports to PDF
+    public function export_pdf(Request $request)
     {
         $query = Report::with(['crop', 'region', 'order']);
 
         if ($request->filled('crop_id')) {
             $query->where('crop_id', $request->crop_id);
         }
-
         if ($request->filled('region_id')) {
             $query->where('region_id', $request->region_id);
         }
-
-        if ($request->filled('order_id')) {
-            $query->where('order_id', $request->order_id);
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
         }
 
-        if ($request->filled('from_date') && $request->filled('to_date')) {
-            $query->whereBetween('created_at', [
-                $request->from_date . ' 00:00:00',
-                $request->to_date . ' 23:59:59',
-            ]);
-        }
+        $reports = $query->get();
 
-        $data = $query->orderBy('created_at', 'desc')->get();
-
-        if ($data->isEmpty()) {
-            return back()->with('error', 'No records found for the selected filters.');
-        }
-
-        $pdf = Pdf::loadView('pages.reports.pdf', compact('data'))->setPaper('a4', 'landscape');
-
-        return $pdf->download('report_' . now()->format('Ymd_His') . '.pdf');
+        return view('pages.reports.pdf', compact('reports'));
     }
 }
-

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Crop;
 use App\Models\PaymentMethod;
 use App\Models\Transaction;
+use App\Models\Report;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -34,6 +35,7 @@ class OrderController extends Controller
         $resCode = $result['responseCode'] ?? null;
 
         if ($resCode === '2001') {
+            // Optional: Fetch order_id if available and generate report
             return response()->json(['message' => 'successfully'], 200);
         } elseif ($resCode === '5306') {
             return response()->json(['message' => 'unsuccessfully'], 400);
@@ -94,7 +96,6 @@ class OrderController extends Controller
         return view('pages.Orders.index', compact('statuses', 'users', 'payments'));
     }
 
-    /* ───────────── Create ───────────── */
     public function create()
     {
         $users = User::select('id', 'fullname')->orderBy('fullname')->get();
@@ -105,21 +106,19 @@ class OrderController extends Controller
         return view('pages.Orders.create', compact('users', 'crops', 'payments', 'statuses'));
     }
 
-    /* ───────────── Store ───────────── */
     public function store(Request $request)
     {
-        Order::create($this->validated($request));
+        $order = Order::create($this->validated($request));
+        $this->generateReport($order); // New addition
         return redirect()->route('orders.index')->with('success', 'Order created successfully.');
     }
 
-    /* ───────────── Show ───────────── */
     public function show(Order $order)
     {
         $order->load(['user', 'items.crop', 'paymentMethod']);
         return view('pages.Orders.show', compact('order'));
     }
 
-    /* ───────────── Edit ───────────── */
     public function edit(Order $order)
     {
         $users = User::select('id', 'fullname')->orderBy('fullname')->get();
@@ -130,72 +129,19 @@ class OrderController extends Controller
         return view('pages.Orders.edit', compact('order', 'users', 'crops', 'payments', 'statuses'));
     }
 
-    /* ───────────── Update ───────────── */
     public function update(Request $request, Order $order)
     {
         $order->update($this->validated($request));
         return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
     }
 
-    /* ───────────── Destroy ───────────── */
     public function destroy(Order $order)
     {
         $order->delete();
         return back()->with('success', 'Order deleted successfully.');
     }
 
-    /* ───────────── Helpers ───────────── */
-    private function validated(Request $request): array
-    {
-        return $request->validate([
-            'user_id' => ['required', 'exists:users,id'],
-            'crop_id' => ['required', 'exists:crops,id'],
-            'payment_method_id' => ['nullable', 'exists:payment_methods,id'],
-            'status' => ['required', Rule::in($this->statuses())],
-            'total_amount' => ['required', 'numeric', 'min:0'],
-            'description' => ['nullable', 'string'],
-        ]);
-    }
-
-    private function statuses(): array
-    {
-        return ['pending', 'confirmed', 'cancelled', 'completed', 'incompleted'];
-    }
-
-    private function statusBadge(string $status): string
-    {
-        $colors = [
-            'pending' => 'warning text-dark',
-            'confirmed' => 'primary',
-            'cancelled' => 'danger',
-            'completed' => 'success',
-            'incompleted' => 'secondary',
-        ];
-
-        $class = $colors[$status] ?? 'light text-dark';
-        return '<span class="badge bg-' . $class . '">' . ucfirst($status) . '</span>';
-    }
-
-    private function actionButtons(Order $o): string
-    {
-        return '
-            <a href="' . route('orders.show', $o) . '" class="btn btn-sm btn-info me-1">
-                <i class="bi bi-eye"></i>
-            </a>
-            <a href="' . route('orders.edit', $o) . '" class="btn btn-sm btn-primary me-1">
-                <i class="bi bi-pencil"></i>
-            </a>
-            <form action="' . route('orders.destroy', $o) . '" method="POST" class="d-inline"
-                onsubmit="return confirm(\'Delete this order?\');">
-                ' . csrf_field() . method_field('DELETE') . '
-                <button class="btn btn-sm btn-danger">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </form>
-        ';
-    }
-
-    /* ───────────── Place Order ───────────── */
+    /* ───────────── Place Order (Updated with Report) ───────────── */
     public function placeOrder(Request $request)
     {
         $validated = $request->validate([
@@ -270,12 +216,80 @@ class OrderController extends Controller
             ]);
 
             $order->update(['status' => 'completed']);
-            session()->forget('cart');
 
+            $this->generateReport($order); // New addition
+
+            session()->forget('cart');
             return redirect()->route('homepage')->with('success', 'Order placed successfully.');
         }
 
         session()->forget('cart');
         return redirect()->route('homepage')->with('error', 'Payment failed or unexpected error.');
+    }
+
+    private function validated(Request $request): array
+    {
+        return $request->validate([
+            'user_id' => ['required', 'exists:users,id'],
+            'crop_id' => ['required', 'exists:crops,id'],
+            'payment_method_id' => ['nullable', 'exists:payment_methods,id'],
+            'status' => ['required', Rule::in($this->statuses())],
+            'total_amount' => ['required', 'numeric', 'min:0'],
+            'description' => ['nullable', 'string'],
+        ]);
+    }
+
+    private function statuses(): array
+    {
+        return ['pending', 'confirmed', 'cancelled', 'completed', 'incompleted'];
+    }
+
+    private function statusBadge(string $status): string
+    {
+        $colors = [
+            'pending' => 'warning text-dark',
+            'confirmed' => 'primary',
+            'cancelled' => 'danger',
+            'completed' => 'success',
+            'incompleted' => 'secondary',
+        ];
+
+        $class = $colors[$status] ?? 'light text-dark';
+        return '<span class="badge bg-' . $class . '">' . ucfirst($status) . '</span>';
+    }
+
+    private function actionButtons(Order $o): string
+    {
+        return '
+            <a href="' . route('orders.show', $o) . '" class="btn btn-sm btn-info me-1">
+                <i class="bi bi-eye"></i>
+            </a>
+            <a href="' . route('orders.edit', $o) . '" class="btn btn-sm btn-primary me-1">
+                <i class="bi bi-pencil"></i>
+            </a>
+            <form action="' . route('orders.destroy', $o) . '" method="POST" class="d-inline"
+                onsubmit="return confirm(\'Delete this order?\');">
+                ' . csrf_field() . method_field('DELETE') . '
+                <button class="btn btn-sm btn-danger">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </form>
+        ';
+    }
+
+    /* ───────────── Report Generator ───────────── */
+    private function generateReport(Order $order): void
+    {
+        foreach ($order->items as $item) {
+            Report::create([
+                'order_id' => $order->id,
+                'crop_id' => $item->crop_id,
+                'region_id' => $order->user->region_id ?? null,
+                'price' => $item->price,
+                'quantity' => $item->quantity,
+                'total' => $item->total,
+                'created_at' => now(),
+            ]);
+        }
     }
 }

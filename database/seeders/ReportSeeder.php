@@ -5,34 +5,50 @@ namespace Database\Seeders;
 use App\Models\Report;
 use App\Models\Crop;
 use App\Models\Region;
-use App\Models\Order; // Add this if you're linking to orders
+use App\Models\Order;
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class ReportSeeder extends Seeder
 {
     public function run(): void
     {
-        // Ensure crops, regions, and orders exist
         if (Crop::count() == 0 || Region::count() == 0 || Order::count() == 0) {
             \Log::warning('Seed crops, regions, and orders before running ReportSeeder.');
             return;
         }
 
-        $crops = Crop::all();
-        $regions = Region::all();
-        $orders = Order::all();
+        foreach (range(1,2) as $i) {
+            $reports = [
+                [
+                    'order_id' => 1,
+                    'crop_id' => 1,
+                    'region_id' => 1,
+                    'kg' => 12,
+                    'litre' => 0,
+                    'price' => 150.00,
+                    'quantity' => 10,
+                    'unit' => 'kg',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
+             
+                [
+                    'order_id' => 3,
+                    'crop_id' => 2,
+                    'region_id' => 3,
+                    'kg' => 0,
+                    'litre' => 20,
+                    'price' => 90.00,
+                    'quantity' => 15,
+                    'unit' => 'litre',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
+            ];
 
-        foreach (range(1, 20) as $i) {
-            Report::create([
-                'order_id'  => $orders->random()->id,
-                'crop_id'   => $crops->random()->id,
-                'region_id' => $regions->random()->id,
-                'price'     => rand(10, 1000),
-                'unit'      => ['kg', 'piece', 'litre'][array_rand(['kg', 'piece', 'litre'])],
-                'quantity'  => rand(1, 100),
-                'kg'        => rand(0, 50),
-                'litre'     => rand(0, 50),
-            ]);
+            // Insert multiple records at once
+            Report::insert($reports);
         }
     }
 }
