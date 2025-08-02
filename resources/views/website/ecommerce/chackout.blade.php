@@ -109,13 +109,13 @@
                                         @enderror
                                     </div>
 
-                                    <div class="form-check my-3">
+                                    {{-- <div class="form-check my-3">
                                         <input type="checkbox" class="form-check-input @error('create_account') is-invalid @enderror" id="Account-1" name="create_account" value="1" {{ old('create_account') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="Account-1">Create an account?</label>
                                         @error('create_account')
                                             <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
-                                    </div>
+                                    </div> --}}
 
                                     <hr>
 
@@ -162,16 +162,20 @@
                                          </table>
                                      </div>
                                    
+<div class="form-check d-flex align-items-center gap-3 my-3">
+    <input type="radio" class="form-check-input bg-primary border-0"
+        id="payment-waafi" name="payment_method" value="waafi" required  
+        style="width: 30px; height: 30px;">
+        
+    <label class="form-check-label fs-5 fw-semibold mb-0" for="payment-waafi" style="margin-left: 10px;">
+        Waafi
+    </label>
+</div>
 
-                <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                    <div class="col-12">
-                        <div class="form-check text-start my-3">
-                            <input type="radio" class="form-check-input bg-primary border-0"
-                                id="payment-waafi" name="payment_method" value="waafi" required>
-                            <label class="form-check-label" for="payment-waafi">Waafi</label>
-                        </div>
-                    </div>
-                </div>
+
+
+            <!-- Waafi -->
+       
 
                 {{-- <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
                     <div class="col-12">

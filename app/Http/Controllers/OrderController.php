@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Crop;
 use App\Models\PaymentMethod;
 use App\Models\Transaction;
-use App\Models\Report;
+// use App\Models\Report;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -109,7 +109,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $order = Order::create($this->validated($request));
-        $this->generateReport($order); // New addition
+        // $this->generateReport($order); // New addition
         return redirect()->route('orders.index')->with('success', 'Order created successfully.');
     }
 
@@ -217,7 +217,7 @@ class OrderController extends Controller
 
             $order->update(['status' => 'completed']);
 
-            $this->generateReport($order); // New addition
+            // $this->generateReport($order); // New addition
 
             session()->forget('cart');
             return redirect()->route('homepage')->with('success', 'Order placed successfully.');
@@ -277,19 +277,19 @@ class OrderController extends Controller
         ';
     }
 
-    /* ───────────── Report Generator ───────────── */
-    private function generateReport(Order $order): void
-    {
-        foreach ($order->items as $item) {
-            Report::create([
-                'order_id' => $order->id,
-                'crop_id' => $item->crop_id,
-                'region_id' => $order->user->region_id ?? null,
-                'price' => $item->price,
-                'quantity' => $item->quantity,
-                'total' => $item->total,
-                'created_at' => now(),
-            ]);
-        }
-    }
+    // /* ───────────── Report Generator ───────────── */
+    // private function generateReport(Order $order): void
+    // {
+    //     foreach ($order->items as $item) {
+    //         Report::create([
+    //             'order_id' => $order->id,
+    //             'crop_id' => $item->crop_id,
+    //             'region_id' => $order->user->region_id ?? null,
+    //             'price' => $item->price,
+    //             'quantity' => $item->quantity,
+    //             'total' => $item->total,
+    //             'created_at' => now(),
+    //         ]);
+    //     }
+    // }
 }

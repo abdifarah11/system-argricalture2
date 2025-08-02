@@ -150,7 +150,7 @@
                                 <p class="mb-0 pe-4" id="total"> </p>
                             </div>
                             <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">
-                                <a href="{{ route('checkout.view') }}" class="position-relative me-4 my-auto">   Proceed Checkout </a>
+                                <a href="{{ route('checkout.view') }}" class="position-relative me-4 my-auto">  Checkout </a>
                              
                             </button>
                         </div>
@@ -218,7 +218,7 @@
                             <a class="btn-link" href="">International Orders</a>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-6">
+                    {{-- <div class="col-lg-3 col-md-6">
                         <div class="footer-item">
                             <h4 class="text-light mb-3">Contact</h4>
                             <p>Address: 1429 Netus Rd, NY 48247</p>
@@ -227,7 +227,7 @@
                             <p>Payment Accepted</p>
                             <img src="img/payment.png" class="img-fluid" alt="">
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

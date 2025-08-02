@@ -18,7 +18,7 @@ class ReportSeeder extends Seeder
             return;
         }
 
-        foreach (range(1,2) as $i) {
+        foreach (range(1,5) as $i) {
             $reports = [
                 [
                     'order_id' => 1,
