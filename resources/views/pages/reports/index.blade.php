@@ -5,7 +5,7 @@
 @section('content')
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="mb-0 text-primary fw-bold">📊 Reports</h3>
+        <h3 class="mb-0 text-primary fw-bold">📊 Completed Reports</h3>
         <div>
             <a href="{{ route('reports.export_pdf', request()->query()) }}" target="_blank"
                class="btn btn-outline-primary me-2 shadow-sm">
@@ -18,27 +18,45 @@
     </div>
 
     {{-- Filter Form --}}
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <div class="row g-3 align-items-end">
-                <div class="col-md-6">
-                    <label class="form-label text-muted">Date Range</label>
-                    <div class="input-group shadow-sm">
-                        <span class="input-group-text bg-white border-end-0">
-                            <i class="bi bi-calendar-date text-primary"></i>
-                        </span>
-                        <input type="date" id="from_date" class="form-control border-start-0">
-                        <span class="input-group-text bg-white">to</span>
-                        <input type="date" id="to_date" class="form-control">
-                        <button class="btn btn-outline-secondary" type="button" id="clearDateRange"
-                            title="Clear Date Range">
-                            <i class="bi bi-x-circle-fill"></i>
-                        </button>
+    <form id="filterForm">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+                    {{-- Date Range --}}
+                    <div class="col-md-6">
+                        <label class="form-label text-muted">Date Range</label>
+                        <div class="input-group shadow-sm">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="bi bi-calendar-date text-primary"></i>
+                            </span>
+                            <input type="date" name="from_date" id="from_date" value="{{ request('from_date') }}"
+                                class="form-control border-start-0">
+                            <span class="input-group-text bg-white">to</span>
+                            <input type="date" name="to_date" id="to_date" value="{{ request('to_date') }}"
+                                class="form-control">
+                            <button class="btn btn-outline-secondary" type="button" id="clearDateRange"
+                                title="Clear Date Range">
+                                <i class="bi bi-x-circle-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Order ID --}}
+                    <div class="col-md-4">
+                        <label class="form-label text-muted">Order</label>
+                        <select id="order_id" class="form-select shadow-sm" name="order_id">
+                            <option value="">All Orders</option>
+                            @foreach ($orders as $order)
+                                <option value="{{ $order->id }}" {{ request('order_id') == $order->id ? 'selected' : '' }}>
+                                    #{{ $order->id }} - {{ $order->user->fullname ?? 'No Customer' }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 
     {{-- Data Table --}}
     <div class="card border-0 shadow-lg">
@@ -49,7 +67,7 @@
                     <tr>
                         <th>#</th>
                         <th>Customer</th>
-                        <th>Order</th>
+                        <th>Order Items</th>
                         <th>Payment Method</th>
                         <th>Amount</th>
                         <th>Status</th>
@@ -80,7 +98,7 @@
 
 <script>
     $(function () {
-        var table = $('#reportsTable').DataTable({
+        const table = $('#reportsTable').DataTable({
             processing: true,
             serverSide: true,
             responsive: true,
@@ -89,13 +107,13 @@
                 data: function (d) {
                     d.from_date = $('#from_date').val();
                     d.to_date = $('#to_date').val();
+                    d.order_id = $('#order_id').val();
                 }
             },
             columns: [
                 { data: 'DT_RowIndex', orderable: false, searchable: false },
-                       { data: 'customer', name: 'customer' },
-                        { data: 'order_items', name: 'order_items' },
-              
+                { data: 'customer', name: 'customer' },
+                { data: 'order_items', name: 'order_items' },
                 { data: 'payment_method', name: 'payment_method' },
                 { data: 'amount', name: 'amount' },
                 { data: 'status', name: 'status' },
@@ -115,14 +133,28 @@
             }
         });
 
-        $('#from_date, #to_date').on('change', function () {
+        // Auto-refresh on filter change
+        $('#from_date, #to_date, #order_id').on('change', function () {
             table.draw();
+            updateExportLink();
         });
 
         $('#resetFilters, #clearDateRange').on('click', function () {
-            $('#from_date, #to_date').val('');
+            $('#from_date, #to_date, #order_id').val('');
             table.draw();
+            updateExportLink();
         });
+
+        function updateExportLink() {
+            const params = new URLSearchParams({
+                from_date: $('#from_date').val(),
+                to_date: $('#to_date').val(),
+                order_id: $('#order_id').val(),
+            }).toString();
+
+            const exportUrl = '{{ route("reports.export_pdf") }}' + '?' + params;
+            $('a[href^="{{ route("reports.export_pdf") }}"]').attr('href', exportUrl);
+        }
 
         $.fn.dataTable.ext.errMode = 'none';
     });

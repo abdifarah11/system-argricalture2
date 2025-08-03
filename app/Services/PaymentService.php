@@ -70,9 +70,15 @@ class PaymentService
        
         $url = "https://api.waafipay.net/asm";
 
-        $response = Http::withHeaders([
+        // $response = Http::withHeaders([
+        //     'Content-Type' => 'application/json',
+        // ])->post($url, $payload);
+        $response = Http::timeout(60)
+        ->withHeaders([
             'Content-Type' => 'application/json',
-        ])->post($url, $payload);
+        ])
+        ->post($url, $payload);
+
       //  return $response->json();
  // ✅ Always return an array
         return $response->json() ?? [];

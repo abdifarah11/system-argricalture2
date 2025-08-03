@@ -155,9 +155,9 @@ class OrderController extends Controller
         ]);
 
         $paymentMethodMap = [
-            'edahab' => 1,
+            // 'edahab' => 1,
             'waafi' => 2,
-            'zaad' => 3,
+            // 'zaad' => 3,
         ];
 
         $user = User::create([
@@ -277,19 +277,5 @@ class OrderController extends Controller
         ';
     }
 
-    // /* ───────────── Report Generator ───────────── */
-    // private function generateReport(Order $order): void
-    // {
-    //     foreach ($order->items as $item) {
-    //         Report::create([
-    //             'order_id' => $order->id,
-    //             'crop_id' => $item->crop_id,
-    //             'region_id' => $order->user->region_id ?? null,
-    //             'price' => $item->price,
-    //             'quantity' => $item->quantity,
-    //             'total' => $item->total,
-    //             'created_at' => now(),
-    //         ]);
-    //     }
-    // }
+    
 }
