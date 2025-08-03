@@ -2,9 +2,10 @@
   <div class="sidebar-brand">
     <a href="{{ route('dashboard') }}" class="brand-link">
       <img src="{{ asset('img/logo.jpg') }}" alt="Logo" class="brand-image opacity-75 shadow" />
-      <span class="brand-text fw-light">Agriculture Market</span>
+      <span class="brand-text fw-light">A Web Platform  </span>
     </a>
   </div>
+  
 
   <div class="sidebar-wrapper">
     <nav class="mt-2">

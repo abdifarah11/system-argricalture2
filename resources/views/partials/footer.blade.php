@@ -8,7 +8,7 @@
     {{-- <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>. --}}
   </strong>
 
-  <h4> Agriculture Market Price Trade </h4>
+  <h4> A Web Platform for Real-Time Agricultural  </h4>
 
   <!--end::Copyright-->
 </footer>
