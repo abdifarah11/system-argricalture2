@@ -19,8 +19,8 @@ class UserController extends Controller
                 ->select([
                     'users.id',
                     'users.fullname',
-                    // 'users.username',
                     'users.email',
+                    'users.phone',
                     'users.role',
                     'regions.name as region',
                     'users.created_at',
@@ -36,8 +36,8 @@ class UserController extends Controller
                 ->make(true);
         }
 
-        $regions   = Region::orderBy('name')->get(['id', 'name']);
-        $userTypes = ['admin', 'market_officer', 'general'];
+        $regions = Region::orderBy('name')->get(['id', 'name']);
+        $userTypes = ['admin', 'market_officer', 'customer'];
 
         return view('pages.users.index', compact('regions', 'userTypes'));
     }
@@ -51,19 +51,21 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'fullname'   => 'required|string|max:255',
-            'email'      => 'required|email|unique:users,email',
-            'role'       => ['required', Rule::in(['admin', 'market_officer', 'general'])],
-            'region_id'  => 'nullable|exists:regions,id',
-            'password'   => 'required|string|min:6|confirmed',
+            'fullname' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'nullable|string|max:20',
+            'role' => ['required', Rule::in(['admin', 'market_officer', 'customer'])],
+            'region_id' => 'nullable|exists:regions,id',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
         User::create([
-            'fullname'   => $request->fullname,
-            'email'      => $request->email,
-            'role'       => $request->role,
-            'region_id'  => $request->region_id,
-            'password'   => Hash::make($request->password),
+            'fullname' => $request->fullname,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'role' => $request->role,
+            'region_id' => $request->region_id,
+            'password' => Hash::make($request->password),
         ]);
 
         return redirect()->route('users.index')->with('success', 'User created.');
@@ -71,7 +73,7 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user    = User::findOrFail($id);
+        $user = User::findOrFail($id);
         $regions = Region::orderBy('name')->get();
 
         return view('pages.users.edit', compact('user', 'regions'));
@@ -81,23 +83,26 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-$request->validate([
-    'fullname'   => 'required|string|max:255',
-    'email'      => [
-        'required', 'email',
-        Rule::unique('users', 'email')->ignore($user->id),
-    ],
-    'role'       => ['required', Rule::in(['admin', 'market_officer', 'general'])],
-    'region_id'  => 'nullable|exists:regions,id',
-    'password'   => 'nullable|string|min:6|confirmed',
-]);
+        $request->validate([
+            'fullname' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'phone' => 'nullable|string|max:20',
+            'role' => ['required', Rule::in(['admin', 'market_officer', 'customer'])],
+            'region_id' => 'nullable|exists:regions,id',
+            'password' => 'nullable|string|min:6|confirmed',
+        ]);
 
         $user->update([
-            'fullname'   => $request->fullname,
-            'email'      => $request->email,
-            'role'       => $request->role,
-            'region_id'  => $request->region_id,
-            'password'   => $request->filled('password') ? Hash::make($request->password) : $user->password,
+            'fullname' => $request->fullname,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'role' => $request->role,
+            'region_id' => $request->region_id,
+            'password' => $request->filled('password') ? Hash::make($request->password) : $user->password,
         ]);
 
         return redirect()->route('users.index')->with('success', 'User updated.');
@@ -110,8 +115,6 @@ $request->validate([
 
         return redirect()->route('users.index')->with('success', 'User deleted.');
     }
-
-    /* ───────────── ADMIN RESET PASSWORD (NO EMAIL) ───────────── */
 
     public function resetPasswor($id)
     {
@@ -133,7 +136,7 @@ $request->validate([
 
         $user = User::findOrFail($id);
 
-        $allowedRoles = ['customer', 'market_officer','general'];
+        $allowedRoles = ['customer', 'market_officer', 'customer'];
 
         if (!in_array($user->role, $allowedRoles)) {
             abort(403, 'You cannot change the password for this user.');
@@ -142,15 +145,12 @@ $request->validate([
         return view('pages.users.changepassword', compact('user'));
     }
 
-    // New improved changePassword method with 403 block and error page response
     public function changePassword(Request $request, $userId)
     {
         $currentUser = auth()->user();
         $targetUser = User::findOrFail($userId);
 
-        // Block if target user is admin and current user is not admin
         if ($targetUser->role === 'admin' && $currentUser->role !== 'admin') {
-            // Return 403 view with custom button
             return response()->view('pages.users.errors.403', [], 403);
         }
 

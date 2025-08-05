@@ -16,6 +16,10 @@
             <label>Email</label>
             <input type="email" name="email" class="form-control" required value="{{ old('email') }}">
         </div>
+          <div class="mb-3">
+            <label>Phone</label>
+            <input type="Phone" name="Phone" class="form-control" required value="{{ old('Phone') }}">
+        </div>
 
         <div class="mb-3">
             <label>Role</label>
@@ -24,7 +28,7 @@
                 <option value="admin">Admin</option>
                 <option value="market_officer">Market Officer</option>
                 <option value="customer">customer</option>
-                <option value="general">General</option>
+                {{-- <option value="customer">customer</option> --}}
             </select>
         </div>
 

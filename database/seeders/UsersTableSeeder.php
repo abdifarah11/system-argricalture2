@@ -37,16 +37,7 @@ class UsersTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            [
-                'fullname'   => 'Buyer Ahmed',
-                'email'      => 'buyer@gmail.com',
-                'phone'      => '611232323',
-                'password'   => Hash::make('12345678'),
-                'role'       => 'general',
-                'region_id'  => 3,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        
             [
                 'fullname'   => 'customer Ahmed',
                 'email'      => 'customer@gmail.com',

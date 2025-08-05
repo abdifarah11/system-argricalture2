@@ -405,6 +405,63 @@
 
 
     <!-- Vegetables Carousel with Cards -->
+        <!-- Vegetables Carousel with Cards -->
+    <section class="container-fluid vesitable py-5">
+        <div class="container py-5">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="display-5 fw-bold mb-3">Seasonal Specials</h2>
+                    <p class="lead text-muted">Fresh picks for this season</p>
+                </div>
+            </div>
+            
+            <div class="owl-carousel vegetable-carousel">
+                @foreach ($categories as $vegetable)
+                    <div class="vesitable-item rounded-4 overflow-hidden shadow-sm border-0">
+                        <div class="vesitable-img position-relative">
+                            <img src="{{ asset('storage/' . $vegetable->image) }}" class="img-fluid w-100" alt="{{ $vegetable->name }}" style="height: 220px; object-fit: cover;">
+                            <div class="position-absolute top-0 end-0 p-3">
+                                <button class="btn btn-sm btn-light rounded-circle shadow-sm">
+                                    <i class="far fa-heart text-danger"></i>
+                                </button>
+                            </div>
+                            <div class="bg-primary text-white px-3 py-1 rounded-pill position-absolute" style="top:10px; left:10px;">
+                                {{ $vegetable->name }}
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="mb-0">{{ $vegetable->name }}</h5>
+                                <div class="d-flex align-items-center">
+                                    <small class="text-warning me-1">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </small>
+                                    <small>(24)</small>
+                                </div>
+                            </div>
+                            <p class="text-muted small mb-3">{{ Str::limit($vegetable->description, 80) }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="text-primary mb-0">$3.99/lb</h5>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-primary rounded-circle">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <span class="fw-bold">1</span>
+                                    <button class="btn btn-sm btn-outline-primary rounded-circle">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
 
 
     <!-- Stats Section with Animation -->
@@ -615,6 +672,8 @@
                         `);
 
                         categories.forEach(cat => {
+                            
+                            
                             $('#category-tabs').append(`
                                 <li class="nav-item">
                                     <button class="nav-link" data-id="${cat.id}" type="button">
@@ -629,6 +688,8 @@
                     } else {
                         $('#crop-list').html('<div class="col-12 text-center py-5"><i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i><h4>Failed to load categories</h4><p class="text-muted">Please try refreshing the page</p></div>');
                     }
+
+                    
                 },
                 error: function () {
                     $('.crop-loading').hide();
@@ -642,16 +703,18 @@
                 $(this).addClass('active');
 
                 const cropTypeId = $(this).data('id');
+             
                 loadCrops(cropTypeId);
             });
 
             function loadCrops(cropTypeId) {
+                
                 $('#crop-list').html('<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-3">Loading fresh produce...</p></div>');
 
                 // Build URL: if "all", no crop_type query param
                 const apiUrl = (cropTypeId && cropTypeId !== 'all') ?
-                    `http://127.0.0.1:8000/api/ecommerce/categories?crop_type=${cropTypeId}` :
-                    `http://127.0.0.1:8000/api/ecommerce/categories`;
+                    `http://127.0.0.1:8000/api/ecommerce/categories?region_id=${cropTypeId}` :
+                    `http://127.0.0.1:8000/api/ecommerce/categories?region_id=${cropTypeId}`;
 
                 $.ajax({
                     url: apiUrl,
@@ -664,6 +727,9 @@
                             let foundCrops = false;
 
                             response.categories.forEach(category => {
+                                // Skip empty categories
+                                
+
                                 if (category.crops.length > 0) {
                                     category.crops.forEach(crop => {
                                         foundCrops = true;

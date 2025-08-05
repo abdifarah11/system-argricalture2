@@ -54,6 +54,7 @@
                         <th>#</th>
                         <th>Full Name</th>
                         <th>Email</th>
+                        <th>Phone</th>
                         <th>Role</th>
                         <th>Region</th>
                         <th>Created At</th>
@@ -87,6 +88,7 @@ $(function () {
             { data: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'fullname', name: 'fullname' },
             { data: 'email', name: 'email' },
+            { data: 'phone', name: 'phone' }, // ✅ Phone column here
             { data: 'role', name: 'role' },
             { data: 'region', name: 'regions.name' },
             { data: 'created_at', name: 'created_at' },
@@ -99,11 +101,11 @@ $(function () {
     });
 
     $('#regionFilter').on('change', function () {
-        table.column(4).search(this.value).draw();
+        table.column(5).search(this.value).draw(); // Adjusted for correct column index
     });
 
     $('#typeFilter').on('change', function () {
-        table.column(3).search(this.value).draw();
+        table.column(4).search(this.value).draw(); // Adjusted for correct column index
     });
 });
 </script>

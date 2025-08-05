@@ -70,45 +70,48 @@ class EcommerceController extends Controller
 //         'categories' => $categories
 //     ]);
 // }
-
 public function index(Request $request)
 {
-    $cropTypeId = $request->query('crop_type'); // Optional
-    $regionId = $request->query('region_id');   // Optional
+    $cropTypeId = $request->query('crop_type');
+    $regionId   = $request->query('region_id'); // from request
 
     $query = CropType::with([
         'crops' => function ($cropQuery) use ($regionId) {
-            $cropQuery->select('id', 'name', 'description', 'image', 'crop_type_id')
+            $cropQuery->select('id', 'name', 'description', 'image', 'crop_type_id', 'region_id')
                 ->with([
-                    'prices' => function ($priceQuery) use ($regionId) {
+                    'region:id,name',
+                    'prices' => function ($priceQuery) {
                         $priceQuery->select('id', 'crop_id', 'region_id', 'price', 'unit', 'quantity', 'kg', 'litre')
                                    ->with('region:id,name');
-
-                        // If region_id is provided and not 'all', filter it
-                        if (!empty($regionId) && $regionId !== 'all') {
-                            $priceQuery->where('region_id', $regionId);
-                        }
                     }
                 ]);
+
+            // ✅ Filter crops by region_id if provided
+            if (!empty($regionId) && $regionId !== 'all') {
+                $cropQuery->where('region_id', $regionId);
+             
+            }
         }
     ])->select('id', 'name', 'description', 'image');
 
-    // Filter by crop_type only if it's specified and not 'all'
     if (!empty($cropTypeId) && $cropTypeId !== 'all') {
         $query->where('id', $cropTypeId);
     }
 
     $categories = $query->get();
-
-    // Always get all available regions for the frontend dropdown
     $regions = Region::select('id', 'name')->get();
 
     return response()->json([
-        'success' => true,
+        'success'    => true,
         'categories' => $categories,
-        'regions' => $regions
+        'regions'    => $regions,
     ]);
 }
+
+
+
+
+
 
 
 }

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('phone', 100)->nullable(); // <-- ADD THIS LINE
 
             $table->string('email')->unique();
-            $table->enum('role', ['admin', 'market_officer', 'general', 'customer'])->default('customer');
+            $table->enum('role', ['admin', 'market_officer', 'customer'])->default('customer');
 
             $table->unsignedBigInteger('region_id')->nullable();
             // add address columnSS

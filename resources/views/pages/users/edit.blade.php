@@ -18,11 +18,15 @@
         </div>
 
         <div class="mb-3">
+            <label>Phone</label>
+            <input type="text" name="phone" class="form-control" value="{{ old('phone', $user->phone) }}">
+
+        <div class="mb-3">
             <label>Role</label>
             <select name="role" class="form-select">
                 <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
                 <option value="market_officer" {{ $user->role == 'market_officer' ? 'selected' : '' }}>Market Officer</option>
-                <option value="general" {{ $user->role == 'general' ? 'selected' : '' }}>General</option>
+                <option value="customer" {{ $user->role == 'customer' ? 'selected' : '' }}>customer</option>
             </select>
         </div>
 

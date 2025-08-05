@@ -51,6 +51,18 @@
             </select>
         </div>
 
+        {{-- Price --}}
+        <div class="mb-3">
+            <label for="price" class="form-label">Price (per kg)</label>
+            <input type="number" name="price" id="price" class="form-control" value="{{ old('price', $crop->price) }}" step="0.01" required>
+        </div>  
+
+        {{-- Quantity --}}
+        <div class="mb-3">
+            <label for="quantity" class="form-label">Quantity (in kg)</label>
+            <input type="number" name="quantity" id="quantity" class="form-control" value="{{ old('quantity', $crop->quantity) }}" step="0.01" required>
+        </div>  
+
         {{-- Existing Image --}}
         @if ($crop->image)
             <div class="mb-3">

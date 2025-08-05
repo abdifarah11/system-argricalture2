@@ -2,40 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CropType;
+use App\Models\Region;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-
 
 class HomeController extends Controller
 {
-    //
-//     public function index(Request $request)
-// {
-//     $regionId = $request->query('region_id');
+    public function index(Request $request)
+    {
+        $regionId = $request->query('region_id');
 
-//     $categories = Http::get("http://127.0.0.1:8000/api/ecommerce/categories", [
-//         'region_id' => $regionId
-//     ])->json()['categories'];
+        // Load crop types with crops and optionally filter prices by region
+        $categories = CropType::with(['crops.prices' => function ($query) use ($regionId) {
+            if (!empty($regionId)) {
+                $query->where('region_id', $regionId);
+            }
+        }])->get();
 
-//     $regions = Region::all();
+        $regions = Region::all();
 
-//     return view('website.home', compact('categories', 'regions'));
-// }
-public function index(Request $request)
-{
-    $regionId = $request->query('region_id');
+        // Set a test session value (for debugging or testing purposes)
+        session()->put('test', 'This is a test session value');
 
-    $categories = \App\Models\CropType::with(['crops.prices' => function ($query) use ($regionId) {
-        if ($regionId) {
-            $query->where('region_id', $regionId);
-        }
-    }])->get();
-
-    $regions = \App\Models\Region::all();
-
-    session()->put('test', 'THis is test session value');
-
-    return view('website.home', compact('categories', 'regions'));
-}
-
+        return view('website.home', compact('categories', 'regions'));
+    }
 }
