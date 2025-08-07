@@ -10,12 +10,16 @@
                 data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars text-primary"></span>
             </button>
+
+            
             <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                 <div class="navbar-nav mx-auto">
                     {{-- <a href="index.html" class="nav-item nav-link active">Home</a>
                     <a href="home.page" class="nav-item nav-link">Shop</a> --}}
 
                 </div>
+                                
+
                 {{-- You want to include it here --}}
                 <x-menu-item />
 

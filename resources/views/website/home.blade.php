@@ -356,7 +356,7 @@
             <div class="row mb-5">
                 <div class="col-12 text-center">
                     <h2 class="display-5 fw-bold mb-3">Fresh From The Farm</h2>
-                    <p class="lead text-muted">Browse our selection of seasonal produce</p>
+                    <p class="lead text-muted">fadlan dooro  gobalka aad joogto  si aad u ogaato  qiimah  la iibiyo dalaga beeraha </p>
                     <div class="d-flex justify-content-center">
                         <div class="border-bottom border-primary border-3" style="width: 80px;"></div>
                     </div>
@@ -767,6 +767,7 @@
                                     });
                                 }
                             });
+                            
 
                             cropsHtml += '</div>';
                             $('#crop-list').html(foundCrops ? cropsHtml : `
