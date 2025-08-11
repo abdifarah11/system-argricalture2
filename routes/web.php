@@ -161,6 +161,12 @@ Route::middleware(['auth', 'check.web3'])->group(function () {
     Route::post('/remove-from-cart', [CartController::class, 'removeFromCart'])->name('cart.remove');
     Route::get('/checkout', [CartController::class, 'gocToCheckout'])->name('checkout.view');
 
+    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+
+    Route::get('/checkout', [CartController::class, 'goToCheckout'])->name('checkout.view');
+
+
+
 
 // ✅ Breeze/Fortify/Auth routes
 require __DIR__ . '/auth.php';

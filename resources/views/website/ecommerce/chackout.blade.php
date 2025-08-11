@@ -62,6 +62,9 @@
                                  <div class="col-md-12 col-lg-6 col-xl-7">
                                      <div class="row"></div>
 
+
+                                     
+
                                     <input type="hidden" name="cart" value='@json(session('cart'))'>
 
                                     <div class="form-item">
@@ -161,51 +164,136 @@
                                              </tbody>
                                          </table>
                                      </div>
-                                   
-<div class="form-check d-flex align-items-center gap-3 my-3">
-    <input type="radio" class="form-check-input bg-primary border-0"
-        id="payment-waafi" name="payment_method" value="waafi" required  
-        style="width: 30px; height: 30px;">
-        
-    <label class="form-check-label fs-5 fw-semibold mb-0" for="payment-waafi" style="margin-left: 10px;">
-        Waafi
-    </label>
+
+
+
+                                     <!-- Payment Methods Section -->
+
+                                     <style>
+  .payment-option {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 24px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    background-color: #fff;
+    user-select: none;
+    margin: 10px 0; /* vertical spacing if multiple options */
+  }
+
+  /* Hover and keyboard focus */
+  .payment-option:hover,
+  .payment-option:focus-within {
+    box-shadow: 0 10px 20px rgba(42, 157, 143, 0.25);
+    transform: translateY(-2px);
+  }
+
+  .payment-option input[type="radio"] {
+    width: 24px;
+    height: 24px;
+    margin-right: 16px;
+    cursor: pointer;
+    accent-color: #2a9d8f; /* modern checked color */
+    transition: box-shadow 0.3s ease;
+  }
+
+  /* Add subtle shadow when checked */
+  .payment-option input[type="radio"]:checked {
+    box-shadow: 0 0 6px 2px rgba(42, 157, 143, 0.6);
+  }
+
+  .payment-option span {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #264653;
+    cursor: pointer; /* make label text also have pointer */
+  }
+</style>
+
+<label for="payment-waafi" class="payment-option">
+  <input type="radio" id="payment-waafi" name="payment_method" value="waafi" required>
+  <span>Waafi</span>
+</label>
+
+
+                  
+
+
+
+
+    <!-- PayPal -->
+
+
+
+<!-- Action Buttons -->
+<div class="row g-3 align-items-center pt-4">
+    <div class="col-md-4">
+        <button type="submit" 
+            class="btn btn-primary py-3 px-4 w-100 text-uppercase fw-bold shadow-sm rounded-pill">
+            <i class="bi bi-check-circle-fill me-2"></i> Place Order
+        </button>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ route('cart.view') }}" 
+           class="btn btn-outline-secondary py-3 px-4 w-100 text-uppercase fw-bold shadow-sm rounded-pill">
+           <i class="bi bi-arrow-left-circle me-2"></i> Back
+        </a>
+    </div>
+   <div class="col-md-4">
+  <button id="cancel-cart" 
+    class="btn btn-danger py-3 px-4 w-100 text-uppercase fw-bold shadow-sm rounded-pill d-flex align-items-center justify-content-center" 
+    style="gap: 0.5rem;">
+    <i class="bi bi-x-circle-fill"></i> Cancel
+  </button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $('#cancel-cart').on('click', function(e) {
+    e.preventDefault();
+
+    if (!confirm('Are you sure you want to cancel and remove all items from your cart?')) {
+      return;
+    }
+
+    // Disable button and add spinner icon while processing
+    const $btn = $(this);
+    $btn.prop('disabled', true);
+    $btn.html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Cancelling...');
+
+    $.ajax({
+      url: "{{ route('cart.clear') }}",
+      type: "DELETE",
+      data: {
+        _token: "{{ csrf_token() }}"
+      },
+      success: function(response) {
+        if (response.success) {
+          alert(response.message);
+          window.location.href = "{{ route('homepage') }}";
+        } else {
+          alert('Failed to clear cart. Please try again.');
+          $btn.prop('disabled', false).html('<i class="bi bi-x-circle-fill me-2"></i> Cancel');
+        }
+      },
+      error: function() {
+        alert('Something went wrong. Please try again later.');
+        $btn.prop('disabled', false).html('<i class="bi bi-x-circle-fill me-2"></i> Cancel');
+      }
+    });
+  });
+</script>
+
 </div>
 
 
 
-            <!-- Waafi -->
-       
 
-                {{-- <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                    <div class="col-12">
-                        <div class="form-check text-start my-3">
-                            <input type="radio" class="form-check-input bg-primary border-0"
-                                id="payment-edahab" name="payment_method" value="edahab">
-                            <label class="form-check-label" for="payment-edahab">E-Dahab</label>
-                        </div>
-                    </div>
-                </div>
+                                   
 
-                <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                    <div class="col-12">
-                        <div class="form-check text-start my-3">
-                            <input type="radio" class="form-check-input bg-primary border-0"
-                                id="payment-zaad" name="payment_method" value="zaad">
-                            <label class="form-check-label" for="payment-zaad">Zaad</label>
-                        </div>
-                    </div>
-                </div> --}}
-
-
-
-
-
-                                     <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                                         <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Place Order</button>
-                                     </div>
-                                 </div>
-                             </div>
+                             
                          </form>
 
                      </div>

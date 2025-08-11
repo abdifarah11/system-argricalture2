@@ -17,7 +17,7 @@
     @endif
 
     {{-- ✅ Filters --}}
-    <div class="card mb-3">
+    <div class="card mb-5">
         <div class="card-body">
             <div class="row gy-2">
                 <div class="col-md-3">
@@ -29,16 +29,16 @@
                     </select>
                 </div>
 
-                <div class="col-md-3">
+                {{-- <div class="col-md-3">
                     <select id="userFilter" class="form-select">
                         <option value="">All Users</option>
                         @foreach($users as $u)
                             <option value="{{ $u->fullname }}">{{ $u->fullname }}</option>
                         @endforeach
                     </select>
-                </div>
+                </div> --}}
 
-                <div class="col-md-3">
+                <div class="col-md-5">
                     <select id="paymentFilter" class="form-select">
                         <option value="">All Payments</option>
                         @foreach($payments as $p)

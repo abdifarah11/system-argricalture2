@@ -135,7 +135,7 @@
 
             <tr>
                 <th scope="row">
-                    <i class="bi bi-globe2 text-info me-2"></i> URL
+                    <i class="bi bi-globe2 text-info me-2"></i> webside
                 </th>
                 <td>
                     @if($setting->url)

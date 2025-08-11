@@ -1,10 +1,8 @@
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-  <div class="sidebar-brand">
-    <a href="{{ route('dashboard') }}" class="brand-link">
-      <img src="{{ asset('img/logo.jpg') }}" alt="Logo" class="brand-image opacity-75 shadow" />
-      <span class="brand-text fw-light">A Web Platform  </span>
-    </a>
-  </div>
+ <div class="sidebar-brand d-flex align-items-center gap-2 p-2">
+  <img src="{{ asset('img/logo.jpg') }}" alt="Logo" class="brand-image opacity-75 shadow rounded-circle" style="width: 40px; height: 40px; object-fit: cover;" />
+  <span class="brand-text fw-semibold fs-5">A Web Platform</span>
+</div>
   
 
   <div class="sidebar-wrapper">
@@ -22,13 +20,13 @@
       <li class="nav-item">
         <a href="{{ route('users.index') }}" class="nav-link">
         <i class="nav-icon bi bi-people-fill"></i>
-        <p>Users Management</p>
+        <p>All Users</p>
         </a>
       </li>
       <li class="nav-item">
         <a href="{{ route('payment_methods.index') }}" class="nav-link">
         <i class="nav-icon bi bi-credit-card-2-front-fill"></i>
-        <p>Payments Management</p>
+        <p>Payments</p>
         </a>
       </li>
     @endif
@@ -38,26 +36,26 @@
       <li class="nav-item">
         <a href="{{ route('orders.index') }}" class="nav-link">
         <i class="nav-icon bi bi-bag-check-fill"></i>
-        <p>Orders Management</p>
+        <p>Orders</p>
         </a>
       </li>
       <li class="nav-item">
         <a href="{{ route('transactions.index') }}" class="nav-link">
         <i class="nav-icon bi bi-currency-exchange"></i>
-        <p>Transaction Management</p>
+        <p>Transactions</p>
         </a>
       </li>
       <li class="nav-item">
         <a href="{{ route('reports.index') }}" class="nav-link">
         <i class="nav-icon bi bi-graph-up-arrow"></i>
-        <p>report Management</p>
+        <p>reports</p>
         </a>
       </li>
 
       <li class="nav-item">
         <a href="{{ route('settings.index') }}" class="nav-link">
         <i class="nav-icon bi bi-gear-fill"></i>
-        <p>Settings Management</p>
+        <p>Settings</p>
         </a>
       </li>
 
