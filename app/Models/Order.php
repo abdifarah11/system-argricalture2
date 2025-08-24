@@ -16,6 +16,8 @@ class Order extends Model
         'status',
         'total_amount',
         'description',
+        'delivery_status',
+
     ];
 
     /**

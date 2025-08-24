@@ -7,11 +7,10 @@ use App\Models\User;
 use App\Models\Crop;
 use App\Models\PaymentMethod;
 use App\Models\Transaction;
-// use App\Models\Report;
-use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
+use App\Services\PaymentService;
 
 class OrderController extends Controller
 {
@@ -35,14 +34,13 @@ class OrderController extends Controller
         $resCode = $result['responseCode'] ?? null;
 
         if ($resCode === '2001') {
-            // Optional: Fetch order_id if available and generate report
-            return response()->json(['message' => 'successfully'], 200);
+            return response()->json(['message' => 'Payment successful'], 200);
         } elseif ($resCode === '5306') {
-            return response()->json(['message' => 'unsuccessfully'], 400);
+            return response()->json(['message' => 'Payment failed'], 400);
         }
 
         return response()->json([
-            'message' => 'unknown response',
+            'message' => 'Unknown response',
             'data' => $result
         ], 500);
     }
@@ -58,90 +56,114 @@ class OrderController extends Controller
                 $orders->where('status', $request->status);
             }
 
-            if ($request->filled('user_id')) {
-                $orders->where('user_id', $request->user_id);
+            if ($request->filled('delivery_status')) {
+                $orders->where('delivery_status', $request->delivery_status);
             }
 
-            if ($request->filled('payment_method_id')) {
-                $orders->where('payment_method_id', $request->payment_method_id);
+            if ($request->filled('payment')) {
+                $orders->whereHas('paymentMethod', function ($q) use ($request) {
+                    $q->where('name', $request->payment);
+                });
             }
 
             return DataTables::of($orders)
                 ->addIndexColumn()
                 ->addColumn('user', fn($o) => $o->user->fullname ?? '—')
-                ->filterColumn('user', function ($query, $keyword) {
-                    $query->whereHas('user', fn($q) => $q->where('fullname', 'like', "%{$keyword}%"));
-                })
+                ->filterColumn('user', fn($query, $keyword) => $query->whereHas('user', fn($q) => $q->where('fullname', 'like', "%{$keyword}%")))
                 ->addColumn('payment_method', fn($o) => $o->paymentMethod->name ?? '—')
-                ->filterColumn('payment_method', function ($query, $keyword) {
-                    $query->whereHas('paymentMethod', fn($q) => $q->where('name', 'like', "%{$keyword}%"));
-                })
+                ->filterColumn('payment_method', fn($query, $keyword) => $query->whereHas('paymentMethod', fn($q) => $q->where('name', 'like', "%{$keyword}%")))
                 ->addColumn('status', fn($o) => $this->statusBadge($o->status))
+                ->addColumn('delivery_status', fn($o) => $this->deliveryBadge($o->delivery_status))
                 ->addColumn('total_amount', fn($o) => '$' . number_format($o->total_amount, 2))
-                ->addColumn('items', function ($o) {
-                    return $o->items->map(function ($item) {
-                        return ($item->crop->name ?? $item->name) . ' (x' . $item->quantity . ')';
-                    })->implode(', ');
-                })
+                ->addColumn('items', fn($o) => $o->items->map(fn($item) => ($item->crop->name ?? $item->name) . ' (x' . $item->quantity . ')')->implode(', '))
                 ->editColumn('created_at', fn($o) => $o->created_at->format('Y-m-d H:i'))
                 ->addColumn('action', fn($o) => $this->actionButtons($o))
-                ->rawColumns(['status', 'action'])
+                ->rawColumns(['status', 'delivery_status', 'action'])
                 ->make(true);
         }
 
         $statuses = $this->statuses();
-        $users = User::select('id', 'fullname')->orderBy('fullname')->get();
+        $deliveryStatuses = $this->deliveryStatuses();
         $payments = PaymentMethod::select('id', 'name')->orderBy('name')->get();
 
-        return view('pages.Orders.index', compact('statuses', 'users', 'payments'));
+        return view('pages.Orders.index', compact('statuses', 'deliveryStatuses', 'payments'));
     }
 
+    /* ───────────── Create ───────────── */
     public function create()
     {
         $users = User::select('id', 'fullname')->orderBy('fullname')->get();
         $crops = Crop::select('id', 'name')->orderBy('name')->get();
         $payments = PaymentMethod::select('id', 'name')->orderBy('name')->get();
         $statuses = $this->statuses();
+        $deliveryStatuses = $this->deliveryStatuses();
 
-        return view('pages.Orders.create', compact('users', 'crops', 'payments', 'statuses'));
+        return view('pages.Orders.create', compact('users', 'crops', 'payments', 'statuses', 'deliveryStatuses'));
     }
 
+    /* ───────────── Store ───────────── */
     public function store(Request $request)
     {
-        $order = Order::create($this->validated($request));
-        // $this->generateReport($order); // New addition
+        $validated = $this->validated($request);
+
+        // Auto-set delivery_status if status is completed
+        if ($validated['status'] === 'completed') {
+            $validated['delivery_status'] = 'delivered';
+        }
+
+        $order = Order::create([
+            'user_id' => $validated['user_id'],
+            'payment_method_id' => $validated['payment_method_id'] ?? null,
+            'status' => $validated['status'],
+            'delivery_status' => $validated['delivery_status'] ?? 'not_delivered',
+            'total_amount' => $validated['total_amount'],
+            'description' => $validated['description'] ?? null,
+        ]);
+
         return redirect()->route('orders.index')->with('success', 'Order created successfully.');
     }
 
+    /* ───────────── Show ───────────── */
     public function show(Order $order)
     {
         $order->load(['user', 'items.crop', 'paymentMethod']);
         return view('pages.Orders.show', compact('order'));
     }
 
+    /* ───────────── Edit ───────────── */
     public function edit(Order $order)
     {
         $users = User::select('id', 'fullname')->orderBy('fullname')->get();
         $crops = Crop::select('id', 'name')->orderBy('name')->get();
         $payments = PaymentMethod::select('id', 'name')->orderBy('name')->get();
         $statuses = $this->statuses();
+        $deliveryStatuses = $this->deliveryStatuses();
 
-        return view('pages.Orders.edit', compact('order', 'users', 'crops', 'payments', 'statuses'));
+        return view('pages.Orders.edit', compact('order', 'users', 'crops', 'payments', 'statuses', 'deliveryStatuses'));
     }
 
+    /* ───────────── Update ───────────── */
     public function update(Request $request, Order $order)
     {
-        $order->update($this->validated($request));
+        $validated = $this->validated($request);
+
+        // Auto-set delivery_status if status is completed
+        if ($validated['status'] === 'completed') {
+            $validated['delivery_status'] = 'delivered';
+        }
+
+        $order->update($validated);
         return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
     }
 
+    /* ───────────── Destroy ───────────── */
     public function destroy(Order $order)
     {
         $order->delete();
         return back()->with('success', 'Order deleted successfully.');
     }
 
-    /* ───────────── Place Order (Updated with Report) ───────────── */
+    /* ───────────── Frontend Place Order ───────────── */
     public function placeOrder(Request $request)
     {
         $validated = $request->validate([
@@ -155,9 +177,9 @@ class OrderController extends Controller
         ]);
 
         $paymentMethodMap = [
-            // 'edahab' => 1,
             'waafi' => 2,
-            // 'zaad' => 3,
+            'edahab' => 1,
+            'zaad' => 3,
         ];
 
         $user = User::create([
@@ -166,10 +188,6 @@ class OrderController extends Controller
             'phone' => $validated['mobile'],
             'password' => bcrypt($validated['mobile']),
         ]);
-
-        if (!$user) {
-            return back()->with('error', 'Failed to create user.');
-        }
 
         $cart = session('cart', []);
         if (empty($cart)) {
@@ -182,6 +200,7 @@ class OrderController extends Controller
             'user_id' => $user->id,
             'payment_method_id' => $paymentMethodMap[$validated['payment_method']],
             'status' => 'pending',
+            'delivery_status' => 'not_delivered',
             'total_amount' => $totalAmount,
             'description' => $validated['order_notes'] ?? null,
         ]);
@@ -202,9 +221,7 @@ class OrderController extends Controller
             'description' => $order->description ?? 'Order Payment',
         ]);
 
-        $resCode = $result['responseCode'] ?? null;
-
-        if ($resCode === '2001') {
+        if (($result['responseCode'] ?? null) === '2001') {
             Transaction::create([
                 'user_id' => $user->id,
                 'order_id' => $order->id,
@@ -215,11 +232,9 @@ class OrderController extends Controller
                 'transaction_date' => now(),
             ]);
 
-            $order->update(['status' => 'completed']);
-
-            // $this->generateReport($order); // New addition
-
+            $order->update(['status' => 'completed', 'delivery_status' => 'delivered']);
             session()->forget('cart');
+
             return redirect()->route('homepage')->with('success', 'Order placed successfully.');
         }
 
@@ -227,6 +242,7 @@ class OrderController extends Controller
         return redirect()->route('homepage')->with('error', 'Payment failed or unexpected error.');
     }
 
+    /* ───────────── Helpers ───────────── */
     private function validated(Request $request): array
     {
         return $request->validate([
@@ -234,6 +250,7 @@ class OrderController extends Controller
             'crop_id' => ['required', 'exists:crops,id'],
             'payment_method_id' => ['nullable', 'exists:payment_methods,id'],
             'status' => ['required', Rule::in($this->statuses())],
+            'delivery_status' => ['required', Rule::in($this->deliveryStatuses())],
             'total_amount' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
         ]);
@@ -244,6 +261,11 @@ class OrderController extends Controller
         return ['pending', 'confirmed', 'cancelled', 'completed', 'incompleted'];
     }
 
+    private function deliveryStatuses(): array
+    {
+        return ['delivered', 'not_delivered'];
+    }
+
     private function statusBadge(string $status): string
     {
         $colors = [
@@ -252,6 +274,17 @@ class OrderController extends Controller
             'cancelled' => 'danger',
             'completed' => 'success',
             'incompleted' => 'secondary',
+        ];
+
+        $class = $colors[$status] ?? 'light text-dark';
+        return '<span class="badge bg-' . $class . '">' . ucfirst($status) . '</span>';
+    }
+
+    private function deliveryBadge(string $status): string
+    {
+        $colors = [
+            'delivered' => 'success',
+            'not_delivered' => 'danger',
         ];
 
         $class = $colors[$status] ?? 'light text-dark';
@@ -276,6 +309,4 @@ class OrderController extends Controller
             </form>
         ';
     }
-
-    
 }

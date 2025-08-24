@@ -15,6 +15,7 @@ class OrdersTableSeeder extends Seeder
                 /// 'crop_id' => 1,
                 'payment_method_id' => 1,
                 'status' => 'pending',
+                'delivery_status' => 'not_delivered',
                 'total_amount' => 150.50,
                 'description' => 'First order - pending',
                 'created_at' => now(),
@@ -25,6 +26,8 @@ class OrdersTableSeeder extends Seeder
                 //'crop_id' => 2,
                 'payment_method_id' => 2,
                 'status' => 'confirmed',
+                'delivery_status' => 'delivered',
+
                 'total_amount' => 320.75,
                 'description' => 'Second order - confirmed',
                 'created_at' => now(),
@@ -32,9 +35,11 @@ class OrdersTableSeeder extends Seeder
             ],
             [
                 'user_id' => 3,
-              //  'crop_id' => 1,
+                //  'crop_id' => 1,
                 'payment_method_id' => 1,
                 'status' => 'completed',
+                'delivery_status' => 'delivered',
+
                 'total_amount' => 199.99,
                 'description' => 'Third order - completed',
                 'created_at' => now(),

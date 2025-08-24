@@ -30,6 +30,13 @@ return new class extends Migration {
                 ->default(0)
                 ->comment('Total amount of the order');
 
+                   
+            // ✅ New delivery status
+            $table->enum('delivery_status', [
+                'not_delivered',
+                'delivered'
+            ])->default('not_delivered')->index();
+
             $table->text('description')->nullable();
 
             $table->timestamps();

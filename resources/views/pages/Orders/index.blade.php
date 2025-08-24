@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid mt-4"> {{-- Changed to full-width --}}
+<div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mb-0">Orders</h1>
         <a href="{{ route('orders.create') }}" class="btn btn-success d-inline-flex align-items-center gap-2">
@@ -16,38 +16,29 @@
         </div>
     @endif
 
-    {{-- ✅ Filters --}}
+    {{-- Filters --}}
     <div class="card mb-5">
         <div class="card-body">
             <div class="row gy-2">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <select id="statusFilter" class="form-select">
                         <option value="">All Statuses</option>
-                        @foreach($statuses as $status)
-                            <option value="{{ $status }}">{{ ucfirst($status) }}</option>
-                        @endforeach
                     </select>
                 </div>
 
-                {{-- <div class="col-md-3">
-                    <select id="userFilter" class="form-select">
-                        <option value="">All Users</option>
-                        @foreach($users as $u)
-                            <option value="{{ $u->fullname }}">{{ $u->fullname }}</option>
-                        @endforeach
+                <div class="col-md-2">
+                    <select id="deliveryFilter" class="form-select">
+                        <option value="">All Delivery</option>
                     </select>
-                </div> --}}
+                </div>
 
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <select id="paymentFilter" class="form-select">
                         <option value="">All Payments</option>
-                        @foreach($payments as $p)
-                            <option value="{{ $p->name }}">{{ $p->name }}</option>
-                        @endforeach
                     </select>
                 </div>
 
-                <div class="col-md-3 d-flex gap-2">
+                <div class="col-md-4 d-flex gap-2">
                     <button type="button" class="btn btn-primary w-50" id="applyFilters">
                         <i class="bi bi-funnel"></i> Filter
                     </button>
@@ -59,7 +50,7 @@
         </div>
     </div>
 
-    {{-- ✅ Table --}}
+    {{-- Orders Table --}}
     <div class="card">
         <div class="card-body">
             <table id="ordersTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
@@ -69,6 +60,7 @@
                         <th>User</th>
                         <th>Payment</th>
                         <th>Status</th>
+                        <th>Delivery Status</th>
                         <th>Total</th>
                         <th>Items</th>
                         <th>Created At</th>
@@ -92,6 +84,15 @@
 
 <script>
 $(function () {
+    const statuses = @json($statuses);
+    const deliveryStatuses = @json($deliveryStatuses);
+    const payments = @json($payments);
+
+    // Populate filters dynamically
+    statuses.forEach(s => $('#statusFilter').append(new Option(s.charAt(0).toUpperCase() + s.slice(1), s)));
+    deliveryStatuses.forEach(d => $('#deliveryFilter').append(new Option(d.replace('_',' ').replace(/\b\w/g, l => l.toUpperCase()), d)));
+    payments.forEach(p => $('#paymentFilter').append(new Option(p.name, p.name)));
+
     var table = $('#ordersTable').DataTable({
         processing: true,
         serverSide: true,
@@ -99,8 +100,8 @@ $(function () {
         ajax: {
             url: "{{ route('orders.index') }}",
             data: function (d) {
-                d.status  = $('#statusFilter').val();
-                d.user    = $('#userFilter').val();
+                d.status = $('#statusFilter').val();
+                d.delivery_status = $('#deliveryFilter').val();
                 d.payment = $('#paymentFilter').val();
             }
         },
@@ -109,6 +110,7 @@ $(function () {
             { data: 'user', name: 'user' },
             { data: 'payment_method', name: 'payment_method' },
             { data: 'status', name: 'status', orderable: false, searchable: false },
+            { data: 'delivery_status', name: 'delivery_status', orderable: false, searchable: false },
             { data: 'total_amount', name: 'total_amount' },
             { data: 'items', name: 'items', orderable: false, searchable: false },
             { data: 'created_at', name: 'created_at' },
@@ -120,15 +122,15 @@ $(function () {
         }
     });
 
-    // ✅ Apply Filters Button
+    // Apply Filters
     $('#applyFilters').on('click', function () {
         table.draw();
     });
 
-    // ✅ Reset Filters Button
+    // Reset Filters
     $('#resetFilters').on('click', function () {
         $('#statusFilter').val('');
-        $('#userFilter').val('');
+        $('#deliveryFilter').val('');
         $('#paymentFilter').val('');
         table.draw();
     });
